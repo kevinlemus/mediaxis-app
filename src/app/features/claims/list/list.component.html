@@ -1,1 +1,24 @@
-<p>list works!</p>
+<div class="claims-list">
+  <h1>Claims</h1>
+
+  <ul class="claims-table">
+    <li *ngFor="let claim of claims" class="claim-row">
+      <div class="summary" (click)="toggleExpand(claim)">
+        <span class="claim-id">#{{ claim.id }}</span>
+        <span class="patient-name">{{ claim.patientName }}</span>
+        <span class="date-of-service">{{ claim.dateOfService | date }}</span>
+        <span class="status {{ claim.status | lowercase }}">{{ claim.status }}</span>
+      </div>
+
+      <!-- Expanded details -->
+      <div *ngIf="claim.expanded" class="details">
+        <p><strong>CPT Code:</strong> {{ claim.cptCode }}</p>
+        <p><strong>ICD-10 Code:</strong> {{ claim.icdCode }}</p>
+        <p><strong>Insurance Provider:</strong> {{ claim.insuranceProvider }}</p>
+        <p><strong>Claim Amount:</strong> ${{ claim.claimAmount }}</p>
+        <p><strong>Submitted By:</strong> {{ claim.submittedBy }}</p>
+        <a [routerLink]="['/dashboard-employee/claims', claim.id]" class="btn-link">View Full Details</a>
+      </div>
+    </li>
+  </ul>
+</div>

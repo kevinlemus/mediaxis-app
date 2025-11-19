@@ -1,1 +1,13 @@
-<p>detail works!</p>
+<div class="claim-detail" *ngIf="claim">
+  <h1>Claim #{{ claim.id }}</h1>
+  <p><strong>Patient:</strong> {{ claim.patientName }}</p>
+  <p><strong>Date of Service:</strong> {{ claim.dateOfService | date }}</p>
+  <p><strong>Status:</strong> {{ claim.status }}</p>
+  <p><strong>CPT Code:</strong> {{ claim.cptCode }}</p>
+  <p><strong>ICD-10 Code:</strong> {{ claim.icdCode }}</p>
+  <p><strong>Insurance Provider:</strong> {{ claim.insuranceProvider }}</p>
+  <p><strong>Claim Amount:</strong> ${{ claim.claimAmount }}</p>
+  <p><strong>Submitted By:</strong> {{ claim.submittedBy }}</p>
+
+  <a [routerLink]="['/dashboard-employee/claims', claim.id, 'history']" class="btn-link">View History</a>
+</div>

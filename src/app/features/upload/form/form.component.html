@@ -1,73 +1,84 @@
-<div class="upload-page">
-  <!-- Page header -->
-  <header class="page-header">
-    <h1>Upload Encounter File</h1>
-    <p class="instructions">
-      Upload patient encounter notes in CSV or PDF format. MediAxis will process
-      billing codes and auto‑fill claim forms.
-    </p>
-  </header>
+<div class="content-grid">
+  <!-- Left: Upload + status -->
+  <section class="upload-section card">
+    <header class="page-header">
+      <h1>Upload Encounter File</h1>
+      <p class="instructions">
+        Upload patient encounter notes in CSV or PDF format. MediAxis will process
+        billing codes and auto‑fill claim forms.
+      </p>
+    </header>
 
-  <!-- Upload card -->
-  <section class="upload-card">
     <div class="upload-box">
       <label for="fileUpload" class="upload-label">
-        <span *ngIf="!uploadedFile"
-          >Drag & drop or click to upload CSV/PDF</span
-        >
+        <span *ngIf="!uploadedFile">
+          Drag & drop or click to upload CSV/PDF
+        </span>
         <span *ngIf="uploadedFile">{{ uploadedFile.name }}</span>
       </label>
       <input id="fileUpload" type="file" (change)="onFileSelected($event)" />
     </div>
 
-    <!-- Processing indicator -->
     <div *ngIf="isProcessing" class="processing">
       <p>MediAxis AI is processing your file…</p>
     </div>
 
-    <!-- Preview section -->
-    <form *ngIf="!isProcessing && uploadedFile" class="preview-form">
-      <h2>Claim Preview</h2>
-      <div class="form-row">
-        <label>Patient Name</label>
-        <input [(ngModel)]="claimForm.patientName" name="patientName" />
-      </div>
-      <div class="form-row">
-        <label>Date of Birth</label>
-        <input
-          [(ngModel)]="claimForm.patientDOB"
-          name="patientDOB"
-          type="date"
-        />
-      </div>
-      <div class="form-row">
-        <label>Insurance Provider</label>
-        <input
-          [(ngModel)]="claimForm.insuranceProvider"
-          name="insuranceProvider"
-        />
-      </div>
-      <div class="form-row">
-        <label>Billing Code</label>
-        <input [(ngModel)]="claimForm.billingCode" name="billingCode" />
-      </div>
-      <div class="form-row">
-        <label>Diagnosis Code</label>
-        <input [(ngModel)]="claimForm.diagnosisCode" name="diagnosisCode" />
-      </div>
-      <div class="form-row">
-        <label>Claim Amount ($)</label>
-        <input
-          [(ngModel)]="claimForm.claimAmount"
-          name="claimAmount"
-          type="number"
-        />
+    <div class="helpers">
+      <span class="hint">Supported: CSV, PDF</span>
+      <button class="link" type="button" (click)="resetForm()" [disabled]="isProcessing">
+        Clear selection
+      </button>
+    </div>
+  </section>
+
+  <!-- Right: Preview panel -->
+  <section class="preview-section card">
+    <header class="preview-header">
+      <h2>Claim preview</h2>
+      <span class="status-chip" [class.ready]="uploadedFile && !isProcessing" [class.pending]="!uploadedFile || isProcessing">
+        {{ isProcessing ? 'Processing' : (uploadedFile ? 'Ready' : 'Awaiting file') }}
+      </span>
+    </header>
+
+    <!-- Empty state -->
+    <div *ngIf="!uploadedFile && !isProcessing" class="empty-state">
+      <p>No file uploaded yet.</p>
+      <p class="subtext">Upload an encounter file to generate a preview and edit before submitting.</p>
+    </div>
+
+    <!-- Form preview -->
+    <form *ngIf="uploadedFile && !isProcessing" class="preview-form" (ngSubmit)="submitClaim()">
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Patient name</label>
+          <input [(ngModel)]="claimForm.patientName" name="patientName" required />
+        </div>
+        <div class="form-row">
+          <label>Date of birth</label>
+          <input [(ngModel)]="claimForm.patientDOB" name="patientDOB" type="date" required />
+        </div>
+        <div class="form-row">
+          <label>Insurance provider</label>
+          <input [(ngModel)]="claimForm.insuranceProvider" name="insuranceProvider" required />
+        </div>
+        <div class="form-row">
+          <label>Billing code (CPT)</label>
+          <input [(ngModel)]="claimForm.billingCode" name="billingCode" pattern="^[0-9A-Za-z\-]{3,10}$" required />
+        </div>
+        <div class="form-row">
+          <label>Diagnosis code (ICD‑10)</label>
+          <input [(ngModel)]="claimForm.diagnosisCode" name="diagnosisCode" pattern="^[A-Z0-9\.\-]{3,10}$" required />
+        </div>
+        <div class="form-row">
+          <label>Claim amount ($)</label>
+          <input [(ngModel)]="claimForm.claimAmount" name="claimAmount" type="number" min="0" step="0.01" required />
+        </div>
       </div>
 
-      <!-- Actions -->
       <div class="actions">
-        <button type="button" (click)="submitClaim()">Submit Claim</button>
-        <button type="button" (click)="resetForm()">Reset</button>
+        <button class="primary" type="submit">Submit claim</button>
+        <button class="secondary" type="button" (click)="resetForm()">Reset</button>
+        <button class="tertiary" type="button">Download draft</button>
       </div>
     </form>
   </section>
