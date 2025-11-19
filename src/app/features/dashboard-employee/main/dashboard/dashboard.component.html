@@ -1,0 +1,48 @@
+<div class="dashboard-grid">
+  <!-- Metrics tiles -->
+  <section class="tiles">
+    <div class="tile">
+      <h3>Claims submitted</h3>
+      <p class="metric">{{ claimsSubmittedThisWeek }}</p>
+      <span class="subtext">This week</span>
+    </div>
+    <div class="tile">
+      <h3>Rejections flagged</h3>
+      <p class="metric">{{ rejectionsFlagged }}</p>
+      <span class="subtext">Needs review</span>
+    </div>
+  </section>
+
+  <!-- Notifications -->
+  <section class="notifications">
+    <h2>Notifications</h2>
+    <ul>
+      <li *ngFor="let n of notifications">
+        <span class="message">{{ n.message }}</span>
+        <span class="time">{{ n.time }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Recent Claims -->
+  <section class="recent-claims">
+    <h2>Recent Claims</h2>
+    <ul>
+      <li *ngFor="let claim of recentClaims">
+        <span class="claim-id">#{{ claim.id }}</span>
+        <span class="claim-status">{{ claim.status }}</span>
+        <span class="claim-date">{{ claim.date }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="actions">
+      <button routerLink="/dashboard-employee/claims">View Claims</button>
+      <button routerLink="/dashboard-employee/upload">Upload File</button>
+      <button routerLink="/dashboard-employee/support">Contact Support</button>
+    </div>
+  </section>
+</div>

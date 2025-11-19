@@ -8,6 +8,8 @@ import { ClaimsListComponent } from './features/claims/list/list.component';
 import { UploadFormComponent } from './features/upload/form/form.component';
 import { adminGuard } from './core/auth/admin.guard';
 import { employeeGuard } from './core/auth/employee.guard';
+import { DashboardComponent } from './features/dashboard-employee/main/dashboard/dashboard.component';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,7 +21,7 @@ export const routes: Routes = [
     canActivate: [employeeGuard],
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: ClaimsListComponent },
+      { path: 'home', component: DashboardComponent },
       { path: 'claims', component: ClaimsListComponent },
       { path: 'upload', component: UploadFormComponent },
       { path: 'settings', component: UploadFormComponent }, // placeholder
@@ -32,5 +34,20 @@ export const routes: Routes = [
     component: AdminMainComponent,
     canActivate: [adminGuard]
     // children can be added later
-  }
+  },
+  
+{
+  path: 'dashboard-employee',
+  component: EmployeeMainComponent,
+  canActivate: [employeeGuard],
+  children: [
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'home', component: DashboardComponent },   // 👈 new dashboard page
+    { path: 'claims', component: ClaimsListComponent },
+    { path: 'upload', component: UploadFormComponent },
+    { path: 'settings', component: UploadFormComponent },
+    { path: 'support', component: UploadFormComponent }
+  ]
+}
+
 ];

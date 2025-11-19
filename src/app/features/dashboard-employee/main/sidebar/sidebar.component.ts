@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
-import { UserService, User } from '../../../core/user/user.service';
+import { UserService, User } from '../../../../core/user/user.service';
 import { Observable } from 'rxjs';
 
 @Component({

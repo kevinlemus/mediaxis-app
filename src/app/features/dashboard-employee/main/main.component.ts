@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
-import { SidebarComponent } from '../sidebar/sidebar.component';
-import { ProfileDrawerComponent } from '../profile-drawer/profile-drawer.component';
 import { CommonModule } from '@angular/common';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { ProfileDrawerComponent } from './profile-drawer/profile-drawer.component';
 
 @Component({
   selector: 'app-employee-main',
@@ -13,19 +13,9 @@ import { CommonModule } from '@angular/common';
     RouterOutlet,
     MatSidenavModule,
     SidebarComponent,
-    ProfileDrawerComponent
+    ProfileDrawerComponent,
   ],
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css']
+  styleUrls: ['./main.component.css'],
 })
-export class EmployeeMainComponent {
-  @ViewChild('profileSidenav') profileSidenav!: MatSidenav;
-
-  openProfileDrawer() {
-    this.profileSidenav.open();
-  }
-
-  closeProfileDrawer() {
-    this.profileSidenav.close();
-  }
-}
+export class EmployeeMainComponent {}

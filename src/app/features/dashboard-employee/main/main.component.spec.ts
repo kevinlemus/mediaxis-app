@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmployeeMainComponent } from './main.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SidebarComponent } from '../sidebar/sidebar.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 describe('EmployeeMainComponent', () => {
   let component: EmployeeMainComponent;
@@ -9,7 +9,7 @@ describe('EmployeeMainComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmployeeMainComponent, SidebarComponent, RouterTestingModule]
+      imports: [EmployeeMainComponent, SidebarComponent, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmployeeMainComponent);

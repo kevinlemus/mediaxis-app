@@ -1,8 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -15,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { UserService } from '../../../core/user/user.service';
+import { UserService } from '../../../../core/user/user.service';
 
 @Component({
   selector: 'app-profile-drawer',
@@ -42,7 +38,10 @@ export class ProfileDrawerComponent {
     const user = this.userService.currentUser;
     this.profileForm = this.fb.group({
       name: [user.name, Validators.required],
-      email: [{ value: user.email, disabled: true }, [Validators.required, Validators.email]],
+      email: [
+        { value: user.email, disabled: true },
+        [Validators.required, Validators.email],
+      ],
       phone: [user.phone ?? ''],
       department: [user.department ?? '', Validators.required],
       role: [{ value: user.role, disabled: true }],
