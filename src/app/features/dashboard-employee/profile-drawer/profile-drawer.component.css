@@ -1,0 +1,114 @@
+:host {
+  display: block;
+  height: 100%;
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  padding: 1.5rem;
+  box-sizing: border-box;
+
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);
+  border-left: 1px solid #e0e0e0;
+  border-radius: 8px 0 0 8px;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 6px;
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  color: #fff;
+}
+
+.drawer-header h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0;
+  color: #fff;
+}
+
+.drawer-header button {
+  color: #fff;
+}
+
+.profile-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 0.75rem;
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid var(--color-accent);
+  transition: all 0.2s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+input[type="file"] {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+mat-label {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+mat-form-field.mat-form-field-appearance-fill .mat-input-element:hover,
+mat-form-field.mat-form-field-appearance-fill .mat-input-element:focus {
+  background-color: #f9fbff;
+}
+
+input[disabled] {
+  background-color: #fafafa;
+  color: #888;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.actions button {
+  min-width: 100px;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+form {
+  padding-top: 0.5rem;
+}
+
+.actions button[color="warn"] {
+  background-color: transparent;
+  color: var(--color-primary-dark);
+  border: 1px solid var(--color-primary-dark);
+}
+.actions button[color="warn"]:hover {
+  background-color: var(--color-blue-gray);
+  color: var(--color-primary-dark);
+}

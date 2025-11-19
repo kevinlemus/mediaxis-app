@@ -1,0 +1,49 @@
+<div class="drawer-header">
+  <h2>Edit Profile</h2>
+  <button mat-icon-button (click)="cancel()" aria-label="Close profile drawer">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div class="profile-avatar">
+  <img [src]="avatarSrc" alt="Profile Avatar" class="avatar" />
+  <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+</div>
+
+<form [formGroup]="profileForm" (ngSubmit)="submit()">
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" [disabled]="true" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Phone</mat-label>
+    <input matInput formControlName="phone" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Department</mat-label>
+    <mat-select formControlName="department" panelClass="dept-panel">
+      <mat-option value="claims">Claims</mat-option>
+      <mat-option value="support">Support</mat-option>
+      <mat-option value="admin">Admin</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Role</mat-label>
+    <input matInput formControlName="role" [disabled]="true" />
+  </mat-form-field>
+
+  <div class="actions">
+    <button mat-raised-button color="primary" type="submit">Save</button>
+    <button mat-button color="warn" type="button" (click)="cancel()">
+      Cancel
+    </button>
+  </div>
+</form>

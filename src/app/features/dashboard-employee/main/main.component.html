@@ -1,0 +1,18 @@
+<mat-sidenav-container class="dashboard-layout">
+  <!-- Left sidebar -->
+  <mat-sidenav mode="side" opened class="sidebar">
+    <app-sidebar (openProfile)="profileSidenav.open()"></app-sidebar>
+  </mat-sidenav>
+
+  <!-- Right profile drawer -->
+  <mat-sidenav #profileSidenav mode="over" position="end">
+    <app-profile-drawer (close)="profileSidenav.close()"></app-profile-drawer>
+  </mat-sidenav>
+
+  <!-- Main content -->
+  <mat-sidenav-content>
+    <main class="dashboard-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

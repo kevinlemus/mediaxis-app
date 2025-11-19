@@ -1,0 +1,87 @@
+<nav class="sidebar" role="navigation" aria-label="Employee Dashboard Sidebar">
+  <div class="sidebar-logo">
+    <img
+      src="assets/mediaxis-logo-sidebar.png"
+      alt="MediAxis Logo"
+      class="logo"
+    />
+  </div>
+
+  <div class="sidebar-header">
+    <button
+      class="profile-button"
+      matRipple
+      type="button"
+      aria-label="Open profile drawer"
+      (click)="openProfile.emit()"
+    >
+      <ng-container *ngIf="user$ | async as user">
+        <ng-container *ngIf="user.photoUrl; else defaultIcon">
+          <img
+            [src]="user.photoUrl"
+            alt="Profile photo"
+            class="profile-photo"
+          />
+        </ng-container>
+        <ng-template #defaultIcon>
+          <mat-icon class="profile-icon">account_circle</mat-icon>
+        </ng-template>
+        <span class="profile-name">{{ user.name }}</span>
+      </ng-container>
+      <mat-icon class="profile-arrow">chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <ul class="nav-list">
+    <li>
+      <a
+        routerLink="/dashboard-employee/home"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/dashboard-employee/claims"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <mat-icon>description</mat-icon>
+        <span>Claims</span>
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/dashboard-employee/upload"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <mat-icon>upload_file</mat-icon>
+        <span>Upload Encounter File</span>
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/dashboard-employee/settings"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </a>
+    </li>
+    <li>
+      <a
+        routerLink="/dashboard-employee/support"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <mat-icon>support_agent</mat-icon>
+        <span>Support</span>
+      </a>
+    </li>
+  </ul>
+</nav>

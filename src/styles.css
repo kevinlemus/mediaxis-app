@@ -1,0 +1,221 @@
+/* ============================= */
+/* 🎨 MediAxis Color Palette     */
+/* ============================= */
+:root {
+  --color-primary: #1e4ca1;
+  --color-secondary: #3a7bd5;
+
+  --color-background: #ffffff;
+  --color-surface: #f5f7fa;
+  --color-text-primary: #1e4ca1;
+  --color-text-secondary: #3a3a3a;
+
+  --color-accent: #3a7bd5;
+
+  --color-primary-dark: #0f2a55; /* darker shade for hover */
+  --color-secondary-dark: #2e65b0;
+
+  /* Sidebar-specific semantic colors */
+  --color-navy: var(--color-primary-dark);
+  --color-light-blue: #e6f0ff;
+  --color-blue-gray: #dce6f5;
+
+  /* Hover semantic colors */
+  --color-hover-bg: var(--color-secondary-dark);
+  --color-hover-text: #ffffff;
+
+  /* Button-specific semantic colors */
+  --btn-text: #ffffff;
+  --btn-text-hover: #ffffff; /* keep text white for contrast */
+
+  /* Overlay semantic color */
+  --overlay-dark: rgba(0, 0, 0, 0.45);
+}
+
+/* ============================= */
+/* 🌐 Base Elements              */
+/* ============================= */
+body {
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--color-text-primary);
+}
+
+a {
+  color: var(--color-secondary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+/* ============================= */
+/* 🔘 Buttons                    */
+/* ============================= */
+button {
+  background-color: var(--color-accent);
+  color: var(--btn-text);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--color-primary-dark);
+  color: var(--btn-text-hover);
+}
+
+button:active,
+button:focus {
+  background-color: var(--color-secondary-dark);
+  color: var(--btn-text-hover);
+  outline: none;
+}
+
+/* ============================= */
+/* 📐 Layout Utilities           */
+/* ============================= */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  margin-left: 240px;     /* push content to the right of fixed sidebar */
+  overflow-x: hidden;     /* avoid horizontal scrollbars */
+}
+
+.dashboard-content {
+  flex-grow: 1;
+  overflow-y: auto;       /* scrollable content area */
+  padding: 2rem;
+  background-color: #fff;
+  color: var(--color-navy);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.header {
+  background-color: var(--color-secondary);
+  color: #fff;
+  padding: 1rem;
+}
+
+.footer {
+  background-color: var(--color-primary-dark);
+  color: #fff;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+/* ============================= */
+/* 🎨 Utility Classes            */
+/* ============================= */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+.bg-surface {
+  background-color: var(--color-surface);
+}
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+.text-accent {
+  color: var(--color-accent);
+}
+
+.logo {
+  transform: scale(4);   /* 2 = 200%, 3 = 300% */
+  transform-origin: center;
+  display: block;
+  margin: 0 auto;
+}
+
+/* ============================= */
+/* 🌌 Sidenav Backdrop Overlay   */
+/* ============================= */
+.mat-drawer-backdrop {
+  background-color: var(--overlay-dark) !important; /* darkish overlay */
+  transition: background-color 300ms ease; /* smooth fade */
+  left: 240px; /* ✅ exclude fixed sidebar from shading */
+  z-index: 1000; /* keep backdrop above content */
+}
+
+mat-sidenav.profile-drawer {
+  z-index: 1100; /* ✅ ensure drawer sits above backdrop */
+}
+
+/* Sidebar should always sit above the backdrop */
+.mat-sidenav.sidebar {
+  z-index: 2000 !important; /* higher than .mat-drawer-backdrop */
+  position: fixed;          /* stays pinned on the left */
+  top: 0;
+  left: 0;
+}
+
+
+/* ✅ Department dropdown panel styling */
+.dept-panel {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-secondary) !important;
+  z-index: 1200;
+}
+
+/* ============================= */
+/* 📱 Responsive Adjustments     */
+/* ============================= */
+@media (max-width: 768px) {
+  .mat-sidenav.sidebar {
+    width: 200px;
+  }
+  .dashboard-layout {
+    margin-left: 200px;
+  }
+  .mat-drawer-backdrop {
+    left: 200px;
+    width: calc(100vw - 200px);
+  }
+}
+
+/* ============================= */
+/* 📋 Department Dropdown Options */
+/* ============================= */
+.dept-panel .mat-mdc-option {
+  font-family: "Segoe UI", Roboto, sans-serif;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+/* Hover or keyboard focus: subtle lift */
+.dept-panel .mat-mdc-option:hover:not(.mat-mdc-option-disabled),
+.dept-panel .mat-mdc-option.mat-mdc-option-active {
+  background-color: var(--color-surface) !important; /* keep neutral surface tone */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);            /* subtle shadow */
+  transform: translateY(-1px);                       /* tiny lift */
+  color: var(--color-primary-dark) !important;
+}
+
+/* Selected option: bold accent fill */
+.dept-panel .mat-mdc-option.mdc-list-item--selected {
+  background-color: var(--color-accent) !important;
+  color: #fff !important;
+  box-shadow: none; /* keep it flat when selected */
+}
+
