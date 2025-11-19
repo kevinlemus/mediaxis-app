@@ -1,1 +1,74 @@
-<p>form works!</p>
+<div class="upload-page">
+  <!-- Page header -->
+  <header class="page-header">
+    <h1>Upload Encounter File</h1>
+    <p class="instructions">
+      Upload patient encounter notes in CSV or PDF format. MediAxis will process
+      billing codes and auto‑fill claim forms.
+    </p>
+  </header>
+
+  <!-- Upload card -->
+  <section class="upload-card">
+    <div class="upload-box">
+      <label for="fileUpload" class="upload-label">
+        <span *ngIf="!uploadedFile"
+          >Drag & drop or click to upload CSV/PDF</span
+        >
+        <span *ngIf="uploadedFile">{{ uploadedFile.name }}</span>
+      </label>
+      <input id="fileUpload" type="file" (change)="onFileSelected($event)" />
+    </div>
+
+    <!-- Processing indicator -->
+    <div *ngIf="isProcessing" class="processing">
+      <p>MediAxis AI is processing your file…</p>
+    </div>
+
+    <!-- Preview section -->
+    <form *ngIf="!isProcessing && uploadedFile" class="preview-form">
+      <h2>Claim Preview</h2>
+      <div class="form-row">
+        <label>Patient Name</label>
+        <input [(ngModel)]="claimForm.patientName" name="patientName" />
+      </div>
+      <div class="form-row">
+        <label>Date of Birth</label>
+        <input
+          [(ngModel)]="claimForm.patientDOB"
+          name="patientDOB"
+          type="date"
+        />
+      </div>
+      <div class="form-row">
+        <label>Insurance Provider</label>
+        <input
+          [(ngModel)]="claimForm.insuranceProvider"
+          name="insuranceProvider"
+        />
+      </div>
+      <div class="form-row">
+        <label>Billing Code</label>
+        <input [(ngModel)]="claimForm.billingCode" name="billingCode" />
+      </div>
+      <div class="form-row">
+        <label>Diagnosis Code</label>
+        <input [(ngModel)]="claimForm.diagnosisCode" name="diagnosisCode" />
+      </div>
+      <div class="form-row">
+        <label>Claim Amount ($)</label>
+        <input
+          [(ngModel)]="claimForm.claimAmount"
+          name="claimAmount"
+          type="number"
+        />
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button type="button" (click)="submitClaim()">Submit Claim</button>
+        <button type="button" (click)="resetForm()">Reset</button>
+      </div>
+    </form>
+  </section>
+</div>
