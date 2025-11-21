@@ -4,17 +4,13 @@
   flex-direction: column; /* stack vertically */
   gap: 1.5rem;
   width: 100%;
-  max-width: 1600px;      /* match dashboard/claims container width */
-  margin: 0 auto;
-  padding: 2rem;         /* match page padding used elsewhere */
-  box-sizing: border-box; /* ensure padding doesn't shift layout */
+  margin: 0;
 }
-
 
 /* Stack columns on smaller screens */
 @media (max-width: 1024px) {
   .content-grid {
-    grid-template-columns: 1fr;     /* single column */
+    grid-template-columns: 1fr; /* single column */
   }
 }
 
@@ -23,7 +19,7 @@
   background-color: var(--color-surface);
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* Header */
@@ -130,7 +126,7 @@ input[type="file"] {
   background-color: #fff;
   padding: 1rem;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 .form-grid {
   display: grid;

@@ -1,7 +1,5 @@
 .claims-list {
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 0;
   font-family: "Segoe UI", Roboto, sans-serif;
   color: var(--color-text-secondary);
 }
@@ -20,14 +18,14 @@
 .toolbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;   /* center everything vertically */
+  align-items: center; /* center everything vertically */
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
   gap: 1rem;
   padding: 0.75rem 1rem;
   background-color: var(--color-surface);
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 /* Search bar: keep it roomy */
@@ -38,7 +36,7 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 0.4rem 0.6rem;
-  width: 500px;          /* nice wide input */
+  width: 500px; /* nice wide input */
   max-width: 100%;
 }
 
@@ -54,7 +52,7 @@
   outline: none;
   flex: 1;
   font-size: 0.95rem;
-  padding: 0.6rem 0;      /* taller input for balance */
+  padding: 0.6rem 0; /* taller input for balance */
   color: var(--color-text-secondary);
 }
 
@@ -66,7 +64,7 @@
 /* Sort controls: match height of search bar */
 .sort-controls {
   display: flex;
-  align-items: center;    /* center vertically */
+  align-items: center; /* center vertically */
   gap: 0.5rem;
   flex-wrap: wrap;
 }
@@ -81,7 +79,7 @@
   background-color: var(--color-surface);
   color: var(--color-primary-dark);
   border: 1px solid #ccc;
-  padding: 0.6rem 1rem;   /* taller buttons to match input height */
+  padding: 0.6rem 1rem; /* taller buttons to match input height */
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.85rem;
@@ -108,13 +106,13 @@
   border-radius: 8px;
   margin-bottom: 1rem;
   background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .claim-row:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 /* Summary row layout */
@@ -146,9 +144,18 @@
   font-weight: 500;
 }
 
-.status-chip.submitted { background: #f0f4ff; color: #2a4d9c; }
-.status-chip.approved { background: #e6f6ea; color: #1d7a3d; }
-.status-chip.rejected { background: #fdecea; color: #a12d2d; }
+.status-chip.submitted {
+  background: #f0f4ff;
+  color: #2a4d9c;
+}
+.status-chip.approved {
+  background: #e6f6ea;
+  color: #1d7a3d;
+}
+.status-chip.rejected {
+  background: #fdecea;
+  color: #a12d2d;
+}
 
 /* Expanded details */
 .details {

@@ -42,6 +42,12 @@ body {
   margin: 0;
 }
 
+/* Make sizing easier to reason about across the app */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 h1,
 h2,
 h3 {
@@ -100,12 +106,11 @@ button:focus {
 
 /* ✅ Shared page container for consistent alignment */
 
-
 /* Dashboard grid — single point of width control */
 .page-container,
 .dashboard-grid {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 2rem;
   box-sizing: border-box;
