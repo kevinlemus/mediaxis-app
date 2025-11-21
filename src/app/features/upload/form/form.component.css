@@ -1,7 +1,6 @@
 /* Match dashboard width without causing overflow */
 .content-grid {
   display: grid;
-  grid-template-columns: 990px;
   gap: 1.5rem;
   width: 100%;              /* stretch full width */
   max-width: 1600px; 

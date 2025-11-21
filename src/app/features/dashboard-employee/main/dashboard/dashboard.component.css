@@ -1,6 +1,5 @@
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 720px;
   gap: 1.5rem;
   width: 100%;              /* stretch full width */
   max-width: 1600px;        /* prevent over-stretch on huge monitors */
