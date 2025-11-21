@@ -1,0 +1,52 @@
+<div class="support-container page-container">
+  <h2 class="support-title">Support</h2>
+
+  <mat-card class="support-card">
+    <mat-card-header>
+      <mat-card-title>Contact Support</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        Submit a message to our support team. We’ll respond to your request as
+        soon as possible.
+      </p>
+
+      <form (ngSubmit)="submitSupport()" #supportForm="ngForm">
+        <mat-form-field appearance="fill" class="support-field">
+          <mat-label>Subject</mat-label>
+          <input
+            matInput
+            [(ngModel)]="subject"
+            name="subject"
+            required
+            placeholder="e.g. Report Issue or Request Feature"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="support-field">
+          <mat-label>Message</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="message"
+            name="message"
+            rows="6"
+            required
+            placeholder="Describe your issue or request..."
+          ></textarea>
+        </mat-form-field>
+
+        <div class="support-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!supportForm.valid"
+          >
+            <mat-icon>send</mat-icon>
+            Submit
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
