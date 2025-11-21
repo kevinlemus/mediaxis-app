@@ -1,0 +1,86 @@
+:host {
+  display: block;
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 6px;
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  color: #fff;
+}
+
+.page-header h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.settings-card {
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-low);
+  background-color: var(--color-surface);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.settings-card:hover {
+  box-shadow: var(--elevation-mid);
+  transform: translateY(-2px);
+}
+
+mat-card-title {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+mat-card-content p {
+  color: var(--color-text-secondary);
+  margin: 0.5rem 0;
+}
+
+mat-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+}
+
+button {
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.primary-btn {
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
+.primary-btn:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.secondary-btn {
+  background-color: transparent;
+  border: 1px solid var(--color-secondary-dark);
+  color: var(--color-secondary-dark);
+}
+
+.secondary-btn:hover {
+  background-color: var(--color-blue-gray);
+  color: #fff;
+}

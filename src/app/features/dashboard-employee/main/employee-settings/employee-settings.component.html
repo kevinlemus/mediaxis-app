@@ -1,5 +1,7 @@
 <div class="settings-container page-container">
-  <h2 class="settings-title">Settings</h2>
+  <div class="page-header">
+    <h2>Settings</h2>
+  </div>
 
   <!-- Profile Info reminder -->
   <mat-card class="settings-card">
@@ -20,7 +22,7 @@
       <p>Reset your password using our secure external flow.</p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="resetPassword()">
+      <button mat-raised-button color="primary" (click)="resetPassword()" class="primary-btn">
         <mat-icon>lock_reset</mat-icon>
         Reset Password
       </button>
@@ -36,11 +38,11 @@
       <p>Need help? Report an issue or request a new feature.</p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button color="accent" (click)="reportIssue()">
+      <button mat-button color="accent" (click)="reportIssue()" class="secondary-btn">
         <mat-icon>bug_report</mat-icon>
         Report Issue
       </button>
-      <button mat-button color="accent" (click)="requestFeature()">
+      <button mat-button color="accent" (click)="requestFeature()" class="secondary-btn">
         <mat-icon>lightbulb</mat-icon>
         Request Feature
       </button>
