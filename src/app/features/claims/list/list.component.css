@@ -1,48 +1,188 @@
 .claims-list {
-  max-width: 1200px;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 2rem;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  color: var(--color-text-secondary);
 }
 
+/* Page header */
+.list-header {
+  margin-bottom: 1.5rem;
+}
+.list-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: var(--color-primary-dark);
+}
+
+/* Toolbar layout */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;   /* center everything vertically */
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-surface);
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* Search bar: keep it roomy */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  width: 500px;          /* nice wide input */
+  max-width: 100%;
+}
+
+.search-icon {
+  color: #6c757d;
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.95rem;
+  padding: 0.6rem 0;      /* taller input for balance */
+  color: var(--color-text-secondary);
+}
+
+.search-bar input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* Sort controls: match height of search bar */
+.sort-controls {
+  display: flex;
+  align-items: center;    /* center vertically */
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sort-controls label {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-right: 0.25rem;
+}
+
+.sort-controls button {
+  background-color: var(--color-surface);
+  color: var(--color-primary-dark);
+  border: 1px solid #ccc;
+  padding: 0.6rem 1rem;   /* taller buttons to match input height */
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.sort-controls button:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* Claims table */
 .claims-table {
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: 75vh;
+  overflow-y: auto;
 }
 
 .claim-row {
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
   margin-bottom: 1rem;
-  background: var(--color-surface);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+.claim-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* Summary row layout */
 .summary {
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem;
+  display: grid;
+  grid-template-columns: 120px 1fr 180px 140px 140px;
+  align-items: center;
+  padding: 1rem 1.25rem;
   cursor: pointer;
   font-weight: 600;
 }
 
-.summary .status {
+.claim-id {
+  color: var(--color-primary);
+}
+
+.amount {
+  text-align: right;
+  font-weight: 600;
+  color: var(--color-secondary-dark);
+}
+
+/* Status chips */
+.status-chip {
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
   font-size: 0.85rem;
+  text-align: center;
+  font-weight: 500;
 }
 
-.status.submitted { background: #f0f4ff; color: #2a4d9c; }
-.status.approved { background: #e6f6ea; color: #1d7a3d; }
-.status.rejected { background: #fdecea; color: #a12d2d; }
+.status-chip.submitted { background: #f0f4ff; color: #2a4d9c; }
+.status-chip.approved { background: #e6f6ea; color: #1d7a3d; }
+.status-chip.rejected { background: #fdecea; color: #a12d2d; }
 
+/* Expanded details */
 .details {
   padding: 1rem 1.5rem;
   border-top: 1px solid #eee;
+  background-color: var(--color-surface);
 }
+
 .details p {
   margin: 0.25rem 0;
 }
-.details button {
+
+.details a {
+  display: inline-block;
   margin-top: 1rem;
+  color: var(--color-accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.details a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive: stack search and sort on small screens */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-bar {
+    width: 100%;
+  }
+  .sort-controls {
+    justify-content: flex-start;
+  }
 }
