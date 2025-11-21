@@ -20,4 +20,10 @@ export class SidebarComponent {
   constructor(private userService: UserService) {
     this.user$ = this.userService.user$;
   }
+
+    logout() {
+    // Placeholder for now
+    console.log('Logout clicked');
+    // Later: this.userService.logout();
+  }
 }

@@ -127,10 +127,10 @@ mat-sidenav {
 }
 
 .nav-list a.active {
-  background-color: var(--sidebar-item-active-bg);
-  color: var(--sidebar-item-active-text);
-  box-shadow: inset 3px 0 0 0 #ffffff33; /* subtle left indicator */
+  border-left: 3px solid var(--color-accent);
+  padding-left: calc(0.8rem - 3px); /* adjust so text doesn’t shift */
 }
+
 
 .nav-list a:focus-visible {
   outline: none;
@@ -155,4 +155,30 @@ mat-sidenav {
   border-radius: 50%;
   object-fit: cover;
   margin-right: 0.5rem;
+}
+
+.sidebar-footer {
+  margin-top: auto; /* pushes to bottom */
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: var(--color-light-blue);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  cursor: pointer;
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.logout-button:hover {
+  background-color: var(--sidebar-item-hover-bg);
+  color: var(--sidebar-item-hover-text);
 }
