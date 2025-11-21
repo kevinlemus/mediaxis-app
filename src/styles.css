@@ -42,7 +42,9 @@ body {
   margin: 0;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: var(--color-text-primary);
 }
 
@@ -96,28 +98,22 @@ button:focus {
   font-family: "Segoe UI", Roboto, sans-serif;
 }
 
-
 /* ✅ Shared page container for consistent alignment */
-.page-container {
+
+
+/* Dashboard grid — single point of width control */
+.page-container,
+.dashboard-grid {
   width: 100%;
-  max-width: 1600px; /* unified width for all main content */
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem; /* horizontal gutters */
+  padding: 0 2rem;
   box-sizing: border-box;
 }
-
-/* ...existing code... */
-/* Dashboard grid — single point of width control */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 1.5rem;
-
-  width: 100%;
-  max-width: 1000px;   /* ⬅️ adjust this value only */
-  margin: 0 auto;
-  padding: 0 2rem;     /* ⬅️ gutters live here */
-  box-sizing: border-box;
 }
 
 .header {
@@ -136,14 +132,28 @@ button:focus {
 /* ============================= */
 /* 🎨 Utility Classes            */
 /* ============================= */
-.bg-primary { background-color: var(--color-primary); }
-.bg-secondary { background-color: var(--color-secondary); }
-.bg-surface { background-color: var(--color-surface); }
-.bg-accent { background-color: var(--color-accent); }
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+.bg-surface {
+  background-color: var(--color-surface);
+}
+.bg-accent {
+  background-color: var(--color-accent);
+}
 
-.text-primary { color: var(--color-text-primary); }
-.text-secondary { color: var(--color-text-secondary); }
-.text-accent { color: var(--color-accent); }
+.text-primary {
+  color: var(--color-text-primary);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+.text-accent {
+  color: var(--color-accent);
+}
 
 .logo {
   transform: scale(4);
@@ -184,13 +194,19 @@ mat-sidenav.profile-drawer {
 /* 📱 Responsive Adjustments     */
 /* ============================= */
 @media (max-width: 768px) {
-  .mat-sidenav.sidebar { width: 200px; }
-  .dashboard-layout { margin-left: 200px; }
+  .mat-sidenav.sidebar {
+    width: 200px;
+  }
+  .dashboard-layout {
+    margin-left: 200px;
+  }
   .mat-drawer-backdrop {
     left: 200px;
     width: calc(100vw - 200px);
   }
-  .page-container { min-width: auto; }
+  .page-container {
+    min-width: auto;
+  }
 }
 
 /* ============================= */
