@@ -34,6 +34,25 @@
   /* Layout reference */
   --sidebar-width: 240px;
   /* Fluid width clamp replaces transform scaling */
+  /* Sidebar interaction tokens */
+  --sidebar-item-hover-bg: #1b3d7a; /* darker than accent, keeps contrast */
+  --sidebar-item-hover-text: #ffffff;
+  --sidebar-item-active-bg: var(--color-accent);
+  --sidebar-item-active-text: #ffffff;
+  --focus-ring: 0 0 0 2px rgba(58, 123, 213, 0.55);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  /* Drawer + elevation tokens */
+  --elevation-low: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --elevation-mid: 0 4px 12px rgba(0, 0, 0, 0.18);
+  --drawer-header-gradient: linear-gradient(
+    to right,
+    var(--color-primary-dark),
+    var(--color-secondary)
+  );
+  --border-subtle: 1px solid #d8dde4;
+  --bg-soft: #f9fbfd;
 }
 
 /* ============================= */
@@ -246,9 +265,14 @@ mat-sidenav.profile-drawer {
 
 /* Enable horizontal scroll only on very small desktop/tablet widths (Nest Hub and below) */
 @media (max-width: 1100px) {
-  .dashboard-content { overflow-x: auto; }
+  .dashboard-content {
+    overflow-x: auto;
+  }
   /* Force a wider virtual canvas so horizontal scroll appears */
-  .proportional-shell, .page-container { min-width: 1300px; }
+  .proportional-shell,
+  .page-container {
+    min-width: 1300px;
+  }
 }
 
 /* ============================= */

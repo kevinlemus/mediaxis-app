@@ -15,51 +15,6 @@ import { DetailComponent } from './features/claims/detail/detail.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-
-  {
-    path: 'dashboard-employee',
-    component: EmployeeMainComponent,
-    canActivate: [employeeGuard],
-    children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: DashboardComponent },
-      { path: 'claims', component: ClaimsListComponent },
-      { path: 'upload', component: UploadFormComponent },
-      { path: 'settings', component: UploadFormComponent }, // placeholder
-      { path: 'support', component: UploadFormComponent }, // placeholder
-    ],
-  },
-
-  {
-    path: 'dashboard-admin',
-    component: AdminMainComponent,
-    canActivate: [adminGuard],
-    // children can be added later
-  },
-
-  {
-    path: 'dashboard-employee',
-    component: EmployeeMainComponent,
-    canActivate: [employeeGuard],
-    children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: DashboardComponent }, // 👈 new dashboard page
-      { path: 'claims', component: ClaimsListComponent },
-      { path: 'upload', component: UploadFormComponent },
-      { path: 'settings', component: UploadFormComponent },
-      { path: 'support', component: UploadFormComponent },
-    ],
-  },
-
-  {
-    path: 'dashboard-employee',
-    component: EmployeeMainComponent,
-    children: [
-      { path: 'upload', component: UploadFormComponent },
-      { path: 'upload/history', component: HistoryComponent },
-    ],
-  },
-
   {
     path: 'dashboard-employee',
     component: EmployeeMainComponent,
@@ -70,8 +25,16 @@ export const routes: Routes = [
       { path: 'claims', component: ClaimsListComponent },
       { path: 'claims/:id', component: DetailComponent },
       { path: 'upload', component: UploadFormComponent },
-      { path: 'settings', component: UploadFormComponent },
-      { path: 'support', component: UploadFormComponent },
+      { path: 'upload/history', component: HistoryComponent },
+      { path: 'settings', component: UploadFormComponent }, // TODO replace
+      { path: 'support', component: UploadFormComponent }, // TODO replace
     ],
   },
+  {
+    path: 'dashboard-admin',
+    component: AdminMainComponent,
+    canActivate: [adminGuard],
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' },
 ];
