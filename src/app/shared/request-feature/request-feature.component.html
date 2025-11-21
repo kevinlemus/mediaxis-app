@@ -1,0 +1,26 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Request a Feature</h1>
+    <p class="instructions">Tell us what would make MediAxis more useful for your workflow.</p>
+  </header>
+
+  <mat-card class="feature-card">
+    <form (ngSubmit)="submitRequest()" #featureForm="ngForm">
+      <mat-form-field appearance="fill" class="feature-field">
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="title" name="title" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="feature-field">
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="description" name="description" rows="6" required></textarea>
+      </mat-form-field>
+
+      <div class="feature-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!featureForm.valid">
+          Submit Request
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

@@ -1,0 +1,23 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1 class="auth-title">Login</h1>
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+      <mat-form-field appearance="fill" class="auth-field">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="email" name="email" type="email" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="auth-field">
+        <mat-label>Password</mat-label>
+        <input matInput [(ngModel)]="password" name="password" type="password" required />
+      </mat-form-field>
+
+      <div class="auth-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">
+          Login
+        </button>
+        <a routerLink="/reset-password" class="link">Forgot password?</a>
+      </div>
+    </form>
+  </div>
+</div>

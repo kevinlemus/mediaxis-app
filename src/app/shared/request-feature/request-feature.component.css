@@ -1,0 +1,30 @@
+.page-header {
+  margin-bottom: 1.5rem;
+}
+.page-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: var(--color-primary-dark);
+}
+.instructions {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+}
+
+.feature-card {
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-low);
+  background-color: var(--color-surface);
+  padding: 1.5rem;
+}
+
+.feature-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.feature-actions {
+  display: flex;
+  justify-content: flex-end;
+}

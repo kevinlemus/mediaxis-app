@@ -1,6 +1,9 @@
 // src/app/app.routes.ts
 import { Routes } from '@angular/router';
-import { LoginComponent } from './features/auth/login/login.component';
+import { LoginComponent } from './shared/login/login.component';
+import { ResetPasswordComponent } from './shared/reset-password/reset-password.component';
+import { RequestFeatureComponent } from './shared/request-feature/request-feature.component';
+
 import { RegisterComponent } from './features/auth/register/register.component';
 import { AdminMainComponent } from './features/dashboard-admin/main/main.component';
 import { EmployeeMainComponent } from './features/dashboard-employee/main/main.component';
@@ -16,6 +19,7 @@ import { EmployeeSupportComponent } from './features/dashboard-employee/main/emp
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'register', component: RegisterComponent },
   {
     path: 'dashboard-employee',
@@ -30,6 +34,7 @@ export const routes: Routes = [
       { path: 'upload/history', component: HistoryComponent },
       { path: 'settings', component: EmployeeSettingsComponent },
       { path: 'support', component: EmployeeSupportComponent },
+      { path: 'request-feature', component: RequestFeatureComponent },
     ],
   },
   {
