@@ -11,6 +11,7 @@ import { employeeGuard } from './core/auth/employee.guard';
 import { DashboardComponent } from './features/dashboard-employee/main/dashboard/dashboard.component';
 import { HistoryComponent } from './features/upload/history/history.component';
 import { DetailComponent } from './features/claims/detail/detail.component';
+import { EmployeeSettingsComponent } from './features/dashboard-employee/employee-settings/employee-settings.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -26,8 +27,8 @@ export const routes: Routes = [
       { path: 'claims/:id', component: DetailComponent },
       { path: 'upload', component: UploadFormComponent },
       { path: 'upload/history', component: HistoryComponent },
-      { path: 'settings', component: UploadFormComponent }, // TODO replace
-      { path: 'support', component: UploadFormComponent }, // TODO replace
+      { path: 'settings', component: EmployeeSettingsComponent },
+      { path: 'support', component: UploadFormComponent }, // TODO replace later
     ],
   },
   {

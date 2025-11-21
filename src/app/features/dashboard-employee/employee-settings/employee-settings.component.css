@@ -1,0 +1,35 @@
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 1rem;
+}
+
+.settings-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 1rem;
+}
+
+.settings-card {
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-low);
+  background-color: var(--color-surface);
+}
+
+mat-card-title {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+mat-card-content p {
+  color: var(--color-text-secondary);
+  margin: 0.5rem 0;
+}
+
+mat-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
