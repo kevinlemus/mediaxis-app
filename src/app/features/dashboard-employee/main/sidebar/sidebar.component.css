@@ -14,7 +14,7 @@ mat-sidenav {
 .sidebar {
   background-color: var(--color-navy);
   color: var(--color-light-blue);
-  width: 240px;
+  width: 250px;
   height: 100vh;          /* full viewport height */
   position: fixed;        /* stays in place */
   top: 0;

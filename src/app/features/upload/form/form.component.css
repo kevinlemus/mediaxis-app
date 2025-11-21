@@ -1,10 +1,10 @@
 /* Match dashboard width without causing overflow */
 .content-grid {
-  display: flex;
-  flex-direction: column; /* stack vertically */
+  display: grid;
+  grid-template-columns: 990px;
   gap: 1.5rem;
-  width: 100%;
-  margin: 0;
+  width: 100%;              /* stretch full width */
+  max-width: 1600px; 
 }
 
 /* Stack columns on smaller screens */

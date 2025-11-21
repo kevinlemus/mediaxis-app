@@ -30,6 +30,12 @@
 
   /* Overlay semantic color */
   --overlay-dark: rgba(0, 0, 0, 0.45);
+
+  /* Layout scaling reference */
+  --sidebar-width: 240px;
+  --design-width: 1400px; /* base design canvas width */
+  /* Scale factor: never bigger than 1, shrinks proportionally on smaller viewports */
+  --scale: clamp(0.70, (100vw - var(--sidebar-width)) / var(--design-width), 1);
 }
 
 /* ============================= */
@@ -102,13 +108,30 @@ button:focus {
   background-color: #fff;
   color: var(--color-navy);
   font-family: "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  justify-content: center; /* center scaled canvas */
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Proportional scaling shell */
+.proportional-shell {
+  width: var(--design-width);
+  max-width: var(--design-width);
+  transform: scale(var(--scale));
+  transform-origin: top center;
+}
+
+/* Ensure scroll height reflects scaled content */
+.proportional-shell-inner {
+  /* wrapper to preserve layout height after scale */
+  width: 100%;
 }
 
 /* ✅ Shared page container for consistent alignment */
 
 /* Dashboard grid — single point of width control */
-.page-container,
-.dashboard-grid {
+.page-container {
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
@@ -119,6 +142,7 @@ button:focus {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 1.5rem;
+  width: 100%;
 }
 
 .header {

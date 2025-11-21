@@ -1,10 +1,9 @@
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: 720px;
   gap: 1.5rem;
   width: 100%;              /* stretch full width */
   max-width: 1600px;        /* prevent over-stretch on huge monitors */
-  margin: 0 auto;           /* center the grid */
 }
 
 /* Tiles row spans full width */
@@ -26,9 +25,9 @@
 .metric { font-size: 2rem; font-weight: 600; margin: 0.5rem 0; color: var(--color-primary); }
 .subtext { font-size: 0.85rem; color: var(--color-text-secondary); }
 
-/* Notifications section spans 8 columns */
+
 .notifications {
-  grid-column: span 8;
+  grid-column: span 12;
   background-color: var(--color-surface);
   padding: 1.5rem;
   border-radius: 8px;
@@ -39,9 +38,9 @@
 .notifications li { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #eee; }
 .notifications li:last-child { border-bottom: none; }
 
-/* Recent claims spans 4 columns */
+
 .recent-claims {
-  grid-column: span 4;
+  grid-column: span 12;
   background-color: var(--color-surface);
   padding: 1.5rem;
   border-radius: 8px;
