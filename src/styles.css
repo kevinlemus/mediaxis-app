@@ -108,7 +108,7 @@ button:focus {
   font-family: "Segoe UI", Roboto, sans-serif;
   display: block;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: hidden; /* default: no horizontal scroll on wide screens */
 }
 
 /* ✅ Shared page container for consistent alignment */
@@ -228,13 +228,27 @@ mat-sidenav.profile-drawer {
     left: 200px;
     width: calc(100vw - 200px);
   }
-  .page-container { width: 100%; padding: 0 1rem; }
+  .page-container {
+    width: 100%;
+    padding: 0 1rem;
+  }
 }
 
 /* Hide main app content on very small widths and show warning */
 @media (max-width: 900px) {
-  .page-container { display: none; }
-  .desktop-only-warning { display: block; }
+  .page-container {
+    display: none;
+  }
+  .desktop-only-warning {
+    display: block;
+  }
+}
+
+/* Enable horizontal scroll only on very small desktop/tablet widths (Nest Hub and below) */
+@media (max-width: 1100px) {
+  .dashboard-content { overflow-x: auto; }
+  /* Force a wider virtual canvas so horizontal scroll appears */
+  .proportional-shell, .page-container { min-width: 1300px; }
 }
 
 /* ============================= */
