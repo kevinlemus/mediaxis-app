@@ -9,7 +9,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-new-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+  ],
   templateUrl: './new-password.component.html',
   styleUrls: ['./new-password.component.css']
 })
@@ -25,18 +31,22 @@ export class NewPasswordComponent {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    // Simulate backend call
     setTimeout(() => {
       if (this.newPassword !== this.confirmPassword) {
         this.errorMessage = 'Passwords do not match. Please try again.';
       } else if (this.newPassword.length < 8) {
         this.errorMessage = 'Password must be at least 8 characters long.';
-      } else if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).+$/.test(this.newPassword)) {
-        this.errorMessage = 'Include uppercase, lowercase, a number, and a special character.';
+      } else if (
+        !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).+$/.test(this.newPassword)
+      ) {
+        this.errorMessage =
+          'Include uppercase, lowercase, a number, and a special character.';
       } else {
-        // On success, redirect to login with banner flag
-        this.router.navigate(['/login'], { queryParams: { reset: 'success' } });
+        this.router.navigate(['/login'], {
+          queryParams: { reset: 'success' }
+        });
       }
+
       this.isSubmitting = false;
     }, 1200);
   }
