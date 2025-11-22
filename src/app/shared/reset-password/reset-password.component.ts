@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
@@ -14,10 +15,26 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ResetPasswordComponent {
   email = '';
+  isSubmitting = false;
+  successMessage = '';
+  errorMessage = '';
+
+  constructor(private router: Router) {}
 
   resetPassword() {
-    // TODO: Replace with real reset password logic
-    console.log('Reset password requested for:', this.email);
-    alert('Password reset link sent to ' + this.email);
+    this.isSubmitting = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    // Simulate backend call
+    setTimeout(() => {
+      if (!this.email.includes('@')) {
+        this.errorMessage = 'Invalid email address. Please try again.';
+      } else {
+        // ✅ Professional wording: don't reveal if email exists
+        this.successMessage = 'If this email exists in our database, a reset link has been sent.';
+      }
+      this.isSubmitting = false;
+    }, 1500);
   }
 }

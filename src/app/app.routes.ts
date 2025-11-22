@@ -1,8 +1,8 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { LoginComponent } from './shared/login/login.component';
 import { ResetPasswordComponent } from './shared/reset-password/reset-password.component';
 import { RequestFeatureComponent } from './shared/request-feature/request-feature.component';
+import { NewPasswordComponent } from './shared/new-password/new-password.component';
 
 import { RegisterComponent } from './features/auth/register/register.component';
 import { AdminMainComponent } from './features/dashboard-admin/main/main.component';
@@ -20,6 +20,7 @@ import { EmployeeSupportComponent } from './features/dashboard-employee/main/emp
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'new-password', component: NewPasswordComponent },   // ✅ placed before wildcard
   { path: 'register', component: RegisterComponent },
   {
     path: 'dashboard-employee',
@@ -43,5 +44,6 @@ export const routes: Routes = [
     canActivate: [adminGuard],
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'login', pathMatch: 'full' }
+
 ];
