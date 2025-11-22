@@ -54,39 +54,15 @@
   font-weight: 600;
   text-transform: uppercase;
 }
-.status-chip.submitted {
-  background: #f0f4ff;
-  color: #2a4d9c;
-}
-.status-chip.approved {
-  background: #e6f6ea;
-  color: #1d7a3d;
-}
+.status-chip.submitted { background: #f0f4ff; color: #2a4d9c; }
+.status-chip.approved { background: #e6f6ea; color: #1d7a3d; }
 .status-chip.rejected,
-.status-chip.denied {
-  background: #fdecea;
-  color: #a12d2d;
-}
-.status-chip.in-review {
-  background: #fff6e5;
-  color: #8a5b00;
-}
-.status-chip.paid {
-  background: #e8fff3;
-  color: #0b7b43;
-}
-.status-chip.partially-paid {
-  background: #fffbe6;
-  color: #7a6a00;
-}
-.status-chip.adjusted {
-  background: #f0f0f0;
-  color: #444;
-}
-.status-chip.void {
-  background: #eee;
-  color: #666;
-}
+.status-chip.denied { background: #fdecea; color: #a12d2d; }
+.status-chip.in-review { background: #fff6e5; color: #8a5b00; }
+.status-chip.paid { background: #e8fff3; color: #0b7b43; }
+.status-chip.partially-paid { background: #fffbe6; color: #7a6a00; }
+.status-chip.adjusted { background: #f0f0f0; color: #444; }
+.status-chip.void { background: #eee; color: #666; }
 
 /* Two-column grid */
 .form-grid {
@@ -138,6 +114,12 @@
   font-size: 0.8rem;
   padding: 0.25rem 0.6rem;
   font-weight: 500;
+  cursor: default;
+}
+.chip.selected {
+  background: var(--color-primary);
+  color: #fff;
+  cursor: pointer;
 }
 
 /* Lists */
@@ -235,7 +217,7 @@
 }
 .diagnosis-row {
   display: grid;
-  grid-template-columns: 160px 1fr 120px 40px; /* ICD, description, primary, delete */
+  grid-template-columns: 160px 1fr 120px 40px;
   gap: 0.75rem;
   align-items: center;
   padding: 0.5rem 0;
@@ -312,6 +294,46 @@
   max-width: 200px;
 }
 
+/* Modifiers and pointers inside service lines */
+.grid-4 .form-row {
+  margin-top: 0.5rem;
+}
+.grid-4 .form-row input {
+  border: 1px solid #ccc;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  width: 80px;
+  box-sizing: border-box;
+}
+
+/* Diagnosis pointer chips inside service lines */
+.grid-4 .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.grid-4 .chip {
+  cursor: pointer;
+  background: #f0f2f5;
+  color: var(--color-primary-dark);
+  border: 1px solid #d0d6e0;
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.grid-4 .chip.selected {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* NDC input styling */
+.grid-4 .form-row input[placeholder*="NDC"] {
+  max-width: 200px;
+}
+
 /* Icon buttons */
 .icon-btn {
   display: inline-flex;
@@ -325,8 +347,7 @@
   background-color: #fff;
   color: var(--color-primary-dark);
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease,
-    border-color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 .icon-btn mat-icon {
   font-size: 20px;
@@ -363,8 +384,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  transition: background-color 0.2s ease, color 0.2s ease,
-    border-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 .actions .primary {
   background-color: var(--color-primary);

@@ -3,7 +3,7 @@ export type ClaimStatus =
   | 'Submitted'
   | 'In Review'
   | 'Accepted'
-  | 'Approved'          // ✅ added for consistency with your mock data
+  | 'Approved'
   | 'Denied'
   | 'Rejected'
   | 'Pending Info'
@@ -13,8 +13,10 @@ export type ClaimStatus =
   | 'Adjusted'
   | 'Void';
 
+export type ClaimType = 'Professional' | 'Institutional';
+
 export interface PatientInfo {
-  mrn: string;                 // Medical Record Number
+  mrn: string;
   firstName: string;
   lastName: string;
   dob: Date;
@@ -34,15 +36,18 @@ export interface ProviderInfo {
   billingProviderName?: string;
   billingNPI?: string;
   taxonomyCode?: string;
+  specialtyCode?: string;             // NEW
   facilityName?: string;
   facilityNPI?: string;
   facilityAddress?: string;
+  referringProviderName?: string;     // NEW
+  referringNPI?: string;              // NEW
 }
 
 export interface InsuranceInfo {
   payerName: string;
-  payerId?: string;            // e.g., CMS payer ID
-  planType?: string;           // PPO/HMO/etc.
+  payerId?: string;
+  planType?: string;
   policyNumber: string;
   groupNumber?: string;
   subscriberName?: string;
@@ -58,13 +63,14 @@ export interface ServiceLine {
   modifier4?: string;
   units: number;
   chargeAmount: number;
-  diagnosisPointers: string[]; // e.g., ['A','B'] pointing to ICD codes
-  placeOfService?: string;     // e.g., 11 (office)
+  diagnosisPointers: string[];
+  placeOfService?: string;
   renderingNPIOverride?: string;
+  ndcCode?: string;                   // NEW
 }
 
 export interface Diagnosis {
-  code: string;                // ICD-10 code
+  code: string;
   description?: string;
   primary?: boolean;
 }
@@ -73,33 +79,40 @@ export interface Financials {
   totalCharge: number;
   allowedAmount?: number;
   paidAmount?: number;
-  patientResponsibility?: number; // copay + coinsurance + deductible
+  patientResponsibility?: number;
   adjustments?: {
-    code: string;              // CARC code
+    code: string;
     description?: string;
     amount: number;
   }[];
-  balance?: number;            // computed remaining balance
+  balance?: number;
 }
 
 export interface SubmissionMetadata {
-  claimId: string;             // internal claim ID
+  claimId: string;
   encounterId?: string;
-  clearinghouseRef?: string;
-  payerClaimRef?: string;      // payer’s assigned reference
+  claimType: ClaimType;               // NEW
   createdAt: Date;
   submittedAt?: Date;
   lastUpdatedAt: Date;
   submittedBy: string;
+  clearinghouseRef?: string;
+  payerClaimRef?: string;
+  x12Transaction837Id?: string;
+  x12Transaction835Id?: string;
+  priorAuthRequired?: boolean;        // NEW
+  priorAuthNumber?: string;           // NEW
+  referralRequired?: boolean;         // NEW
+  referralNumber?: string;            // NEW
 }
 
 export interface PayerResponse {
   status?: ClaimStatus;
-  reasonCode?: string;         // e.g., CARC/RARC codes
+  reasonCode?: string;
   reasonDescription?: string;
   responseDate?: Date;
   notes?: string;
-  remittanceAdviceId?: string; // EOB/ERA ref
+  remittanceAdviceId?: string;
 }
 
 export interface Attachment {
@@ -125,12 +138,12 @@ export interface AuditEvent {
   details?: string;
 }
 
-export interface ComplianceFlags {
-  hipaaOk: boolean;
-  priorAuthRequired?: boolean;
-  priorAuthNumber?: string;
-  referralRequired?: boolean;
-  referralNumber?: string;
+export interface CoordinationOfBenefits {
+  hasSecondaryInsurance?: boolean;
+  sequence?: ('Primary' | 'Secondary' | 'Tertiary')[];
+  primaryPayerPaidAmount?: number;
+  secondaryExpectedAmount?: number;
+  notes?: string;
 }
 
 export interface Claim {
@@ -138,6 +151,8 @@ export interface Claim {
   patient: PatientInfo;
   provider: ProviderInfo;
   insurance: InsuranceInfo;
+  secondaryInsurance?: InsuranceInfo;       // NEW
+  coordinationOfBenefits?: CoordinationOfBenefits; // NEW
   status: ClaimStatus;
   dateOfService: Date;
   diagnoses: Diagnosis[];
@@ -146,5 +161,4 @@ export interface Claim {
   payerResponse?: PayerResponse;
   attachments?: Attachment[];
   auditTrail?: AuditEvent[];
-  compliance?: ComplianceFlags;
 }

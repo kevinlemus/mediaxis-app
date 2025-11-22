@@ -16,14 +16,17 @@
   </header>
 
   <!-- Rejection reason -->
-  <div *ngIf="claim.status === 'Rejected'" class="rejection-reason">
+  <div
+    *ngIf="claim.status === 'Rejected' && claim.payerResponse"
+    class="rejection-reason"
+  >
     <strong>Reason for Rejection:</strong>
-    {{ claim.payerResponse?.reasonDescription || "Not provided" }}
+    {{ claim.payerResponse.reasonDescription || "Not provided" }}
   </div>
 
   <!-- Two-column grid -->
   <div class="form-grid">
-    <!-- Left column -->
+    <!-- Patient -->
     <section class="form-section">
       <h3>Patient</h3>
       <p><strong>MRN</strong> {{ claim.patient.mrn }}</p>
@@ -33,8 +36,20 @@
       </p>
       <p><strong>DOB</strong> {{ claim.patient.dob | date }}</p>
       <p><strong>Gender</strong> {{ claim.patient.gender || "—" }}</p>
+      <p *ngIf="claim.patient.phone">
+        <strong>Phone</strong> {{ claim.patient.phone }}
+      </p>
+      <p *ngIf="claim.patient.email">
+        <strong>Email</strong> {{ claim.patient.email }}
+      </p>
+      <p *ngIf="claim.patient.addressLine1">
+        <strong>Address</strong> {{ claim.patient.addressLine1 }}
+        {{ claim.patient.addressLine2 }} {{ claim.patient.city }},
+        {{ claim.patient.state }} {{ claim.patient.zip }}
+      </p>
     </section>
 
+    <!-- Provider -->
     <section class="form-section">
       <h3>Provider</h3>
       <p>
@@ -50,9 +65,23 @@
         <strong>Facility</strong> {{ claim.provider.facilityName }} (NPI
         {{ claim.provider.facilityNPI }})
       </p>
+      <p *ngIf="claim.provider.facilityAddress">
+        <strong>Facility Address</strong> {{ claim.provider.facilityAddress }}
+      </p>
+      <p *ngIf="claim.provider.taxonomyCode">
+        <strong>Taxonomy</strong> {{ claim.provider.taxonomyCode }}
+      </p>
+      <p *ngIf="claim.provider.specialtyCode">
+        <strong>Specialty</strong> {{ claim.provider.specialtyCode }}
+      </p>
+      <p *ngIf="claim.provider.referringProviderName">
+        <strong>Referring</strong>
+        {{ claim.provider.referringProviderName }} (NPI
+        {{ claim.provider.referringNPI }})
+      </p>
     </section>
 
-    <!-- Right column -->
+    <!-- Insurance -->
     <section class="form-section">
       <h3>Insurance</h3>
       <ng-container *ngIf="!editMode; else insuranceEdit">
@@ -61,8 +90,10 @@
         <p *ngIf="claim.insurance.groupNumber">
           <strong>Group #</strong> {{ claim.insurance.groupNumber }}
         </p>
-        <p><strong>Subscriber</strong> {{ claim.insurance.subscriberName }}</p>
-        <p>
+        <p *ngIf="claim.insurance.subscriberName">
+          <strong>Subscriber</strong> {{ claim.insurance.subscriberName }}
+        </p>
+        <p *ngIf="claim.insurance.relationshipToSubscriber">
           <strong>Relationship</strong>
           {{ claim.insurance.relationshipToSubscriber }}
         </p>
@@ -92,6 +123,7 @@
       </ng-template>
     </section>
 
+    <!-- Encounter -->
     <section class="form-section">
       <h3>Encounter</h3>
       <p><strong>Date of Service</strong> {{ claim.dateOfService | date }}</p>
@@ -104,20 +136,47 @@
         {{ claim.metadata.lastUpdatedAt | date : "short" }}
       </p>
       <p><strong>Submitted By</strong> {{ claim.metadata.submittedBy }}</p>
+      <p *ngIf="claim.metadata.priorAuthNumber">
+        <strong>Prior Auth #</strong> {{ claim.metadata.priorAuthNumber }}
+      </p>
+      <p *ngIf="claim.metadata.referralNumber">
+        <strong>Referral #</strong> {{ claim.metadata.referralNumber }}
+      </p>
     </section>
   </div>
 
-  <!-- Full-width sections -->
+  <!-- Secondary Insurance -->
+  <section *ngIf="claim.secondaryInsurance" class="form-section">
+    <h3>Secondary Insurance</h3>
+    <p><strong>Payer</strong> {{ claim.secondaryInsurance!.payerName }}</p>
+    <p>
+      <strong>Policy #</strong> {{ claim.secondaryInsurance!.policyNumber }}
+    </p>
+    <p *ngIf="claim.secondaryInsurance!.subscriberName">
+      <strong>Subscriber</strong> {{ claim.secondaryInsurance!.subscriberName }}
+    </p>
+    <p *ngIf="claim.secondaryInsurance!.relationshipToSubscriber">
+      <strong>Relationship</strong>
+      {{ claim.secondaryInsurance!.relationshipToSubscriber }}
+    </p>
+    <p
+      *ngIf="claim.coordinationOfBenefits && claim.coordinationOfBenefits.notes"
+    >
+      <strong>COB Notes</strong> {{ claim.coordinationOfBenefits.notes }}
+    </p>
+  </section>
+
+  <!-- Diagnoses -->
   <section class="form-section">
     <h3>Diagnoses</h3>
     <ng-container *ngIf="!editMode; else diagnosesEdit">
       <div class="chips">
-        <span *ngFor="let dx of claim.diagnoses" class="chip">
-          {{ dx.code }}{{ dx.primary ? " (Primary)" : "" }}
+        <span *ngFor="let dx of claim.diagnoses; index as i" class="chip">
+          {{ pointerLabels[i] }}: {{ dx.code
+          }}{{ dx.primary ? " (Primary)" : "" }}
         </span>
       </div>
     </ng-container>
-
     <ng-template #diagnosesEdit>
       <ng-container *ngIf="workingCopy as wc">
         <div class="diagnoses-list">
@@ -144,25 +203,32 @@
               <mat-icon>delete</mat-icon>
             </button>
           </div>
-
           <button class="icon-btn" (click)="addDiagnosis()">
-            <mat-icon>add</mat-icon>
-            Add diagnosis
+            <mat-icon>add</mat-icon> Add diagnosis
           </button>
         </div>
       </ng-container>
     </ng-template>
   </section>
 
+  <!-- Service Lines -->
   <section class="form-section">
     <h3>Service Lines</h3>
     <ng-container *ngIf="!editMode; else serviceLinesEdit">
       <ul class="service-lines">
-        <li *ngFor="let sl of claim.serviceLines">
+        <li *ngFor="let sl of claim.serviceLines; index as i">
           <span class="chip">{{ sl.cptCode }}</span>
+          <span *ngIf="sl.modifier1"
+            >Mod: {{ sl.modifier1 }} {{ sl.modifier2 }} {{ sl.modifier3 }}
+            {{ sl.modifier4 }}</span
+          >
           <span>Units: {{ sl.units }}</span>
           <span>Charge: ${{ sl.chargeAmount }}</span>
           <span *ngIf="sl.placeOfService">POS: {{ sl.placeOfService }}</span>
+          <span *ngIf="sl.ndcCode">NDC: {{ sl.ndcCode }}</span>
+          <span *ngIf="sl.diagnosisPointers && sl.diagnosisPointers.length"
+            >Dx Ptrs: {{ sl.diagnosisPointers.join(", ") }}</span
+          >
         </li>
       </ul>
     </ng-container>
@@ -174,12 +240,14 @@
             <span><strong>Units</strong></span>
             <span><strong>Charge</strong></span>
             <span><strong>POS</strong></span>
+            <span><strong>Actions</strong></span>
           </div>
+
           <div
             class="grid-4 row"
             *ngFor="let sl of wc.serviceLines; index as i"
           >
-            <input [(ngModel)]="sl.cptCode" />
+            <input [(ngModel)]="sl.cptCode" placeholder="CPT/HCPCS" />
             <input
               type="number"
               [(ngModel)]="sl.units"
@@ -190,11 +258,46 @@
               [(ngModel)]="sl.chargeAmount"
               (input)="recalcFinancials()"
             />
-            <input [(ngModel)]="sl.placeOfService" />
+            <input [(ngModel)]="sl.placeOfService" placeholder="POS" />
+
             <button class="icon-btn danger" (click)="removeServiceLine(i)">
               <mat-icon>delete</mat-icon>
             </button>
+
+            <!-- Modifiers -->
+            <div class="form-row" style="grid-column: 1 / span 5">
+              <label>Modifiers</label>
+              <input [(ngModel)]="sl.modifier1" placeholder="Mod1" />
+              <input [(ngModel)]="sl.modifier2" placeholder="Mod2" />
+              <input [(ngModel)]="sl.modifier3" placeholder="Mod3" />
+              <input [(ngModel)]="sl.modifier4" placeholder="Mod4" />
+            </div>
+
+            <!-- Diagnosis pointers -->
+            <div class="form-row" style="grid-column: 1 / span 5">
+              <label>Dx Pointers</label>
+              <div class="chips">
+                <span
+                  *ngFor="let label of pointerLabels"
+                  class="chip"
+                  [class.selected]="sl.diagnosisPointers.includes(label)"
+                  (click)="toggleDiagnosisPointer(i, label)"
+                >
+                  {{ label }}
+                </span>
+              </div>
+            </div>
+
+            <!-- NDC code -->
+            <div class="form-row" style="grid-column: 1 / span 5">
+              <label>NDC</label>
+              <input
+                [(ngModel)]="sl.ndcCode"
+                placeholder="NDC Code (for drugs)"
+              />
+            </div>
           </div>
+
           <button class="icon-btn" (click)="addServiceLine()">
             <mat-icon>add</mat-icon> Add line
           </button>
@@ -203,6 +306,7 @@
     </ng-template>
   </section>
 
+  <!-- Financials -->
   <section class="form-section">
     <h3>Financials</h3>
     <ul class="financials">
@@ -234,19 +338,24 @@
     </ul>
   </section>
 
-  <section class="form-section">
+  <!-- Payer Response -->
+  <section *ngIf="claim.payerResponse" class="form-section">
     <h3>Payer Response</h3>
-    <p><strong>Status</strong> {{ claim.payerResponse?.status || "—" }}</p>
-    <p *ngIf="claim.payerResponse?.reasonCode">
-      <strong>Reason</strong> {{ claim.payerResponse?.reasonCode }} —
-      {{ claim.payerResponse?.reasonDescription }}
+    <p><strong>Status</strong> {{ claim.payerResponse!.status || "—" }}</p>
+    <p *ngIf="claim.payerResponse!.reasonCode">
+      <strong>Reason</strong> {{ claim.payerResponse!.reasonCode }} —
+      {{ claim.payerResponse!.reasonDescription }}
     </p>
-    <p *ngIf="claim.payerResponse?.notes">
-      <strong>Notes</strong> {{ claim.payerResponse?.notes }}
+    <p *ngIf="claim.payerResponse!.notes">
+      <strong>Notes</strong> {{ claim.payerResponse!.notes }}
     </p>
   </section>
 
-  <section *ngIf="claim.attachments?.length" class="form-section">
+  <!-- Attachments -->
+  <section
+    *ngIf="claim.attachments && claim.attachments.length"
+    class="form-section"
+  >
     <h3>Attachments</h3>
     <ul class="attachments">
       <li *ngFor="let a of claim.attachments">
@@ -260,7 +369,11 @@
     </ul>
   </section>
 
-  <section *ngIf="claim.auditTrail?.length" class="form-section">
+  <!-- History -->
+  <section
+    *ngIf="claim.auditTrail && claim.auditTrail.length"
+    class="form-section"
+  >
     <h3>History</h3>
     <ul class="history">
       <li *ngFor="let ev of claim.auditTrail">
@@ -272,29 +385,26 @@
     </ul>
   </section>
 
+  <!-- Actions -->
   <footer class="actions">
     <button
       class="primary"
       *ngIf="claim.status === 'Rejected' && !editMode"
       (click)="enableEdit()"
     >
-      <mat-icon>edit</mat-icon>
-      Edit Claim
+      <mat-icon>edit</mat-icon> Edit Claim
     </button>
 
     <button class="primary" *ngIf="editMode" (click)="saveChanges()">
-      <mat-icon>save</mat-icon>
-      Save
+      <mat-icon>save</mat-icon> Save
     </button>
 
     <button class="accent" *ngIf="editMode" (click)="saveAndResubmit()">
-      <mat-icon>send</mat-icon>
-      Save & Resubmit
+      <mat-icon>send</mat-icon> Save & Resubmit
     </button>
 
     <button class="secondary" *ngIf="editMode" (click)="cancelEdit()">
-      <mat-icon>close</mat-icon>
-      Cancel
+      <mat-icon>close</mat-icon> Cancel
     </button>
 
     <button
@@ -302,13 +412,11 @@
       *ngIf="claim.status !== 'Void'"
       (click)="withdrawClaim()"
     >
-      <mat-icon>cancel</mat-icon>
-      Withdraw Claim
+      <mat-icon>cancel</mat-icon> Withdraw Claim
     </button>
 
     <button class="secondary" routerLink="/dashboard-employee/claims">
-      <mat-icon>arrow_back</mat-icon>
-      Back to Claims
+      <mat-icon>arrow_back</mat-icon> Back to Claims
     </button>
   </footer>
 </div>
