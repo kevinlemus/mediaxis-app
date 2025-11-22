@@ -15,7 +15,11 @@
   margin-bottom: 2rem;
   padding: 1rem 1.25rem;
   border-radius: var(--radius-md);
-  background: linear-gradient(to right, var(--color-primary-dark), var(--color-secondary));
+  background: linear-gradient(
+    to right,
+    var(--color-primary-dark),
+    var(--color-secondary)
+  );
   color: #fff;
   box-shadow: var(--elevation-low);
 }
@@ -50,15 +54,39 @@
   font-weight: 600;
   text-transform: uppercase;
 }
-.status-chip.submitted { background: #f0f4ff; color: #2a4d9c; }
-.status-chip.approved { background: #e6f6ea; color: #1d7a3d; }
+.status-chip.submitted {
+  background: #f0f4ff;
+  color: #2a4d9c;
+}
+.status-chip.approved {
+  background: #e6f6ea;
+  color: #1d7a3d;
+}
 .status-chip.rejected,
-.status-chip.denied { background: #fdecea; color: #a12d2d; }
-.status-chip.in-review { background: #fff6e5; color: #8a5b00; }
-.status-chip.paid { background: #e8fff3; color: #0b7b43; }
-.status-chip.partially-paid { background: #fffbe6; color: #7a6a00; }
-.status-chip.adjusted { background: #f0f0f0; color: #444; }
-.status-chip.void { background: #eee; color: #666; }
+.status-chip.denied {
+  background: #fdecea;
+  color: #a12d2d;
+}
+.status-chip.in-review {
+  background: #fff6e5;
+  color: #8a5b00;
+}
+.status-chip.paid {
+  background: #e8fff3;
+  color: #0b7b43;
+}
+.status-chip.partially-paid {
+  background: #fffbe6;
+  color: #7a6a00;
+}
+.status-chip.adjusted {
+  background: #f0f0f0;
+  color: #444;
+}
+.status-chip.void {
+  background: #eee;
+  color: #666;
+}
 
 /* Two-column grid */
 .form-grid {
@@ -75,7 +103,7 @@
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-low);
 }
-.form-section + .form-section {
+.page-container > .form-section + .form-section {
   margin-top: 1.5rem;
 }
 .form-section h3 {
@@ -297,7 +325,8 @@
   background-color: #fff;
   color: var(--color-primary-dark);
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease;
 }
 .icon-btn mat-icon {
   font-size: 20px;
@@ -334,7 +363,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease;
 }
 .actions .primary {
   background-color: var(--color-primary);
