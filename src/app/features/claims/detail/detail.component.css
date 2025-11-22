@@ -60,43 +60,34 @@
 .status-chip.adjusted { background: #f0f0f0; color: #444; }
 .status-chip.void { background: #eee; color: #666; }
 
-/* Content grid */
-.content-grid {
+/* Two-column grid */
+.form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
-  width: 100%;
-  max-width: 1600px;
-}
-.content-grid.edit-mode .card {
-  outline: 1px dashed var(--color-blue-gray);
+  margin-bottom: 2rem;
 }
 
-/* Card sections */
-.card {
+/* Form sections */
+.form-section {
   background-color: var(--color-background);
   padding: 1.25rem 1.5rem;
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-low);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
-.card:hover {
-  box-shadow: var(--elevation-mid);
-  transform: translateY(-2px);
-}
-.card h3 {
+.form-section h3 {
   margin: 0 0 0.75rem;
   color: var(--color-primary-dark);
   font-size: 1.1rem;
   font-weight: 600;
 }
-.card p,
-.card li {
+.form-section p,
+.form-section li {
   margin: 0.25rem 0;
   font-size: 0.95rem;
   line-height: 1.4;
 }
-.card strong {
+.form-section strong {
   display: inline-block;
   min-width: 120px;
   font-weight: 600;
@@ -179,11 +170,11 @@
   color: #a12d2d;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
-  margin-top: 1rem;
+  margin: 1rem 0;
   font-size: 0.9rem;
 }
 
-/* Form styles */
+/* Form rows and inputs */
 .form-row {
   display: grid;
   grid-template-columns: 140px 1fr;
@@ -201,6 +192,7 @@
   padding: 0.5rem 0.6rem;
   font-size: 0.95rem;
   width: 100%;
+  max-width: 280px; /* prevent overflow */
   box-sizing: border-box;
 }
 
@@ -227,6 +219,7 @@
   padding: 0.5rem 0.6rem;
   font-size: 0.95rem;
   width: 100%;
+  max-width: 200px;
 }
 
 /* Icon buttons */
@@ -306,9 +299,9 @@
   color: #fff;
 }
 
-/* Responsive */
+/* Responsive adjustments */
 @media (max-width: 900px) {
-  .content-grid {
+  .form-grid {
     grid-template-columns: 1fr;
   }
   .page-header {
@@ -321,5 +314,15 @@
   }
   .form-row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1100px) {
+  .claim-detail {
+    overflow-x: auto;
+  }
+  .claim-detail .form-grid,
+  .claim-detail .form-section {
+    min-width: 1300px; /* ensures horizontal scroll appears on narrower screens */
   }
 }
