@@ -54,15 +54,39 @@
   font-weight: 600;
   text-transform: uppercase;
 }
-.status-chip.submitted { background: #f0f4ff; color: #2a4d9c; }
-.status-chip.approved { background: #e6f6ea; color: #1d7a3d; }
+.status-chip.submitted {
+  background: #f0f4ff;
+  color: #2a4d9c;
+}
+.status-chip.approved {
+  background: #e6f6ea;
+  color: #1d7a3d;
+}
 .status-chip.rejected,
-.status-chip.denied { background: #fdecea; color: #a12d2d; }
-.status-chip.in-review { background: #fff6e5; color: #8a5b00; }
-.status-chip.paid { background: #e8fff3; color: #0b7b43; }
-.status-chip.partially-paid { background: #fffbe6; color: #7a6a00; }
-.status-chip.adjusted { background: #f0f0f0; color: #444; }
-.status-chip.void { background: #eee; color: #666; }
+.status-chip.denied {
+  background: #fdecea;
+  color: #a12d2d;
+}
+.status-chip.in-review {
+  background: #fff6e5;
+  color: #8a5b00;
+}
+.status-chip.paid {
+  background: #e8fff3;
+  color: #0b7b43;
+}
+.status-chip.partially-paid {
+  background: #fffbe6;
+  color: #7a6a00;
+}
+.status-chip.adjusted {
+  background: #f0f0f0;
+  color: #444;
+}
+.status-chip.void {
+  background: #eee;
+  color: #666;
+}
 
 /* Two-column grid */
 .form-grid {
@@ -294,6 +318,83 @@
   max-width: 200px;
 }
 
+/* Edit mode service line card layout */
+.service-lines-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.service-lines-edit .grid-4.row {
+  background: var(--color-background);
+  border: 1px solid #e2e4e7;
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem 0.75rem;
+  box-shadow: var(--elevation-low);
+}
+.service-lines-edit .grid-4.row > * {
+  align-self: flex-start;
+}
+
+/* Nested full-width edit subrows inside a service line */
+.grid-4.row .form-row {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.6rem 0 0.2rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid #f1f3f5;
+}
+.grid-4.row .form-row:first-of-type {
+  margin-top: 0.4rem;
+}
+.grid-4.row .form-row label {
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  min-width: 90px;
+  margin: 0;
+}
+.grid-4.row .form-row input {
+  border: 1px solid #ccc;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.6rem;
+  font-size: 0.85rem;
+  width: 110px;
+  box-sizing: border-box;
+}
+.grid-4.row .form-row input[placeholder*="NDC"] {
+  width: 180px;
+}
+
+/* Chips inside diagnosis pointer selector within service lines */
+.grid-4.row .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.grid-4.row .chips .chip {
+  cursor: pointer;
+  background: #f0f2f5;
+  color: var(--color-primary-dark);
+  border: 1px solid #d0d6e0;
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.55rem;
+  font-size: 0.75rem;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease;
+}
+.grid-4.row .chips .chip.selected {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* Action button at bottom of service lines edit list */
+.service-lines-edit > .icon-btn {
+  align-self: flex-start;
+}
+
 /* Modifiers and pointers inside service lines */
 .grid-4 .form-row {
   margin-top: 0.5rem;
@@ -347,7 +448,8 @@
   background-color: #fff;
   color: var(--color-primary-dark);
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease;
 }
 .icon-btn mat-icon {
   font-size: 20px;
@@ -384,7 +486,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease;
 }
 .actions .primary {
   background-color: var(--color-primary);
