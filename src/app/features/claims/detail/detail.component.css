@@ -326,3 +326,6 @@
     min-width: 1300px; /* ensures horizontal scroll appears on narrower screens */
   }
 }
+.form-section + .form-section {
+  margin-top: 1.5rem;
+}
