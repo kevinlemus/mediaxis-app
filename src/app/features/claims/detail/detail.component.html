@@ -1,13 +1,113 @@
+<!-- src/app/features/claims/detail/detail.component.html -->
 <div class="claim-detail" *ngIf="claim">
-  <h1>Claim #{{ claim.id }}</h1>
-  <p><strong>Patient:</strong> {{ claim.patientName }}</p>
-  <p><strong>Date of Service:</strong> {{ claim.dateOfService | date }}</p>
-  <p><strong>Status:</strong> {{ claim.status }}</p>
-  <p><strong>CPT Code:</strong> {{ claim.cptCode }}</p>
-  <p><strong>ICD-10 Code:</strong> {{ claim.icdCode }}</p>
-  <p><strong>Insurance Provider:</strong> {{ claim.insuranceProvider }}</p>
-  <p><strong>Claim Amount:</strong> ${{ claim.claimAmount }}</p>
-  <p><strong>Submitted By:</strong> {{ claim.submittedBy }}</p>
+  <header class="detail-header">
+    <h1>Claim #{{ claim.metadata.claimId }}</h1>
+    <span class="status-chip {{ claim.status | lowercase }}">{{ claim.status }}</span>
+  </header>
 
-  <a [routerLink]="['/dashboard-employee/claims', claim.id, 'history']" class="btn-link">View History</a>
+  <section class="detail-grid">
+    <div>
+      <h3>Patient</h3>
+      <p><strong>MRN:</strong> {{ claim.patient.mrn }}</p>
+      <p><strong>Name:</strong> {{ claim.patient.firstName }} {{ claim.patient.lastName }}</p>
+      <p><strong>DOB:</strong> {{ claim.patient.dob | date }}</p>
+      <p><strong>Gender:</strong> {{ claim.patient.gender || '—' }}</p>
+    </div>
+
+    <div>
+      <h3>Provider</h3>
+      <p><strong>Rendering:</strong> {{ claim.provider.renderingProviderName }} (NPI {{ claim.provider.renderingNPI }})</p>
+      <p *ngIf="claim.provider.billingProviderName"><strong>Billing:</strong> {{ claim.provider.billingProviderName }} (NPI {{ claim.provider.billingNPI }})</p>
+      <p *ngIf="claim.provider.facilityName"><strong>Facility:</strong> {{ claim.provider.facilityName }} (NPI {{ claim.provider.facilityNPI }})</p>
+    </div>
+
+    <div>
+      <h3>Insurance</h3>
+      <p><strong>Payer:</strong> {{ claim.insurance.payerName }}</p>
+      <p><strong>Policy #:</strong> {{ claim.insurance.policyNumber }}</p>
+      <p *ngIf="claim.insurance.groupNumber"><strong>Group #:</strong> {{ claim.insurance.groupNumber }}</p>
+      <p><strong>Subscriber:</strong> {{ claim.insurance.subscriberName }}</p>
+    </div>
+
+    <div>
+      <h3>Encounter</h3>
+      <p><strong>Date of Service:</strong> {{ claim.dateOfService | date }}</p>
+      <p><strong>Submitted:</strong> {{ claim.metadata.submittedAt | date:'short' }}</p>
+      <p><strong>Last Updated:</strong> {{ claim.metadata.lastUpdatedAt | date:'short' }}</p>
+      <p><strong>Submitted By:</strong> {{ claim.metadata.submittedBy }}</p>
+    </div>
+  </section>
+
+  <section>
+    <h3>Diagnoses</h3>
+    <p>
+      <ng-container *ngFor="let dx of claim.diagnoses">
+        <span class="chip">{{ dx.code }}{{ dx.primary ? ' (Primary)' : '' }}</span>
+      </ng-container>
+    </p>
+  </section>
+
+  <section>
+    <h3>Service lines</h3>
+    <ul class="service-lines">
+      <li *ngFor="let sl of claim.serviceLines">
+        <span class="chip">{{ sl.cptCode }}</span>
+        <span>Units: {{ sl.units }}</span>
+        <span>Charge: ${{ sl.chargeAmount }}</span>
+        <span *ngIf="sl.modifier1">Mod: {{ sl.modifier1 }}</span>
+        <span *ngIf="sl.placeOfService">POS: {{ sl.placeOfService }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Financials</h3>
+    <ul class="financials">
+      <li><span class="label">Total charge:</span> ${{ claim.financials.totalCharge }}</li>
+      <li *ngIf="claim.financials.allowedAmount !== undefined"><span class="label">Allowed:</span> ${{ claim.financials.allowedAmount }}</li>
+      <li *ngIf="claim.financials.paidAmount !== undefined"><span class="label">Paid:</span> ${{ claim.financials.paidAmount }}</li>
+      <li *ngIf="claim.financials.patientResponsibility !== undefined"><span class="label">Patient resp.:</span> ${{ claim.financials.patientResponsibility }}</li>
+      <li *ngIf="claim.financials.adjustments?.length"><span class="label">Adjustments:</span> 
+        <ng-container *ngFor="let adj of claim.financials.adjustments">
+          <span class="chip">{{ adj.code }}</span> ${{ adj.amount }}
+        </ng-container>
+      </li>
+      <li *ngIf="claim.financials.balance !== undefined"><span class="label">Balance:</span> ${{ claim.financials.balance }}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Payer response</h3>
+    <p><strong>Status:</strong> {{ claim.payerResponse?.status || '—' }}</p>
+    <p *ngIf="claim.payerResponse?.reasonCode"><strong>Reason:</strong> {{ claim.payerResponse?.reasonCode }} — {{ claim.payerResponse?.reasonDescription }}</p>
+    <p *ngIf="claim.payerResponse?.remittanceAdviceId"><strong>ERA/EOB:</strong> {{ claim.payerResponse?.remittanceAdviceId }}</p>
+    <p *ngIf="claim.payerResponse?.notes"><strong>Notes:</strong> {{ claim.payerResponse?.notes }}</p>
+  </section>
+
+  <section *ngIf="claim.attachments?.length">
+    <h3>Attachments</h3>
+    <ul class="attachments">
+      <li *ngFor="let a of claim.attachments">
+        <span class="chip">{{ a.type }}</span>
+        <span class="file">{{ a.filename }}</span>
+        <span class="meta">uploaded {{ a.uploadedAt | date:'short' }} by {{ a.uploadedBy }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <section *ngIf="claim.auditTrail?.length">
+    <h3>History</h3>
+    <ul class="history">
+      <li *ngFor="let ev of claim.auditTrail">
+        <span class="meta">{{ ev.at | date:'short' }}</span>
+        <span class="chip">{{ ev.action }}</span>
+        <span class="detail">{{ ev.details || '' }}</span>
+        <span class="by">by {{ ev.by }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <div class="actions">
+    <a [routerLink]="['/dashboard-employee/claims', claim.metadata.claimId, 'history']" class="btn-link">View History</a>
+  </div>
 </div>
