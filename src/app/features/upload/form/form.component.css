@@ -1,15 +1,24 @@
-/* Match dashboard width without causing overflow */
+:host {
+  display: block;
+  background-color: #fff;              /* clean white background */
+  color: var(--color-text-secondary);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  padding: 2rem;                       /* consistent page spacing */
+  box-sizing: border-box;
+}
+
+/* Grid layout */
 .content-grid {
   display: grid;
   gap: 1.5rem;
-  width: 100%;              /* stretch full width */
-  max-width: 1600px; 
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;                      /* center content */
 }
 
-/* Stack columns on smaller screens */
 @media (max-width: 1024px) {
   .content-grid {
-    grid-template-columns: 1fr; /* single column */
+    grid-template-columns: 1fr;
   }
 }
 
@@ -18,7 +27,7 @@
   background-color: var(--color-surface);
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 /* Header */
@@ -38,6 +47,7 @@
 
 /* Upload box */
 .upload-box {
+  position: relative;
   border: 2px dashed var(--color-primary);
   border-radius: 8px;
   padding: 2rem;
@@ -49,13 +59,16 @@
 .upload-box:hover {
   background-color: var(--color-blue-gray);
 }
+/* Ensure pointer stays consistent across text and children */
+.upload-box, .upload-box * {
+  cursor: pointer;
+}
 .upload-label {
   font-size: 1rem;
   color: var(--color-primary-dark);
-  cursor: pointer;
 }
 input[type="file"] {
-  display: none;
+  display: none;                       /* hidden, triggered via click handler */
 }
 
 /* Helpers under upload */
@@ -120,13 +133,23 @@ input[type="file"] {
   font-size: 0.9rem;
 }
 
-/* Editable preview form */
+/* Preview form */
 .preview-form {
   background-color: #fff;
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
+.preview-form h3 {
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.25rem;
+}
+
+/* Form grid */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -150,6 +173,7 @@ input[type="file"] {
   padding: 0.55rem 0.6rem;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
+  font-size: 0.95rem;
 }
 
 /* Actions */
@@ -167,6 +191,7 @@ input[type="file"] {
   min-width: 150px;
   cursor: pointer;
   border: 1px solid transparent;
+  font-size: 0.9rem;
 }
 .actions .primary {
   background-color: var(--color-primary);

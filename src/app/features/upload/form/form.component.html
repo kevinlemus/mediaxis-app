@@ -1,6 +1,6 @@
 <div class="page-container">
   <div class="content-grid">
-    <!-- Left: Upload + status -->
+    <!-- Upload section -->
     <section class="upload-section card">
       <header class="page-header">
         <h1>Upload Encounter File</h1>
@@ -10,14 +10,23 @@
         </p>
       </header>
 
-      <div class="upload-box">
-        <label for="fileUpload" class="upload-label">
-          <span *ngIf="!uploadedFile">
-            Drag & drop or click to upload CSV/PDF
-          </span>
-          <span *ngIf="uploadedFile">{{ uploadedFile.name }}</span>
-        </label>
-        <input id="fileUpload" type="file" (change)="onFileSelected($event)" />
+      <div
+        class="upload-box"
+        role="button"
+        tabindex="0"
+        (click)="triggerFileDialog()"
+        (keydown)="onUploadBoxKeydown($event)"
+      >
+        <span *ngIf="!uploadedFile"
+          >Drag & drop or click to upload CSV/PDF</span
+        >
+        <span *ngIf="uploadedFile">{{ uploadedFile.name }}</span>
+        <input
+          #fileInput
+          id="fileUpload"
+          type="file"
+          (change)="onFileSelected($event)"
+        />
       </div>
 
       <div *ngIf="isProcessing" class="processing">
@@ -37,7 +46,7 @@
       </div>
     </section>
 
-    <!-- Right: Preview panel -->
+    <!-- Preview section -->
     <section class="preview-section card">
       <header class="preview-header">
         <h2>Claim preview</h2>
@@ -56,7 +65,6 @@
         </span>
       </header>
 
-      <!-- Empty state -->
       <div *ngIf="!uploadedFile && !isProcessing" class="empty-state">
         <p>No file uploaded yet.</p>
         <p class="subtext">
@@ -65,65 +73,211 @@
         </p>
       </div>
 
-      <!-- Form preview -->
       <form
         *ngIf="uploadedFile && !isProcessing"
         class="preview-form"
         (ngSubmit)="submitClaim()"
       >
+        <h3>Patient Info</h3>
         <div class="form-grid">
           <div class="form-row">
-            <label>Patient name</label>
-            <input
-              [(ngModel)]="claimForm.patientName"
-              name="patientName"
-              required
+            <label>MRN</label
+            ><input [(ngModel)]="claimForm.patient.mrn" name="mrn" />
+          </div>
+          <div class="form-row">
+            <label>First Name</label
+            ><input
+              [(ngModel)]="claimForm.patient.firstName"
+              name="firstName"
             />
           </div>
           <div class="form-row">
-            <label>Date of birth</label>
-            <input
-              [(ngModel)]="claimForm.patientDOB"
-              name="patientDOB"
+            <label>Last Name</label
+            ><input [(ngModel)]="claimForm.patient.lastName" name="lastName" />
+          </div>
+          <div class="form-row">
+            <label>DOB</label
+            ><input
+              [(ngModel)]="claimForm.patient.dob"
+              name="dob"
               type="date"
-              required
             />
           </div>
           <div class="form-row">
-            <label>Insurance provider</label>
-            <input
-              [(ngModel)]="claimForm.insuranceProvider"
-              name="insuranceProvider"
-              required
+            <label>Gender</label
+            ><input [(ngModel)]="claimForm.patient.gender" name="gender" />
+          </div>
+        </div>
+
+        <h3>Provider Info</h3>
+        <div class="form-grid">
+          <div class="form-row">
+            <label>Rendering Provider</label
+            ><input
+              [(ngModel)]="claimForm.provider.renderingProviderName"
+              name="renderingProviderName"
             />
           </div>
           <div class="form-row">
-            <label>Billing code (CPT)</label>
-            <input
-              [(ngModel)]="claimForm.billingCode"
-              name="billingCode"
-              pattern="^[0-9A-Za-z\-]{3,10}$"
-              required
+            <label>Rendering NPI</label
+            ><input
+              [(ngModel)]="claimForm.provider.renderingNPI"
+              name="renderingNPI"
             />
           </div>
           <div class="form-row">
-            <label>Diagnosis code (ICD‑10)</label>
+            <label>Billing Provider</label
+            ><input
+              [(ngModel)]="claimForm.provider.billingProviderName"
+              name="billingProviderName"
+            />
+          </div>
+        </div>
+
+        <h3>Insurance Info</h3>
+        <div class="form-grid">
+          <div class="form-row">
+            <label>Payer Name</label>
             <input
-              [(ngModel)]="claimForm.diagnosisCode"
-              name="diagnosisCode"
-              pattern="^[A-Z0-9\.\-]{3,10}$"
-              required
+              [(ngModel)]="claimForm.insurance.payerName"
+              name="payerName"
             />
           </div>
           <div class="form-row">
-            <label>Claim amount ($)</label>
+            <label>Policy Number</label>
             <input
-              [(ngModel)]="claimForm.claimAmount"
-              name="claimAmount"
+              [(ngModel)]="claimForm.insurance.policyNumber"
+              name="policyNumber"
+            />
+          </div>
+          <div class="form-row">
+            <label>Group Number</label>
+            <input
+              [(ngModel)]="claimForm.insurance.groupNumber"
+              name="groupNumber"
+            />
+          </div>
+          <div class="form-row">
+            <label>Subscriber Name</label>
+            <input
+              [(ngModel)]="claimForm.insurance.subscriberName"
+              name="subscriberName"
+            />
+          </div>
+          <div class="form-row">
+            <label>Relationship</label>
+            <input
+              [(ngModel)]="claimForm.insurance.relationshipToSubscriber"
+              name="relationshipToSubscriber"
+            />
+          </div>
+        </div>
+
+        <h3>Diagnoses</h3>
+        <div class="form-grid">
+          <div
+            class="form-row"
+            *ngFor="let dx of claimForm.diagnoses; let i = index"
+          >
+            <label>Diagnosis {{ i + 1 }}</label>
+            <input [(ngModel)]="dx.code" name="diagnosis{{ i }}" />
+            <input
+              [(ngModel)]="dx.description"
+              name="diagnosisDesc{{ i }}"
+              placeholder="Description"
+            />
+          </div>
+        </div>
+
+        <h3>Service Lines</h3>
+        <div class="form-grid">
+          <div
+            class="form-row"
+            *ngFor="let sl of claimForm.serviceLines; let i = index"
+          >
+            <label>CPT Code</label>
+            <input [(ngModel)]="sl.cptCode" name="cpt{{ i }}" />
+            <label>Units</label>
+            <input [(ngModel)]="sl.units" name="units{{ i }}" type="number" />
+            <label>Charge Amount</label>
+            <input
+              [(ngModel)]="sl.chargeAmount"
+              name="charge{{ i }}"
               type="number"
-              min="0"
-              step="0.01"
-              required
+            />
+          </div>
+        </div>
+
+        <h3>Financials</h3>
+        <div class="form-grid">
+          <div class="form-row">
+            <label>Total Charge</label>
+            <input
+              [(ngModel)]="claimForm.financials.totalCharge"
+              name="totalCharge"
+              type="number"
+            />
+          </div>
+          <div class="form-row">
+            <label>Allowed Amount</label>
+            <input
+              [(ngModel)]="claimForm.financials.allowedAmount"
+              name="allowedAmount"
+              type="number"
+            />
+          </div>
+          <div class="form-row">
+            <label>Paid Amount</label>
+            <input
+              [(ngModel)]="claimForm.financials.paidAmount"
+              name="paidAmount"
+              type="number"
+            />
+          </div>
+          <div class="form-row">
+            <label>Patient Responsibility</label>
+            <input
+              [(ngModel)]="claimForm.financials.patientResponsibility"
+              name="patientResp"
+              type="number"
+            />
+          </div>
+          <div class="form-row">
+            <label>Balance</label>
+            <input
+              [(ngModel)]="claimForm.financials.balance"
+              name="balance"
+              type="number"
+            />
+          </div>
+        </div>
+
+        <h3>Metadata</h3>
+        <div class="form-grid">
+          <div class="form-row">
+            <label>Claim ID</label>
+            <input [(ngModel)]="claimForm.metadata.claimId" name="claimId" />
+          </div>
+          <div class="form-row">
+            <label>Claim Type</label>
+            <input
+              [(ngModel)]="claimForm.metadata.claimType"
+              name="claimType"
+            />
+          </div>
+          <div class="form-row">
+            <label>Created At</label>
+            <input
+              [(ngModel)]="claimForm.metadata.createdAt"
+              name="createdAt"
+              type="date"
+            />
+          </div>
+          <div class="form-row">
+            <label>Submitted By</label>
+            <input
+              [(ngModel)]="claimForm.metadata.submittedBy"
+              name="submittedBy"
             />
           </div>
         </div>
