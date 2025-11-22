@@ -75,6 +75,9 @@
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-low);
 }
+.form-section + .form-section {
+  margin-top: 1.5rem;
+}
 .form-section h3 {
   margin: 0 0 0.75rem;
   color: var(--color-primary-dark);
@@ -192,17 +195,76 @@
   padding: 0.5rem 0.6rem;
   font-size: 0.95rem;
   width: 100%;
-  max-width: 280px; /* prevent overflow */
+  max-width: 280px;
   box-sizing: border-box;
 }
 
-/* Diagnoses and service lines edit grids */
-.grid-3 {
+/* Diagnoses styling */
+.diagnoses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.diagnosis-row {
   display: grid;
-  grid-template-columns: 1fr 2fr 0.5fr;
+  grid-template-columns: 160px 1fr 120px 40px; /* ICD, description, primary, delete */
   gap: 0.75rem;
   align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: var(--border-subtle);
 }
+.diagnosis-row:last-child {
+  border-bottom: none;
+}
+.diagnosis-row input[type="text"] {
+  border: 1px solid #ccc;
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.6rem;
+  font-size: 0.95rem;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: var(--color-text-secondary);
+}
+.primary-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: flex-start;
+}
+.primary-radio label {
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  margin: 0;
+}
+.diagnosis-row .icon-btn.danger {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-color: #f5c2c2;
+  background-color: #fdecea;
+  color: #a12d2d;
+}
+.diagnosis-row .icon-btn.danger:hover {
+  background-color: #a12d2d;
+  color: #fff;
+}
+.diagnoses-list > .icon-btn {
+  align-self: flex-start;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-md);
+  background-color: #fff;
+  color: var(--color-primary-dark);
+  border: 1px solid #ddd;
+}
+.diagnoses-list > .icon-btn:hover {
+  background-color: var(--color-light-blue);
+}
+
+/* Service lines edit grid */
 .grid-4.header,
 .grid-4.row {
   display: grid;
@@ -226,22 +288,29 @@
 .icon-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 0.7rem;
+  justify-content: center;
+  width: auto;
+  min-width: unset;
+  padding: 0.4rem;
   border: 1px solid #ddd;
   border-radius: var(--radius-md);
   background-color: #fff;
   color: var(--color-primary-dark);
   cursor: pointer;
-  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.icon-btn mat-icon {
+  font-size: 20px;
 }
 .icon-btn:hover {
   background-color: var(--color-light-blue);
 }
+
+/* Danger icon button (delete) */
 .icon-btn.danger {
-  color: #a12d2d;
   border-color: #f5c2c2;
   background-color: #fdecea;
+  color: #a12d2d;
 }
 .icon-btn.danger:hover {
   background-color: #a12d2d;
@@ -315,6 +384,12 @@
   .form-row {
     grid-template-columns: 1fr;
   }
+  .diagnosis-row {
+    grid-template-columns: 1fr; /* stack fields on small screens */
+  }
+  .primary-radio {
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -325,7 +400,4 @@
   .claim-detail .form-section {
     min-width: 1300px; /* ensures horizontal scroll appears on narrower screens */
   }
-}
-.form-section + .form-section {
-  margin-top: 1.5rem;
 }

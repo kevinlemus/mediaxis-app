@@ -8,7 +8,9 @@
       </button>
       <h2>Claim #{{ claim.metadata.claimId }}</h2>
     </div>
-    <span class="status-chip {{ claim.status.replace(' ', '-').toLowerCase() }}">
+    <span
+      class="status-chip {{ claim.status.replace(' ', '-').toLowerCase() }}"
+    >
       {{ claim.status }}
     </span>
   </header>
@@ -16,7 +18,7 @@
   <!-- Rejection reason -->
   <div *ngIf="claim.status === 'Rejected'" class="rejection-reason">
     <strong>Reason for Rejection:</strong>
-    {{ claim.payerResponse?.reasonDescription || 'Not provided' }}
+    {{ claim.payerResponse?.reasonDescription || "Not provided" }}
   </div>
 
   <!-- Two-column grid -->
@@ -25,19 +27,28 @@
     <section class="form-section">
       <h3>Patient</h3>
       <p><strong>MRN</strong> {{ claim.patient.mrn }}</p>
-      <p><strong>Name</strong> {{ claim.patient.firstName }} {{ claim.patient.lastName }}</p>
+      <p>
+        <strong>Name</strong> {{ claim.patient.firstName }}
+        {{ claim.patient.lastName }}
+      </p>
       <p><strong>DOB</strong> {{ claim.patient.dob | date }}</p>
-      <p><strong>Gender</strong> {{ claim.patient.gender || '—' }}</p>
+      <p><strong>Gender</strong> {{ claim.patient.gender || "—" }}</p>
     </section>
 
     <section class="form-section">
       <h3>Provider</h3>
-      <p><strong>Rendering</strong> {{ claim.provider.renderingProviderName }} (NPI {{ claim.provider.renderingNPI }})</p>
+      <p>
+        <strong>Rendering</strong>
+        {{ claim.provider.renderingProviderName }} (NPI
+        {{ claim.provider.renderingNPI }})
+      </p>
       <p *ngIf="claim.provider.billingProviderName">
-        <strong>Billing</strong> {{ claim.provider.billingProviderName }} (NPI {{ claim.provider.billingNPI }})
+        <strong>Billing</strong> {{ claim.provider.billingProviderName }} (NPI
+        {{ claim.provider.billingNPI }})
       </p>
       <p *ngIf="claim.provider.facilityName">
-        <strong>Facility</strong> {{ claim.provider.facilityName }} (NPI {{ claim.provider.facilityNPI }})
+        <strong>Facility</strong> {{ claim.provider.facilityName }} (NPI
+        {{ claim.provider.facilityNPI }})
       </p>
     </section>
 
@@ -47,17 +58,36 @@
       <ng-container *ngIf="!editMode; else insuranceEdit">
         <p><strong>Payer</strong> {{ claim.insurance.payerName }}</p>
         <p><strong>Policy #</strong> {{ claim.insurance.policyNumber }}</p>
-        <p *ngIf="claim.insurance.groupNumber"><strong>Group #</strong> {{ claim.insurance.groupNumber }}</p>
+        <p *ngIf="claim.insurance.groupNumber">
+          <strong>Group #</strong> {{ claim.insurance.groupNumber }}
+        </p>
         <p><strong>Subscriber</strong> {{ claim.insurance.subscriberName }}</p>
-        <p><strong>Relationship</strong> {{ claim.insurance.relationshipToSubscriber }}</p>
+        <p>
+          <strong>Relationship</strong>
+          {{ claim.insurance.relationshipToSubscriber }}
+        </p>
       </ng-container>
       <ng-template #insuranceEdit>
         <ng-container *ngIf="workingCopy as wc">
-          <div class="form-row"><label>Payer</label><input [(ngModel)]="wc.insurance.payerName" /></div>
-          <div class="form-row"><label>Policy #</label><input [(ngModel)]="wc.insurance.policyNumber" /></div>
-          <div class="form-row"><label>Group #</label><input [(ngModel)]="wc.insurance.groupNumber" /></div>
-          <div class="form-row"><label>Subscriber</label><input [(ngModel)]="wc.insurance.subscriberName" /></div>
-          <div class="form-row"><label>Relationship</label><input [(ngModel)]="wc.insurance.relationshipToSubscriber" /></div>
+          <div class="form-row">
+            <label>Payer</label><input [(ngModel)]="wc.insurance.payerName" />
+          </div>
+          <div class="form-row">
+            <label>Policy #</label
+            ><input [(ngModel)]="wc.insurance.policyNumber" />
+          </div>
+          <div class="form-row">
+            <label>Group #</label
+            ><input [(ngModel)]="wc.insurance.groupNumber" />
+          </div>
+          <div class="form-row">
+            <label>Subscriber</label
+            ><input [(ngModel)]="wc.insurance.subscriberName" />
+          </div>
+          <div class="form-row">
+            <label>Relationship</label
+            ><input [(ngModel)]="wc.insurance.relationshipToSubscriber" />
+          </div>
         </ng-container>
       </ng-template>
     </section>
@@ -65,8 +95,14 @@
     <section class="form-section">
       <h3>Encounter</h3>
       <p><strong>Date of Service</strong> {{ claim.dateOfService | date }}</p>
-      <p><strong>Submitted</strong> {{ claim.metadata.submittedAt | date:'short' }}</p>
-      <p><strong>Last Updated</strong> {{ claim.metadata.lastUpdatedAt | date:'short' }}</p>
+      <p>
+        <strong>Submitted</strong>
+        {{ claim.metadata.submittedAt | date : "short" }}
+      </p>
+      <p>
+        <strong>Last Updated</strong>
+        {{ claim.metadata.lastUpdatedAt | date : "short" }}
+      </p>
       <p><strong>Submitted By</strong> {{ claim.metadata.submittedBy }}</p>
     </section>
   </div>
@@ -77,22 +113,42 @@
     <ng-container *ngIf="!editMode; else diagnosesEdit">
       <div class="chips">
         <span *ngFor="let dx of claim.diagnoses" class="chip">
-          {{ dx.code }}{{ dx.primary ? ' (Primary)' : '' }}
+          {{ dx.code }}{{ dx.primary ? " (Primary)" : "" }}
         </span>
       </div>
     </ng-container>
+
     <ng-template #diagnosesEdit>
       <ng-container *ngIf="workingCopy as wc">
         <div class="diagnoses-list">
-          <div class="form-row" *ngFor="let dx of wc.diagnoses; index as i">
-            <div class="grid-3">
-              <div><label>ICD-10</label><input [(ngModel)]="dx.code" /></div>
-              <div><label>Description</label><input [(ngModel)]="dx.description" /></div>
-              <div><label>Primary</label><input type="radio" name="primaryDx" [checked]="dx.primary" (change)="setPrimaryDiagnosis(i)" /></div>
+          <div
+            class="diagnosis-row"
+            *ngFor="let dx of wc.diagnoses; index as i"
+          >
+            <input type="text" [(ngModel)]="dx.code" placeholder="ICD-10" />
+            <input
+              type="text"
+              [(ngModel)]="dx.description"
+              placeholder="Description"
+            />
+            <div class="primary-radio">
+              <input
+                type="radio"
+                name="primaryDx"
+                [checked]="dx.primary"
+                (change)="setPrimaryDiagnosis(i)"
+              />
+              <label>Primary</label>
             </div>
-            <button class="icon-btn danger" (click)="removeDiagnosis(i)"><mat-icon>delete</mat-icon></button>
+            <button class="icon-btn danger" (click)="removeDiagnosis(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
-          <button class="icon-btn" (click)="addDiagnosis()"><mat-icon>add</mat-icon> Add diagnosis</button>
+
+          <button class="icon-btn" (click)="addDiagnosis()">
+            <mat-icon>add</mat-icon>
+            Add diagnosis
+          </button>
         </div>
       </ng-container>
     </ng-template>
@@ -119,14 +175,29 @@
             <span><strong>Charge</strong></span>
             <span><strong>POS</strong></span>
           </div>
-          <div class="grid-4 row" *ngFor="let sl of wc.serviceLines; index as i">
+          <div
+            class="grid-4 row"
+            *ngFor="let sl of wc.serviceLines; index as i"
+          >
             <input [(ngModel)]="sl.cptCode" />
-            <input type="number" [(ngModel)]="sl.units" (change)="recalcFinancials()" />
-            <input type="number" [(ngModel)]="sl.chargeAmount" (input)="recalcFinancials()" />
+            <input
+              type="number"
+              [(ngModel)]="sl.units"
+              (change)="recalcFinancials()"
+            />
+            <input
+              type="number"
+              [(ngModel)]="sl.chargeAmount"
+              (input)="recalcFinancials()"
+            />
             <input [(ngModel)]="sl.placeOfService" />
-            <button class="icon-btn danger" (click)="removeServiceLine(i)"><mat-icon>delete</mat-icon></button>
+            <button class="icon-btn danger" (click)="removeServiceLine(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
-          <button class="icon-btn" (click)="addServiceLine()"><mat-icon>add</mat-icon> Add line</button>
+          <button class="icon-btn" (click)="addServiceLine()">
+            <mat-icon>add</mat-icon> Add line
+          </button>
         </div>
       </ng-container>
     </ng-template>
@@ -135,72 +206,109 @@
   <section class="form-section">
     <h3>Financials</h3>
     <ul class="financials">
-      <li><strong>Total Charge</strong> ${{ editMode && workingCopy ? workingCopy.financials.totalCharge : claim.financials.totalCharge }}</li>
-      <li *ngIf="claim.financials.allowedAmount"><strong>Allowed</strong> ${{ claim.financials.allowedAmount }}</li>
-      <li *ngIf="claim.financials.paidAmount"><strong>Paid</strong> ${{ claim.financials.paidAmount }}</li>
-      <li *ngIf="claim.financials.patientResponsibility"><strong>Patient Resp.</strong> ${{ claim.financials.patientResponsibility }}</li>
-      <li><strong>Balance</strong> ${{ editMode && workingCopy ? workingCopy.financials.balance : claim.financials.balance }}</li>
+      <li>
+        <strong>Total Charge</strong> ${{
+          editMode && workingCopy
+            ? workingCopy.financials.totalCharge
+            : claim.financials.totalCharge
+        }}
+      </li>
+      <li *ngIf="claim.financials.allowedAmount">
+        <strong>Allowed</strong> ${{ claim.financials.allowedAmount }}
+      </li>
+      <li *ngIf="claim.financials.paidAmount">
+        <strong>Paid</strong> ${{ claim.financials.paidAmount }}
+      </li>
+      <li *ngIf="claim.financials.patientResponsibility">
+        <strong>Patient Resp.</strong> ${{
+          claim.financials.patientResponsibility
+        }}
+      </li>
+      <li>
+        <strong>Balance</strong> ${{
+          editMode && workingCopy
+            ? workingCopy.financials.balance
+            : claim.financials.balance
+        }}
+      </li>
     </ul>
   </section>
 
   <section class="form-section">
     <h3>Payer Response</h3>
-    <p><strong>Status</strong> {{ claim.payerResponse?.status || '—' }}</p>
-    <p *ngIf="claim.payerResponse?.reasonCode"><strong>Reason</strong> {{ claim.payerResponse?.reasonCode }} — {{ claim.payerResponse?.reasonDescription }}</p>
-    <p *ngIf="claim.payerResponse?.notes"><strong>Notes</strong> {{ claim.payerResponse?.notes }}</p>
+    <p><strong>Status</strong> {{ claim.payerResponse?.status || "—" }}</p>
+    <p *ngIf="claim.payerResponse?.reasonCode">
+      <strong>Reason</strong> {{ claim.payerResponse?.reasonCode }} —
+      {{ claim.payerResponse?.reasonDescription }}
+    </p>
+    <p *ngIf="claim.payerResponse?.notes">
+      <strong>Notes</strong> {{ claim.payerResponse?.notes }}
+    </p>
   </section>
 
-<section *ngIf="claim.attachments?.length" class="form-section">
-  <h3>Attachments</h3>
-  <ul class="attachments">
-    <li *ngFor="let a of claim.attachments">
-      <span class="chip">{{ a.type }}</span>
-      <span class="file">{{ a.filename }}</span>
-      <span class="meta">uploaded {{ a.uploadedAt | date:'short' }} by {{ a.uploadedBy }}</span>
-    </li>
-  </ul>
-</section>
+  <section *ngIf="claim.attachments?.length" class="form-section">
+    <h3>Attachments</h3>
+    <ul class="attachments">
+      <li *ngFor="let a of claim.attachments">
+        <span class="chip">{{ a.type }}</span>
+        <span class="file">{{ a.filename }}</span>
+        <span class="meta"
+          >uploaded {{ a.uploadedAt | date : "short" }} by
+          {{ a.uploadedBy }}</span
+        >
+      </li>
+    </ul>
+  </section>
 
-<section *ngIf="claim.auditTrail?.length" class="form-section">
-  <h3>History</h3>
-  <ul class="history">
-    <li *ngFor="let ev of claim.auditTrail">
-      <span class="meta">{{ ev.at | date:'short' }}</span>
-      <span class="chip">{{ ev.action }}</span>
-      <span class="detail">{{ ev.details || '' }}</span>
-      <span class="by">by {{ ev.by }}</span>
-    </li>
-  </ul>
-</section>
+  <section *ngIf="claim.auditTrail?.length" class="form-section">
+    <h3>History</h3>
+    <ul class="history">
+      <li *ngFor="let ev of claim.auditTrail">
+        <span class="meta">{{ ev.at | date : "short" }}</span>
+        <span class="chip">{{ ev.action }}</span>
+        <span class="detail">{{ ev.details || "" }}</span>
+        <span class="by">by {{ ev.by }}</span>
+      </li>
+    </ul>
+  </section>
 
-<footer class="actions">
-  <button class="primary" *ngIf="claim.status === 'Rejected' && !editMode" (click)="enableEdit()">
-    <mat-icon>edit</mat-icon>
-    Edit Claim
-  </button>
+  <footer class="actions">
+    <button
+      class="primary"
+      *ngIf="claim.status === 'Rejected' && !editMode"
+      (click)="enableEdit()"
+    >
+      <mat-icon>edit</mat-icon>
+      Edit Claim
+    </button>
 
-  <button class="primary" *ngIf="editMode" (click)="saveChanges()">
-    <mat-icon>save</mat-icon>
-    Save
-  </button>
+    <button class="primary" *ngIf="editMode" (click)="saveChanges()">
+      <mat-icon>save</mat-icon>
+      Save
+    </button>
 
-  <button class="accent" *ngIf="editMode" (click)="saveAndResubmit()">
-    <mat-icon>send</mat-icon>
-    Save & Resubmit
-  </button>
+    <button class="accent" *ngIf="editMode" (click)="saveAndResubmit()">
+      <mat-icon>send</mat-icon>
+      Save & Resubmit
+    </button>
 
-  <button class="secondary" *ngIf="editMode" (click)="cancelEdit()">
-    <mat-icon>close</mat-icon>
-    Cancel
-  </button>
+    <button class="secondary" *ngIf="editMode" (click)="cancelEdit()">
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
 
-  <button class="danger" *ngIf="claim.status !== 'Void'" (click)="withdrawClaim()">
-    <mat-icon>cancel</mat-icon>
-    Withdraw Claim
-  </button>
+    <button
+      class="danger"
+      *ngIf="claim.status !== 'Void'"
+      (click)="withdrawClaim()"
+    >
+      <mat-icon>cancel</mat-icon>
+      Withdraw Claim
+    </button>
 
-  <button class="secondary" routerLink="/dashboard-employee/claims">
-    <mat-icon>arrow_back</mat-icon>
-    Back to Claims
-  </button>
-</footer>
+    <button class="secondary" routerLink="/dashboard-employee/claims">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Claims
+    </button>
+  </footer>
+</div>
