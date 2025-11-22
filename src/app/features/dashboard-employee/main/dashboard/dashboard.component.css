@@ -69,3 +69,28 @@
 @media (max-width: 1024px) {
   .notifications, .recent-claims { grid-column: span 12; }
 }
+/* Quick actions buttons: align icon + text */
+.actions button {
+  display: inline-flex;           /* ensures icon/text align on the baseline */
+  align-items: center;            /* vertical center */
+  justify-content: center;
+  gap: 0.5rem;                    /* space between icon and label */
+  line-height: 1;                 /* avoids extra vertical drift */
+  padding: 0.75rem 1rem;          /* consistent height */
+}
+
+/* Normalize Material icon sizing and alignment inside buttons */
+.actions button mat-icon {
+  font-size: 20px;                /* visually balanced with text */
+  height: 20px;
+  width: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;         /* belt-and-suspenders for baseline quirks */
+}
+
+/* Optional: ensure consistent font metrics in buttons */
+.actions button span {
+  line-height: 1;
+}

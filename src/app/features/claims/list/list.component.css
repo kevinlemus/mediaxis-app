@@ -1,3 +1,5 @@
+/* src/app/features/claims/list/list.component.css */
+
 .claims-list {
   padding: 2rem 0;
   font-family: "Segoe UI", Roboto, sans-serif;
@@ -18,7 +20,7 @@
 .toolbar {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* center everything vertically */
+  align-items: center;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
   gap: 1rem;
@@ -28,7 +30,7 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-/* Search bar: keep it roomy */
+/* Search bar */
 .search-bar {
   display: flex;
   align-items: center;
@@ -36,56 +38,50 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 0.4rem 0.6rem;
-  width: 500px; /* nice wide input */
+  width: 500px;
   max-width: 100%;
 }
-
 .search-icon {
   color: #6c757d;
   margin-right: 0.5rem;
   display: flex;
   align-items: center;
 }
-
 .search-bar input {
   border: none;
   outline: none;
   flex: 1;
   font-size: 0.95rem;
-  padding: 0.6rem 0; /* taller input for balance */
+  padding: 0.6rem 0;
   color: var(--color-text-secondary);
 }
-
 .search-bar input::placeholder {
   color: #999;
   font-style: italic;
 }
 
-/* Sort controls: match height of search bar */
+/* Sort controls */
 .sort-controls {
   display: flex;
-  align-items: center; /* center vertically */
+  align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
-
 .sort-controls label {
   font-weight: 500;
   color: var(--color-text-secondary);
   margin-right: 0.25rem;
 }
-
 .sort-controls button {
   background-color: var(--color-surface);
   color: var(--color-primary-dark);
   border: 1px solid #ccc;
-  padding: 0.6rem 1rem; /* taller buttons to match input height */
+  padding: 0.6rem 1rem;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.85rem;
   transition: all 0.2s ease;
 }
-
 .sort-controls button:hover {
   background-color: var(--color-primary);
   color: #fff;
@@ -100,7 +96,6 @@
   max-height: 75vh;
   overflow-y: auto;
 }
-
 .claim-row {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -109,26 +104,23 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-
 .claim-row:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-/* Summary row layout */
+/* Summary row */
 .summary {
   display: grid;
-  grid-template-columns: 120px 1fr 180px 140px 140px;
+  grid-template-columns: 160px 1fr 180px 160px 160px;
   align-items: center;
   padding: 1rem 1.25rem;
   cursor: pointer;
   font-weight: 600;
 }
-
 .claim-id {
   color: var(--color-primary);
 }
-
 .amount {
   text-align: right;
   font-weight: 600;
@@ -143,53 +135,55 @@
   text-align: center;
   font-weight: 500;
 }
+.status-chip.submitted { background: #f0f4ff; color: #2a4d9c; }
+.status-chip.approved { background: #e6f6ea; color: #1d7a3d; }
+.status-chip.rejected { background: #fdecea; color: #a12d2d; }
+.status-chip.in-review { background: #fff6e5; color: #8a5b00; }
+.status-chip.denied { background: #fdecea; color: #a12d2d; }
+.status-chip.paid { background: #e8fff3; color: #0b7b43; }
+.status-chip.partially-paid { background: #fffbe6; color: #7a6a00; }
+.status-chip.adjusted { background: #f0f0f0; color: #444; }
+.status-chip.void { background: #eee; color: #666; }
 
-.status-chip.submitted {
-  background: #f0f4ff;
-  color: #2a4d9c;
-}
-.status-chip.approved {
-  background: #e6f6ea;
-  color: #1d7a3d;
-}
-.status-chip.rejected {
-  background: #fdecea;
-  color: #a12d2d;
-}
-
-/* Expanded details */
+/* Expanded details - optimized for square dashboard */
 .details {
-  padding: 1rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem 1.5rem;
+  padding: 1rem 1.25rem;
   border-top: 1px solid #eee;
-  background-color: var(--color-surface);
+  background-color: #f9fafb;
+  border-radius: 0 0 8px 8px;
 }
-
-.details p {
-  margin: 0.25rem 0;
+.detail-item {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 0.25rem;
 }
-
+.detail-item strong {
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  font-size: 0.85rem;
+}
+.detail-item span {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+}
 .details a {
-  display: inline-block;
-  margin-top: 1rem;
+  grid-column: 1 / -1;
+  margin-top: 0.25rem;
+  text-align: right;
   color: var(--color-accent);
   font-weight: 500;
   text-decoration: none;
 }
-
 .details a:hover {
   text-decoration: underline;
 }
 
-/* Responsive: stack search and sort on small screens */
-@media (max-width: 768px) {
-  .toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .search-bar {
-    width: 100%;
-  }
-  .sort-controls {
-    justify-content: flex-start;
+/* Responsive */
+@media (max-width: 900px) {
+  .summary {
+    grid-template-columns: 120px 1fr 140px 120px 120px;
   }
 }
