@@ -14,10 +14,10 @@ import { Router } from '@angular/router';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   templateUrl: './new-password.component.html',
-  styleUrls: ['./new-password.component.css']
+  styleUrls: ['./new-password.component.css'],
 })
 export class NewPasswordComponent {
   newPassword = '';
@@ -37,13 +37,15 @@ export class NewPasswordComponent {
       } else if (this.newPassword.length < 8) {
         this.errorMessage = 'Password must be at least 8 characters long.';
       } else if (
-        !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).+$/.test(this.newPassword)
+        !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).+$/.test(
+          this.newPassword
+        )
       ) {
         this.errorMessage =
           'Include uppercase, lowercase, a number, and a special character.';
       } else {
         this.router.navigate(['/login'], {
-          queryParams: { reset: 'success' }
+          queryParams: { reset: 'success' },
         });
       }
 
