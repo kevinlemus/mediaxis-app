@@ -1,6 +1,6 @@
 :host {
   display: block;
-  background-color: var(--color-surface);
+  /* background-color: var(--color-surface); */
   color: var(--color-text-secondary);
   font-family: "Segoe UI", Roboto, sans-serif;
   padding: 2rem;

@@ -1,3 +1,12 @@
+:host {
+  display: block;
+  background-color: #fff; /* match dashboard & claims background */
+  color: var(--color-text-secondary);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  padding: 2rem; /* consistent outer spacing */
+  box-sizing: border-box;
+}
+
 .page-header {
   margin-bottom: 1.5rem;
 }
@@ -27,4 +36,13 @@
 .feature-actions {
   display: flex;
   justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.cancel-btn {
+  color: var(--color-secondary-dark);
+  font-weight: 500;
+}
+.cancel-btn:hover {
+  text-decoration: underline;
 }

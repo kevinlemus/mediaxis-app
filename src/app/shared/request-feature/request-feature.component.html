@@ -1,7 +1,9 @@
 <div class="page-container">
   <header class="page-header">
     <h1>Request a Feature</h1>
-    <p class="instructions">Tell us what would make MediAxis more useful for your workflow.</p>
+    <p class="instructions">
+      Tell us what would make MediAxis more useful for your workflow.
+    </p>
   </header>
 
   <mat-card class="feature-card">
@@ -13,12 +15,26 @@
 
       <mat-form-field appearance="fill" class="feature-field">
         <mat-label>Description</mat-label>
-        <textarea matInput [(ngModel)]="description" name="description" rows="6" required></textarea>
+        <textarea
+          matInput
+          [(ngModel)]="description"
+          name="description"
+          rows="6"
+          required
+        ></textarea>
       </mat-form-field>
 
       <div class="feature-actions">
-        <button mat-raised-button color="primary" type="submit" [disabled]="!featureForm.valid">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="!featureForm.valid"
+        >
           Submit Request
+        </button>
+        <button mat-button type="button" class="cancel-btn" (click)="cancel()">
+          Cancel
         </button>
       </div>
     </form>
