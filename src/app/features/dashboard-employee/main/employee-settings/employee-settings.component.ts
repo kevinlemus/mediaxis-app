@@ -21,12 +21,12 @@ export class EmployeeSettingsComponent {
   }
 
   reportIssue() {
-    // Placeholder: open support form or external link
-    window.open('https://support.medi-axis.com/report', '_blank');
+    // Navigate to in-app support page instead of external link
+    this.router.navigate(['/dashboard-employee/support']);
   }
 
   requestFeature() {
-    // Placeholder: open feature request form
-    window.open('https://support.medi-axis.com/feature', '_blank');
+    // Navigate to in-app request-feature page
+    this.router.navigate(['/dashboard-employee/request-feature']);
   }
 }
