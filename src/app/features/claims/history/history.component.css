@@ -33,6 +33,9 @@
   padding: 0.25rem 0.6rem;
   font-size: 0.8rem;
 }
+.history .detail {
+  color: var(--color-text-secondary);
+}
 .history .by {
   font-style: italic;
   color: var(--color-primary-dark);

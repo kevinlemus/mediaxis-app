@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -38,20 +39,29 @@ export class DetailComponent implements OnInit {
   workingCopy: Claim | null = null;
   currentUser = 'j.smith';
   routeClaimId: string | null = null;
+  isPrintMode = false;
 
   // Simple UI helpers
   pointerLabels = 'ABCDEFGHIJKL'.split(''); // CMS-1500 diag pointer slots
   maxModifiers = 4;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      this.routeClaimId = id;
-      if (id) this.loadClaim(id);
-    });
-  }
+ngOnInit(): void {
+  this.route.paramMap.subscribe(params => {
+    const id = params.get('id');
+    this.routeClaimId = id;
+    if (id) this.loadClaim(id);
+  });
+
+  this.route.url.subscribe(segments => {
+    this.isPrintMode = segments.some(s => s.path === 'print');
+    if (this.isPrintMode) {
+      setTimeout(() => window.print(), 500);
+    }
+  });
+}
+
 
   // ----- Load mock claim (clinic-ready fields populated) -----
   private loadClaim(id: string): void {
@@ -183,25 +193,41 @@ export class DetailComponent implements OnInit {
 
   // ----- Edit workflow -----
   enableEdit(): void {
-    if (!this.claim || (this.claim.status !== 'Rejected' && this.claim.status !== 'Denied')) return;
+    if (
+      !this.claim ||
+      (this.claim.status !== 'Rejected' && this.claim.status !== 'Denied')
+    )
+      return;
     this.editMode = true;
     this.workingCopy = JSON.parse(JSON.stringify(this.claim));
-    this.logAudit('Edited', `Edit initiated for claim ${this.claim?.metadata.claimId}`);
+    this.logAudit(
+      'Edited',
+      `Edit initiated for claim ${this.claim?.metadata.claimId}`
+    );
   }
 
   cancelEdit(): void {
     if (!this.claim) return;
     this.editMode = false;
     this.workingCopy = null;
-    this.logAudit('Edited', `Edit canceled for claim ${this.claim.metadata.claimId}`);
+    this.logAudit(
+      'Edited',
+      `Edit canceled for claim ${this.claim.metadata.claimId}`
+    );
   }
 
   saveChanges(): void {
     if (!this.claim || !this.workingCopy) return;
     const validationErrors = this.validateClaim(this.workingCopy);
     if (validationErrors.length) {
-      this.logAudit('Edited', `Validation failed: ${validationErrors.join('; ')}`);
-      alert('Please fix validation errors:\n' + validationErrors.map(e => `• ${e}`).join('\n'));
+      this.logAudit(
+        'Edited',
+        `Validation failed: ${validationErrors.join('; ')}`
+      );
+      alert(
+        'Please fix validation errors:\n' +
+          validationErrors.map((e) => `• ${e}`).join('\n')
+      );
       return;
     }
 
@@ -210,7 +236,11 @@ export class DetailComponent implements OnInit {
     this.claim = this.workingCopy;
     this.claim.metadata.lastUpdatedAt = new Date();
     const diff = this.computeDiff(before, after);
-    this.logAudit('Edited', `Changes saved to claim ${this.claim.metadata.claimId}`, diff);
+    this.logAudit(
+      'Edited',
+      `Changes saved to claim ${this.claim.metadata.claimId}`,
+      diff
+    );
   }
 
   saveAndResubmit(): void {
@@ -218,8 +248,16 @@ export class DetailComponent implements OnInit {
     if (this.editMode && this.workingCopy) {
       const validationErrors = this.validateClaim(this.workingCopy);
       if (validationErrors.length) {
-        this.logAudit('Edited', `Validation failed before resubmission: ${validationErrors.join('; ')}`);
-        alert('Please fix validation errors:\n' + validationErrors.map(e => `• ${e}`).join('\n'));
+        this.logAudit(
+          'Edited',
+          `Validation failed before resubmission: ${validationErrors.join(
+            '; '
+          )}`
+        );
+        alert(
+          'Please fix validation errors:\n' +
+            validationErrors.map((e) => `• ${e}`).join('\n')
+        );
         return;
       }
 
@@ -245,8 +283,14 @@ export class DetailComponent implements OnInit {
       remittanceAdviceId: undefined,
       notes: 'Resubmitted after edits',
     };
-    this.logAudit('StatusChanged', `Status changed ${previousStatus} -> Submitted`);
-    this.logAudit('Submitted', `Claim ${this.claim.metadata.claimId} resubmitted`);
+    this.logAudit(
+      'StatusChanged',
+      `Status changed ${previousStatus} -> Submitted`
+    );
+    this.logAudit(
+      'Submitted',
+      `Claim ${this.claim.metadata.claimId} resubmitted`
+    );
     this.editMode = false;
     this.workingCopy = null;
   }
@@ -275,42 +319,70 @@ export class DetailComponent implements OnInit {
 
     // Provider NPIs
     const isValidNpi = (npi?: string) => !!npi && /^\d{10}$/.test(npi);
-    if (!isValidNpi(c.provider.renderingNPI)) errors.push('Rendering NPI must be 10 digits');
+    if (!isValidNpi(c.provider.renderingNPI))
+      errors.push('Rendering NPI must be 10 digits');
     if (c.provider.billingNPI && !isValidNpi(c.provider.billingNPI))
       errors.push('Billing NPI must be 10 digits when provided');
     if (c.provider.referringNPI && !isValidNpi(c.provider.referringNPI))
       errors.push('Referring NPI must be 10 digits when provided');
 
     // Diagnoses: must have at least 1, and exactly one primary
-    const primaries = (c.diagnoses || []).filter(d => d.primary);
-    if (!c.diagnoses?.length) errors.push('At least one diagnosis (ICD-10) is required');
-    if (primaries.length !== 1) errors.push('Exactly one primary diagnosis must be selected');
+    const primaries = (c.diagnoses || []).filter((d) => d.primary);
+    if (!c.diagnoses?.length)
+      errors.push('At least one diagnosis (ICD-10) is required');
+    if (primaries.length !== 1)
+      errors.push('Exactly one primary diagnosis must be selected');
 
     // Service lines: CPT present, charges non-negative, pointers valid, modifiers <= 4
     const validPointerLabels = this.pointerLabels;
     c.serviceLines.forEach((sl, idx) => {
-      if (!sl.cptCode) errors.push(`Service line ${idx + 1}: CPT code is required`);
+      if (!sl.cptCode)
+        errors.push(`Service line ${idx + 1}: CPT code is required`);
       if (sl.chargeAmount == null || sl.chargeAmount < 0)
         errors.push(`Service line ${idx + 1}: charge amount must be >= 0`);
-      if (!sl.units || sl.units <= 0) errors.push(`Service line ${idx + 1}: units must be >= 1`);
+      if (!sl.units || sl.units <= 0)
+        errors.push(`Service line ${idx + 1}: units must be >= 1`);
 
       // diagnosis pointers must reference available labels within A–L AND map to actual diagnoses index
       if (!sl.diagnosisPointers?.length) {
-        errors.push(`Service line ${idx + 1}: at least one diagnosis pointer (A–L) is required`);
-      } else if (sl.diagnosisPointers.some(p => !validPointerLabels.includes(p))) {
-        errors.push(`Service line ${idx + 1}: diagnosis pointers must be within A–L`);
+        errors.push(
+          `Service line ${
+            idx + 1
+          }: at least one diagnosis pointer (A–L) is required`
+        );
+      } else if (
+        sl.diagnosisPointers.some((p) => !validPointerLabels.includes(p))
+      ) {
+        errors.push(
+          `Service line ${idx + 1}: diagnosis pointers must be within A–L`
+        );
       } else {
         const maxIndex = c.diagnoses.length - 1;
-        const pointerIndexes = sl.diagnosisPointers.map(p => validPointerLabels.indexOf(p));
-        if (pointerIndexes.some(pi => pi < 0 || pi > maxIndex)) {
-          errors.push(`Service line ${idx + 1}: diagnosis pointer references a non-existent diagnosis`);
+        const pointerIndexes = sl.diagnosisPointers.map((p) =>
+          validPointerLabels.indexOf(p)
+        );
+        if (pointerIndexes.some((pi) => pi < 0 || pi > maxIndex)) {
+          errors.push(
+            `Service line ${
+              idx + 1
+            }: diagnosis pointer references a non-existent diagnosis`
+          );
         }
       }
 
       // modifiers cap
-      const modifiers = [sl.modifier1, sl.modifier2, sl.modifier3, sl.modifier4].filter(Boolean);
+      const modifiers = [
+        sl.modifier1,
+        sl.modifier2,
+        sl.modifier3,
+        sl.modifier4,
+      ].filter(Boolean);
       if (modifiers.length > this.maxModifiers) {
-        errors.push(`Service line ${idx + 1}: maximum of ${this.maxModifiers} modifiers allowed`);
+        errors.push(
+          `Service line ${idx + 1}: maximum of ${
+            this.maxModifiers
+          } modifiers allowed`
+        );
       }
     });
 
@@ -321,9 +393,13 @@ export class DetailComponent implements OnInit {
       errors.push('Referral number is required');
 
     // COB checks
-    if (c.secondaryInsurance || c.coordinationOfBenefits?.hasSecondaryInsurance) {
+    if (
+      c.secondaryInsurance ||
+      c.coordinationOfBenefits?.hasSecondaryInsurance
+    ) {
       const primaryPaid = c.coordinationOfBenefits?.primaryPayerPaidAmount ?? 0;
-      if (primaryPaid < 0) errors.push('Primary payer paid amount cannot be negative');
+      if (primaryPaid < 0)
+        errors.push('Primary payer paid amount cannot be negative');
     }
 
     return errors;
@@ -346,9 +422,13 @@ export class DetailComponent implements OnInit {
     this.claim.auditTrail = [...(this.claim.auditTrail || []), event];
   }
 
-  private computeDiff(before: unknown, after: unknown): Record<string, unknown> {
+  private computeDiff(
+    before: unknown,
+    after: unknown
+  ): Record<string, unknown> {
     const diff: Record<string, unknown> = {};
-    const b = before as any, a = after as any;
+    const b = before as any,
+      a = after as any;
     const compare = (path: string, valB: any, valA: any) => {
       const serialize = (v: any) => (v instanceof Date ? v.toISOString() : v);
       if (JSON.stringify(valB) !== JSON.stringify(valA))
@@ -383,7 +463,11 @@ export class DetailComponent implements OnInit {
     compare('secondaryInsurance', b.secondaryInsurance, a.secondaryInsurance);
 
     // COB
-    compare('coordinationOfBenefits', b.coordinationOfBenefits, a.coordinationOfBenefits);
+    compare(
+      'coordinationOfBenefits',
+      b.coordinationOfBenefits,
+      a.coordinationOfBenefits
+    );
 
     // Clinical & financials
     compare('diagnoses', b.diagnoses, a.diagnoses);
@@ -395,7 +479,11 @@ export class DetailComponent implements OnInit {
 
     if (b.payerResponse && a.payerResponse)
       for (const key of Object.keys(a.payerResponse))
-        compare(`payerResponse.${key}`, b.payerResponse[key], a.payerResponse[key]);
+        compare(
+          `payerResponse.${key}`,
+          b.payerResponse[key],
+          a.payerResponse[key]
+        );
 
     return diff;
   }
@@ -412,13 +500,17 @@ export class DetailComponent implements OnInit {
   removeDiagnosis(i: number): void {
     if (!this.workingCopy) return;
     const wasPrimary = this.workingCopy.diagnoses[i]?.primary;
-    this.workingCopy.diagnoses = this.workingCopy.diagnoses.filter((_, idx) => idx !== i);
+    this.workingCopy.diagnoses = this.workingCopy.diagnoses.filter(
+      (_, idx) => idx !== i
+    );
     // If primary removed, set first remaining as primary to satisfy validation quickly
     if (wasPrimary && this.workingCopy.diagnoses.length) {
-      this.workingCopy.diagnoses = this.workingCopy.diagnoses.map((dx, idx) => ({
-        ...dx,
-        primary: idx === 0,
-      }));
+      this.workingCopy.diagnoses = this.workingCopy.diagnoses.map(
+        (dx, idx) => ({
+          ...dx,
+          primary: idx === 0,
+        })
+      );
     }
   }
 
@@ -447,7 +539,9 @@ export class DetailComponent implements OnInit {
 
   removeServiceLine(i: number): void {
     if (!this.workingCopy) return;
-    this.workingCopy.serviceLines = this.workingCopy.serviceLines.filter((_, idx) => idx !== i);
+    this.workingCopy.serviceLines = this.workingCopy.serviceLines.filter(
+      (_, idx) => idx !== i
+    );
     this.recalcFinancials();
   }
 
@@ -479,5 +573,29 @@ export class DetailComponent implements OnInit {
     this.workingCopy.financials.totalCharge = total;
     // For a rejected/unpaid claim, balance = total (until adjudication rules adjust it)
     this.workingCopy.financials.balance = total;
+  }
+
+  downloadClaim(format: 'pdf' | 'csv') {
+    if (!this.claim) return;
+    window.open(
+      `/api/claims/${this.claim.metadata.claimId}/export?format=${format}`,
+      '_blank'
+    );
+  }
+
+  printClaim() {
+    if (!this.claim) return;
+    window.open(
+      `/dashboard-employee/claims/${this.claim.metadata.claimId}/print`,
+      '_blank'
+    );
+  }
+
+  viewHistory() {
+    if (!this.claim) return;
+    window.open(
+      `/dashboard-employee/claims/${this.claim.metadata.claimId}/history`,
+      '_blank'
+    );
   }
 }

@@ -14,12 +14,19 @@ import { AuditEvent } from '../../../core/models/claim.model';
 export class HistoryComponent implements OnInit {
   claimId: string | null = null;
   events: AuditEvent[] = [];
+  isPrintMode = false;
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.claimId = this.route.snapshot.paramMap.get('id');
+    this.isPrintMode = this.route.snapshot.url.some(s => s.path === 'print');
+
     if (this.claimId) this.loadHistory(this.claimId);
+
+    if (this.isPrintMode) {
+      setTimeout(() => window.print(), 500);
+    }
   }
 
   private loadHistory(id: string): void {
@@ -37,6 +44,6 @@ export class HistoryComponent implements OnInit {
 
   printHistory() {
     if (!this.claimId) return;
-    window.open(`/claims/${this.claimId}/history/print`, '_blank');
+    window.open(`/dashboard-employee/claims/${this.claimId}/history/print`, '_blank');
   }
 }

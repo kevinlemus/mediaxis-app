@@ -1,6 +1,6 @@
 <div class="page-container claim-detail" *ngIf="claim">
   <!-- Page header -->
-  <header class="page-header">
+  <header class="page-header" *ngIf="!isPrintMode">
     <div class="header-left">
       <button class="back-btn" routerLink="/dashboard-employee/claims">
         <mat-icon>arrow_back</mat-icon>
@@ -374,7 +374,7 @@
     *ngIf="claim.auditTrail && claim.auditTrail.length"
     class="form-section"
   >
-    <h3>History</h3>
+    <h3>History (Recent)</h3>
     <ul class="history">
       <li *ngFor="let ev of claim.auditTrail">
         <span class="meta">{{ ev.at | date : "short" }}</span>
@@ -383,10 +383,13 @@
         <span class="by">by {{ ev.by }}</span>
       </li>
     </ul>
+    <button class="secondary small" (click)="viewHistory()">
+      <mat-icon>history</mat-icon> View Full History
+    </button>
   </section>
 
   <!-- Actions -->
-  <footer class="actions">
+  <footer class="actions" *ngIf="!isPrintMode">
     <button
       class="primary"
       *ngIf="claim.status === 'Rejected' && !editMode"
@@ -417,6 +420,22 @@
 
     <button class="secondary" routerLink="/dashboard-employee/claims">
       <mat-icon>arrow_back</mat-icon> Back to Claims
+    </button>
+
+    <button class="secondary" (click)="downloadClaim('pdf')">
+      <mat-icon>download</mat-icon> Download PDF
+    </button>
+
+    <button class="secondary" (click)="downloadClaim('csv')">
+      <mat-icon>download</mat-icon> Download CSV
+    </button>
+
+    <button class="secondary" (click)="printClaim()">
+      <mat-icon>print</mat-icon> Print Claim
+    </button>
+
+    <button class="secondary" (click)="viewHistory()">
+      <mat-icon>history</mat-icon> View Full History
     </button>
   </footer>
 </div>

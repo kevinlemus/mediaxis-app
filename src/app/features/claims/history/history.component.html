@@ -1,5 +1,5 @@
 <div class="page-container claim-history">
-  <header class="page-header">
+  <header class="page-header" *ngIf="!isPrintMode">
     <h2>History for Claim #{{ claimId }}</h2>
     <div class="actions">
       <button class="secondary" (click)="downloadHistory('pdf')">
