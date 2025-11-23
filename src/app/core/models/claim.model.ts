@@ -136,6 +136,10 @@ export interface AuditEvent {
     | 'PaymentPosted'
     | 'AdjustmentApplied';
   details?: string;
+  role?: string; // User role at event time
+  diff?: Record<string, { before: unknown; after: unknown }>; // Field-level changes
+  hash?: string; // Immutable event hash
+  prevHash?: string; // Previous event hash
 }
 
 export interface CoordinationOfBenefits {

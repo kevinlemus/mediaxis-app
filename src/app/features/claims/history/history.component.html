@@ -1,3 +1,4 @@
+<!-- features/claims/history/history.component.html -->
 <div class="page-container claim-history">
   <header class="page-header" *ngIf="!isPrintMode">
     <h2>History for Claim #{{ claimId }}</h2>
@@ -16,13 +17,60 @@
 
   <section class="form-section">
     <h3>Audit Trail</h3>
-    <ul class="history">
-      <li *ngFor="let ev of events">
-        <span class="meta">{{ ev.at | date : 'short' }}</span>
-        <span class="chip">{{ ev.action }}</span>
-        <span class="detail">{{ ev.details || '' }}</span>
-        <span class="by">by {{ ev.by }}</span>
-      </li>
-    </ul>
+    <table class="events-table">
+      <thead>
+        <tr>
+          <th>At</th>
+          <th>User</th>
+          <th>Role</th>
+          <th>Action</th>
+          <th>Details</th>
+          <th>Diff</th>
+          <th>Hash</th>
+          <th>Prev Hash</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let ev of events">
+          <tr class="event-row">
+            <td>{{ ev.at | date : "short" }}</td>
+            <td>{{ ev.by }}</td>
+            <td>{{ ev.role || "—" }}</td>
+            <td>{{ ev.action }}</td>
+            <td class="details-cell">{{ ev.details || "" }}</td>
+            <td class="diff-count">
+              {{ ev.diff ? (ev.diff | keyvalue).length : "—" }}
+            </td>
+            <td class="hash-cell">{{ ev.hash || "—" }}</td>
+            <td class="hash-cell">{{ ev.prevHash || "—" }}</td>
+          </tr>
+          <tr *ngIf="ev.diff" class="diff-wrapper">
+            <td colspan="8">
+              <div class="diff-block">
+                <div class="diff-title">Field Changes</div>
+                <table class="diff-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Before</th>
+                      <th></th>
+                      <th>After</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let d of ev.diff | keyvalue">
+                      <td class="path">{{ d.key }}</td>
+                      <td class="before">{{ d.value.before }}</td>
+                      <td class="arrow">→</td>
+                      <td class="after">{{ d.value.after }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
   </section>
 </div>
