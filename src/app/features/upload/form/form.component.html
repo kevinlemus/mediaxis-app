@@ -46,7 +46,7 @@
       </div>
     </section>
 
-    <!-- Preview section -->
+    <!-- Preview / Confirmation section -->
     <section class="preview-section card">
       <header class="preview-header">
         <h2>Claim preview</h2>
@@ -65,7 +65,36 @@
         </span>
       </header>
 
-      <div *ngIf="!uploadedFile && !isProcessing" class="empty-state">
+      <!-- Confirmation state -->
+      <div *ngIf="submitSuccess" class="confirmation-state">
+        <mat-icon>check_circle</mat-icon>
+        <div class="confirmation-text">
+          <h3>Claim submitted successfully</h3>
+          <p>
+            Your claim {{ claimForm.metadata.claimId || "(no ID yet)" }} has
+            been submitted.
+          </p>
+          <div class="actions">
+            <a
+              [routerLink]="[
+                '/dashboard-employee/claims',
+                claimForm.metadata.claimId
+              ]"
+              class="primary"
+            >
+              View claim details
+            </a>
+            <button class="secondary" type="button" (click)="resetForm()">
+              Upload another file
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="!uploadedFile && !isProcessing && !submitSuccess"
+        class="empty-state"
+      >
         <p>No file uploaded yet.</p>
         <p class="subtext">
           Upload an encounter file to generate a preview and edit before
@@ -73,11 +102,13 @@
         </p>
       </div>
 
+      <!-- Full preview form -->
       <form
-        *ngIf="uploadedFile && !isProcessing"
+        *ngIf="uploadedFile && !isProcessing && !submitSuccess"
         class="preview-form"
         (ngSubmit)="submitClaim()"
       >
+        <!-- Patient Info -->
         <h3>Patient Info</h3>
         <div class="form-grid">
           <div class="form-row">
@@ -109,70 +140,73 @@
           </div>
         </div>
 
+        <!-- Provider Info -->
         <h3>Provider Info</h3>
         <div class="form-grid">
           <div class="form-row">
-            <label>Rendering Provider</label
-            ><input
+            <label>Rendering Provider</label>
+            <input
               [(ngModel)]="claimForm.provider.renderingProviderName"
               name="renderingProviderName"
             />
           </div>
           <div class="form-row">
-            <label>Rendering NPI</label
-            ><input
+            <label>Rendering NPI</label>
+            <input
               [(ngModel)]="claimForm.provider.renderingNPI"
               name="renderingNPI"
             />
           </div>
           <div class="form-row">
-            <label>Billing Provider</label
-            ><input
+            <label>Billing Provider</label>
+            <input
               [(ngModel)]="claimForm.provider.billingProviderName"
               name="billingProviderName"
             />
           </div>
         </div>
 
+        <!-- Insurance Info -->
         <h3>Insurance Info</h3>
         <div class="form-grid">
           <div class="form-row">
-            <label>Payer Name</label>
-            <input
+            <label>Payer Name</label
+            ><input
               [(ngModel)]="claimForm.insurance.payerName"
               name="payerName"
             />
           </div>
           <div class="form-row">
-            <label>Policy Number</label>
-            <input
+            <label>Policy Number</label
+            ><input
               [(ngModel)]="claimForm.insurance.policyNumber"
               name="policyNumber"
             />
           </div>
           <div class="form-row">
-            <label>Group Number</label>
-            <input
+            <label>Group Number</label
+            ><input
               [(ngModel)]="claimForm.insurance.groupNumber"
               name="groupNumber"
             />
           </div>
           <div class="form-row">
-            <label>Subscriber Name</label>
-            <input
+            <label>Subscriber Name</label
+            ><input
               [(ngModel)]="claimForm.insurance.subscriberName"
               name="subscriberName"
             />
           </div>
           <div class="form-row">
-            <label>Relationship</label>
-            <input
+            <label>Relationship</label
+            ><input
               [(ngModel)]="claimForm.insurance.relationshipToSubscriber"
               name="relationshipToSubscriber"
             />
           </div>
         </div>
 
+        <!-- Diagnoses -->
         <h3>Diagnoses</h3>
         <div class="form-grid">
           <div
@@ -189,6 +223,7 @@
           </div>
         </div>
 
+        <!-- Service Lines -->
         <h3>Service Lines</h3>
         <div class="form-grid">
           <div
@@ -208,43 +243,44 @@
           </div>
         </div>
 
+        <!-- Financials -->
         <h3>Financials</h3>
         <div class="form-grid">
           <div class="form-row">
-            <label>Total Charge</label>
-            <input
+            <label>Total Charge</label
+            ><input
               [(ngModel)]="claimForm.financials.totalCharge"
               name="totalCharge"
               type="number"
             />
           </div>
           <div class="form-row">
-            <label>Allowed Amount</label>
-            <input
+            <label>Allowed Amount</label
+            ><input
               [(ngModel)]="claimForm.financials.allowedAmount"
               name="allowedAmount"
               type="number"
             />
           </div>
           <div class="form-row">
-            <label>Paid Amount</label>
-            <input
+            <label>Paid Amount</label
+            ><input
               [(ngModel)]="claimForm.financials.paidAmount"
               name="paidAmount"
               type="number"
             />
           </div>
           <div class="form-row">
-            <label>Patient Responsibility</label>
-            <input
+            <label>Patient Responsibility</label
+            ><input
               [(ngModel)]="claimForm.financials.patientResponsibility"
               name="patientResp"
               type="number"
             />
           </div>
           <div class="form-row">
-            <label>Balance</label>
-            <input
+            <label>Balance</label
+            ><input
               [(ngModel)]="claimForm.financials.balance"
               name="balance"
               type="number"
@@ -252,36 +288,38 @@
           </div>
         </div>
 
+        <!-- Metadata -->
         <h3>Metadata</h3>
         <div class="form-grid">
           <div class="form-row">
-            <label>Claim ID</label>
-            <input [(ngModel)]="claimForm.metadata.claimId" name="claimId" />
+            <label>Claim ID</label
+            ><input [(ngModel)]="claimForm.metadata.claimId" name="claimId" />
           </div>
           <div class="form-row">
-            <label>Claim Type</label>
-            <input
+            <label>Claim Type</label
+            ><input
               [(ngModel)]="claimForm.metadata.claimType"
               name="claimType"
             />
           </div>
           <div class="form-row">
-            <label>Created At</label>
-            <input
+            <label>Created At</label
+            ><input
               [(ngModel)]="claimForm.metadata.createdAt"
               name="createdAt"
               type="date"
             />
           </div>
           <div class="form-row">
-            <label>Submitted By</label>
-            <input
+            <label>Submitted By</label
+            ><input
               [(ngModel)]="claimForm.metadata.submittedBy"
               name="submittedBy"
             />
           </div>
         </div>
 
+        <!-- Actions -->
         <div class="actions">
           <button class="primary" type="submit">Submit claim</button>
           <button class="secondary" type="button" (click)="resetForm()">

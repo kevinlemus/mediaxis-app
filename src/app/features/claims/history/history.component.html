@@ -1,0 +1,28 @@
+<div class="page-container claim-history">
+  <header class="page-header">
+    <h2>History for Claim #{{ claimId }}</h2>
+    <div class="actions">
+      <button class="secondary" (click)="downloadHistory('pdf')">
+        <mat-icon>download</mat-icon> Download PDF
+      </button>
+      <button class="secondary" (click)="downloadHistory('csv')">
+        <mat-icon>download</mat-icon> Download CSV
+      </button>
+      <button class="secondary" (click)="printHistory()">
+        <mat-icon>print</mat-icon> Print
+      </button>
+    </div>
+  </header>
+
+  <section class="form-section">
+    <h3>Audit Trail</h3>
+    <ul class="history">
+      <li *ngFor="let ev of events">
+        <span class="meta">{{ ev.at | date : 'short' }}</span>
+        <span class="chip">{{ ev.action }}</span>
+        <span class="detail">{{ ev.details || '' }}</span>
+        <span class="by">by {{ ev.by }}</span>
+      </li>
+    </ul>
+  </section>
+</div>

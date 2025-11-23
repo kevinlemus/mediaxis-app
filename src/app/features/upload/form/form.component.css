@@ -1,9 +1,9 @@
 :host {
   display: block;
-  background-color: #fff;              /* clean white background */
+  background-color: #fff;
   color: var(--color-text-secondary);
   font-family: "Segoe UI", Roboto, sans-serif;
-  padding: 2rem;                       /* consistent page spacing */
+  padding: 2rem;
   box-sizing: border-box;
 }
 
@@ -13,9 +13,8 @@
   gap: 1.5rem;
   width: 100%;
   max-width: 1600px;
-  margin: 0 auto;                      /* center content */
+  margin: 0 auto;
 }
-
 @media (max-width: 1024px) {
   .content-grid {
     grid-template-columns: 1fr;
@@ -27,7 +26,7 @@
   background-color: var(--color-surface);
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* Header */
@@ -59,8 +58,8 @@
 .upload-box:hover {
   background-color: var(--color-blue-gray);
 }
-/* Ensure pointer stays consistent across text and children */
-.upload-box, .upload-box * {
+.upload-box,
+.upload-box * {
   cursor: pointer;
 }
 .upload-label {
@@ -68,7 +67,7 @@
   color: var(--color-primary-dark);
 }
 input[type="file"] {
-  display: none;                       /* hidden, triggered via click handler */
+  display: none;
 }
 
 /* Helpers under upload */
@@ -138,7 +137,7 @@ input[type="file"] {
   background-color: #fff;
   padding: 1rem 1.25rem;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 .preview-form h3 {
   margin-top: 1.25rem;
@@ -192,6 +191,7 @@ input[type="file"] {
   cursor: pointer;
   border: 1px solid transparent;
   font-size: 0.9rem;
+  text-align: center;
 }
 .actions .primary {
   background-color: var(--color-primary);
@@ -206,4 +206,44 @@ input[type="file"] {
   background-color: #f7f7f7;
   color: var(--color-primary-dark);
   border-color: #eee;
+}
+
+/* Confirmation state */
+.confirmation-state {
+  background-color: #e6f6ea;
+  color: #1d7a3d;
+  padding: 2rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.confirmation-text h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  color: var(--color-primary-dark);
+}
+.confirmation-text p {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+}
+.confirmation-state .actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.confirmation-state .primary {
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.confirmation-state .secondary {
+  background-color: #fff;
+  color: var(--color-primary-dark);
+  border: 1px solid #d9d9d9;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
 }

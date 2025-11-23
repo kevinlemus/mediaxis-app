@@ -12,7 +12,7 @@ import { UploadFormComponent } from './features/upload/form/form.component';
 import { adminGuard } from './core/auth/admin.guard';
 import { employeeGuard } from './core/auth/employee.guard';
 import { DashboardComponent } from './features/dashboard-employee/main/dashboard/dashboard.component';
-import { HistoryComponent } from './features/upload/history/history.component';
+import { HistoryComponent } from './features/claims/history/history.component';
 import { DetailComponent } from './features/claims/detail/detail.component';
 import { EmployeeSettingsComponent } from './features/dashboard-employee/main/employee-settings/employee-settings.component';
 import { EmployeeSupportComponent } from './features/dashboard-employee/main/employee-support/employee-support.component';

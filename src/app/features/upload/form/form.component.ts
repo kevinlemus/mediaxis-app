@@ -1,12 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 
-// Types from your Claim model
 import {
   Claim,
   ClaimStatus,
-  ClaimType,
   PatientInfo,
   ProviderInfo,
   InsuranceInfo,
@@ -19,7 +19,7 @@ import {
 @Component({
   selector: 'app-upload-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule, RouterModule],
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css'],
 })
@@ -28,6 +28,7 @@ export class UploadFormComponent {
 
   uploadedFile: File | null = null;
   isProcessing = false;
+  submitSuccess = false;
 
   claimForm: Claim = {
     metadata: {
@@ -37,12 +38,7 @@ export class UploadFormComponent {
       lastUpdatedAt: new Date(),
       submittedBy: 'System',
     } as SubmissionMetadata,
-    patient: {
-      mrn: '',
-      firstName: '',
-      lastName: '',
-      dob: new Date(),
-    } as PatientInfo,
+    patient: { mrn: '', firstName: '', lastName: '', dob: new Date() } as PatientInfo,
     provider: { renderingProviderName: '', renderingNPI: '' } as ProviderInfo,
     insurance: { payerName: '', policyNumber: '' } as InsuranceInfo,
     status: 'Draft' as ClaimStatus,
@@ -74,7 +70,6 @@ export class UploadFormComponent {
 
   processFile(): void {
     this.isProcessing = true;
-    // Simulate AI processing
     setTimeout(() => {
       this.claimForm = {
         metadata: {
@@ -116,19 +111,10 @@ export class UploadFormComponent {
         status: 'Draft',
         dateOfService: new Date('2025-11-01'),
         diagnoses: [
-          {
-            code: 'J06.9',
-            description: 'Acute upper respiratory infection',
-            primary: true,
-          },
+          { code: 'J06.9', description: 'Acute upper respiratory infection', primary: true }
         ],
         serviceLines: [
-          {
-            cptCode: '99213',
-            units: 1,
-            chargeAmount: 150,
-            diagnosisPointers: ['J06.9'],
-          },
+          { cptCode: '99213', units: 1, chargeAmount: 150, diagnosisPointers: ['J06.9'] }
         ],
         financials: {
           totalCharge: 150,
@@ -143,12 +129,13 @@ export class UploadFormComponent {
   }
 
   submitClaim(): void {
-    alert('Claim submitted successfully!');
-    // TODO: integrate with backend service
+    this.submitSuccess = true;
+    // Do NOT clear uploadedFile here — confirmation state is controlled by submitSuccess
   }
 
   resetForm(): void {
     this.uploadedFile = null;
+    this.submitSuccess = false; // reset confirmation state
     this.claimForm = {
       metadata: {
         claimId: '',

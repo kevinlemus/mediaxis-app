@@ -36,12 +36,12 @@ export interface ProviderInfo {
   billingProviderName?: string;
   billingNPI?: string;
   taxonomyCode?: string;
-  specialtyCode?: string;             // NEW
+  specialtyCode?: string; // NEW
   facilityName?: string;
   facilityNPI?: string;
   facilityAddress?: string;
-  referringProviderName?: string;     // NEW
-  referringNPI?: string;              // NEW
+  referringProviderName?: string; // NEW
+  referringNPI?: string; // NEW
 }
 
 export interface InsuranceInfo {
@@ -66,7 +66,7 @@ export interface ServiceLine {
   diagnosisPointers: string[];
   placeOfService?: string;
   renderingNPIOverride?: string;
-  ndcCode?: string;                   // NEW
+  ndcCode?: string; // NEW
 }
 
 export interface Diagnosis {
@@ -91,7 +91,7 @@ export interface Financials {
 export interface SubmissionMetadata {
   claimId: string;
   encounterId?: string;
-  claimType: ClaimType;               // NEW
+  claimType: ClaimType; // NEW
   createdAt: Date;
   submittedAt?: Date;
   lastUpdatedAt: Date;
@@ -100,10 +100,10 @@ export interface SubmissionMetadata {
   payerClaimRef?: string;
   x12Transaction837Id?: string;
   x12Transaction835Id?: string;
-  priorAuthRequired?: boolean;        // NEW
-  priorAuthNumber?: string;           // NEW
-  referralRequired?: boolean;         // NEW
-  referralNumber?: string;            // NEW
+  priorAuthRequired?: boolean; // NEW
+  priorAuthNumber?: string; // NEW
+  referralRequired?: boolean; // NEW
+  referralNumber?: string; // NEW
 }
 
 export interface PayerResponse {
@@ -151,7 +151,7 @@ export interface Claim {
   patient: PatientInfo;
   provider: ProviderInfo;
   insurance: InsuranceInfo;
-  secondaryInsurance?: InsuranceInfo;       // NEW
+  secondaryInsurance?: InsuranceInfo; // NEW
   coordinationOfBenefits?: CoordinationOfBenefits; // NEW
   status: ClaimStatus;
   dateOfService: Date;
