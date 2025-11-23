@@ -183,8 +183,7 @@ input[type="file"] {
   flex-wrap: wrap;
 }
 .actions .primary,
-.actions .secondary,
-.actions .tertiary {
+.actions .secondary {
   padding: 0.6rem 1rem;
   border-radius: 6px;
   min-width: 150px;
@@ -201,11 +200,6 @@ input[type="file"] {
   background-color: #fff;
   color: var(--color-primary-dark);
   border-color: #d9d9d9;
-}
-.actions .tertiary {
-  background-color: #f7f7f7;
-  color: var(--color-primary-dark);
-  border-color: #eee;
 }
 
 /* Confirmation state */

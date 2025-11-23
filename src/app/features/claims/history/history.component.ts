@@ -24,13 +24,12 @@ export class HistoryComponent implements OnInit {
   ngOnInit(): void {
     this.claimId = this.route.snapshot.paramMap.get('id');
     this.isPrintMode = this.route.snapshot.url.some((s) => s.path === 'print');
-
     if (this.claimId) this.loadHistory(this.claimId);
-    if (this.isPrintMode) setTimeout(() => window.print(), 500);
+    if (this.isPrintMode) setTimeout(() => this.printHistory(), 300);
   }
 
   private loadHistory(id: string): void {
-    // TODO: Replace with backend call. Demo events include multiple diffs.
+    // Demo events – replace with backend fetch
     this.events = [
       {
         at: new Date('2025-11-10T09:20:00Z'),
@@ -189,7 +188,12 @@ export class HistoryComponent implements OnInit {
   }
 
   private buildPdf(): jsPDF {
-    const pdf = new jsPDF({ unit: 'pt', format: 'letter' });
+    // Landscape for wider audit/diff columns
+    const pdf = new jsPDF({
+      unit: 'pt',
+      format: 'letter',
+      orientation: 'landscape',
+    });
     const marginX = 32;
     let cursorY = 40;
     const headStyles: any = {
@@ -198,8 +202,6 @@ export class HistoryComponent implements OnInit {
       fontStyle: 'bold',
     };
     const bodyStyles = { fontSize: 9, cellPadding: 4 } as any;
-    const smallBodyStyles = { fontSize: 8, cellPadding: 3 } as any;
-
     const addHeader = () => {
       pdf.setFontSize(18);
       pdf.text(`History for Claim ${this.claimId}`, marginX, cursorY);
@@ -220,15 +222,24 @@ export class HistoryComponent implements OnInit {
     };
     addHeader();
 
-    // Main events table
+    // Primary events table (summary)
     ensureSpace();
     pdf.setFontSize(12);
-    pdf.text('Audit Trail', marginX, cursorY);
+    pdf.text('Audit Events Summary', marginX, cursorY);
     cursorY += 10;
     autoTable(pdf, {
       startY: cursorY,
       head: [
-        ['At', 'By', 'Role', 'Action', 'Details', 'Diff', 'Hash', 'Prev Hash'],
+        [
+          'At',
+          'By',
+          'Role',
+          'Action',
+          'Details',
+          'Diff Cnt',
+          'Hash',
+          'Prev Hash',
+        ],
       ],
       body: this.events.map((ev) => [
         ev.at.toISOString(),
@@ -236,7 +247,7 @@ export class HistoryComponent implements OnInit {
         ev.role || '',
         ev.action,
         (ev.details || '').slice(0, 140),
-        String(ev.diff ? Object.keys(ev.diff).length : 0),
+        ev.diff ? Object.keys(ev.diff).length : 0,
         ev.hash || '',
         ev.prevHash || '',
       ]),
@@ -250,7 +261,7 @@ export class HistoryComponent implements OnInit {
       },
     });
 
-    // Per-event diffs
+    // Field-level diff tables (only for events that have changes)
     this.events.forEach((ev) => {
       if (!ev.diff || !Object.keys(ev.diff).length) return;
       ensureSpace();
@@ -260,7 +271,7 @@ export class HistoryComponent implements OnInit {
         marginX,
         cursorY
       );
-      cursorY += 8;
+      cursorY += 10;
       autoTable(pdf, {
         startY: cursorY,
         head: [['Field', 'Before', 'After']],
@@ -270,12 +281,12 @@ export class HistoryComponent implements OnInit {
           String((v as any).after ?? ''),
         ]),
         margin: { left: marginX, right: marginX },
-        styles: smallBodyStyles,
+        styles: bodyStyles,
         headStyles,
         theme: 'grid',
         didDrawPage: (data) => {
           const cy = (data as any).cursor?.y;
-          if (typeof cy === 'number') cursorY = cy + 6;
+          if (typeof cy === 'number') cursorY = cy + 8;
         },
       });
     });

@@ -40,6 +40,10 @@ export const routes: Routes = [
     ],
   },
 
+  // Standalone history (auditor-focused) page without employee dashboard chrome/sidebar
+  { path: 'claims/:id/history', component: HistoryComponent },
+  { path: 'claims/:id/history/print', component: HistoryComponent },
+
   {
     path: 'dashboard-admin',
     component: AdminMainComponent,

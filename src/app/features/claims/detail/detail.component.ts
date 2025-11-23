@@ -1,4 +1,3 @@
-
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -597,10 +596,7 @@ export class DetailComponent implements OnInit {
 
   viewHistory() {
     if (!this.claim) return;
-    window.open(
-      `/dashboard-employee/claims/${this.claim.metadata.claimId}/history`,
-      '_blank'
-    );
+    this.router.navigate(['/claims', this.claim.metadata.claimId, 'history']);
   }
 
   // ----- Download helpers (client-side) -----
