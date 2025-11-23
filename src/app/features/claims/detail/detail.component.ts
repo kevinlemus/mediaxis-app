@@ -42,6 +42,9 @@ export class DetailComponent implements OnInit {
   currentUser = 'j.smith';
   routeClaimId: string | null = null;
   isPrintMode = false;
+  bannerMessage: string | null = null;
+  bannerTimeoutHandle: any;
+  bannerType: 'success' | 'danger' | null = null;
 
   // Simple UI helpers
   pointerLabels = 'ABCDEFGHIJKL'.split(''); // CMS-1500 diag pointer slots
@@ -195,11 +198,7 @@ export class DetailComponent implements OnInit {
 
   // ----- Edit workflow -----
   enableEdit(): void {
-    if (
-      !this.claim ||
-      (this.claim.status !== 'Rejected' && this.claim.status !== 'Denied')
-    )
-      return;
+    if (!this.claim || this.claim.status === 'Void') return;
     this.editMode = true;
     this.workingCopy = JSON.parse(JSON.stringify(this.claim));
     this.logAudit(
@@ -243,6 +242,10 @@ export class DetailComponent implements OnInit {
       `Changes saved to claim ${this.claim.metadata.claimId}`,
       diff
     );
+    // Exit edit mode and show banner
+    this.editMode = false;
+    this.workingCopy = null;
+    this.showBanner('Changes saved successfully', 'success');
   }
 
   saveAndResubmit(): void {
@@ -295,6 +298,7 @@ export class DetailComponent implements OnInit {
     );
     this.editMode = false;
     this.workingCopy = null;
+    this.showBanner('Changes saved and claim resubmitted', 'success');
   }
 
   withdrawClaim(): void {
@@ -303,6 +307,7 @@ export class DetailComponent implements OnInit {
     this.claim.status = 'Void';
     this.claim.metadata.lastUpdatedAt = new Date();
     this.logAudit('StatusChanged', `Status changed ${previousStatus} -> Void`);
+    this.showBanner('Claim withdrawn', 'danger');
   }
 
   // ----- Diagnostics & validation (clinic-ready rules) -----
@@ -989,6 +994,19 @@ export class DetailComponent implements OnInit {
       pdf.setTextColor(0);
     }
     return pdf;
+  }
+
+  private showBanner(
+    message: string,
+    type: 'success' | 'danger' = 'success'
+  ): void {
+    this.bannerMessage = message;
+    this.bannerType = type;
+    if (this.bannerTimeoutHandle) clearTimeout(this.bannerTimeoutHandle);
+    this.bannerTimeoutHandle = setTimeout(() => {
+      this.bannerMessage = null;
+      this.bannerType = null;
+    }, 6000);
   }
 
   // Build HTML summary identical to print view (without auto print script)

@@ -1,4 +1,10 @@
 <div class="page-container claim-detail" *ngIf="claim">
+  <div *ngIf="bannerMessage" class="banner" [ngClass]="'banner-' + bannerType">
+    <mat-icon>{{
+      bannerType === "danger" ? "warning" : "check_circle"
+    }}</mat-icon>
+    {{ bannerMessage }}
+  </div>
   <!-- Page header -->
   <header class="page-header" *ngIf="!isPrintMode">
     <div class="header-left">
@@ -389,7 +395,7 @@
   <footer class="actions" *ngIf="!isPrintMode">
     <button
       class="primary"
-      *ngIf="claim.status === 'Rejected' && !editMode"
+      *ngIf="claim.status !== 'Void' && !editMode"
       (click)="enableEdit()"
     >
       <mat-icon>edit</mat-icon> Edit Claim
