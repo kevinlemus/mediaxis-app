@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import {
   Claim,
   AuditEvent,
@@ -44,24 +46,24 @@ export class DetailComponent implements OnInit {
   // Simple UI helpers
   pointerLabels = 'ABCDEFGHIJKL'.split(''); // CMS-1500 diag pointer slots
   maxModifiers = 4;
+  // Dropdown state removed; single automatic PDF export now.
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
-ngOnInit(): void {
-  this.route.paramMap.subscribe(params => {
-    const id = params.get('id');
-    this.routeClaimId = id;
-    if (id) this.loadClaim(id);
-  });
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      this.routeClaimId = id;
+      if (id) this.loadClaim(id);
+    });
 
-  this.route.url.subscribe(segments => {
-    this.isPrintMode = segments.some(s => s.path === 'print');
-    if (this.isPrintMode) {
-      setTimeout(() => window.print(), 500);
-    }
-  });
-}
-
+    this.route.url.subscribe((segments) => {
+      this.isPrintMode = segments.some((s) => s.path === 'print');
+      if (this.isPrintMode) {
+        setTimeout(() => window.print(), 500);
+      }
+    });
+  }
 
   // ----- Load mock claim (clinic-ready fields populated) -----
   private loadClaim(id: string): void {
@@ -575,20 +577,16 @@ ngOnInit(): void {
     this.workingCopy.financials.balance = total;
   }
 
+  // Unified actions
   downloadClaim(format: 'pdf' | 'csv') {
     if (!this.claim) return;
-    window.open(
-      `/api/claims/${this.claim.metadata.claimId}/export?format=${format}`,
-      '_blank'
-    );
+    if (format === 'csv') this.downloadCsv();
+    else this.downloadSummaryPdf();
   }
 
   printClaim() {
     if (!this.claim) return;
-    window.open(
-      `/dashboard-employee/claims/${this.claim.metadata.claimId}/print`,
-      '_blank'
-    );
+    this.printSummaryPdf();
   }
 
   viewHistory() {
@@ -597,5 +595,520 @@ ngOnInit(): void {
       `/dashboard-employee/claims/${this.claim.metadata.claimId}/history`,
       '_blank'
     );
+  }
+
+  // ----- Download helpers (client-side) -----
+  downloadCsv(): void {
+    if (!this.claim) return;
+    const c = this.claim;
+    const escape = (v: any) => {
+      const s = v == null ? '' : String(v).replace(/\r?\n+/g, ' ');
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    };
+
+    const lines: string[] = [];
+    const pushSectionHeader = (title: string) => lines.push(`# ${title}`);
+
+    pushSectionHeader('Claim');
+    lines.push(['Claim ID', c.metadata.claimId].map(escape).join(','));
+    lines.push(['Status', c.status].map(escape).join(','));
+    lines.push(['Type', c.metadata.claimType].map(escape).join(','));
+    lines.push(
+      ['Date of Service', c.dateOfService.toISOString()].map(escape).join(',')
+    );
+
+    pushSectionHeader('Patient');
+    lines.push(['MRN', c.patient.mrn].map(escape).join(','));
+    lines.push(
+      ['Name', `${c.patient.firstName} ${c.patient.lastName}`]
+        .map(escape)
+        .join(',')
+    );
+    lines.push(['DOB', c.patient.dob.toISOString()].map(escape).join(','));
+    if (c.patient.gender)
+      lines.push(['Gender', c.patient.gender].map(escape).join(','));
+
+    pushSectionHeader('Provider');
+    lines.push(
+      [
+        'Rendering Provider',
+        c.provider.renderingProviderName,
+        c.provider.renderingNPI,
+      ]
+        .map(escape)
+        .join(',')
+    );
+    if (c.provider.billingProviderName)
+      lines.push(
+        [
+          'Billing Provider',
+          c.provider.billingProviderName,
+          c.provider.billingNPI,
+        ]
+          .map(escape)
+          .join(',')
+      );
+    if (c.provider.facilityName)
+      lines.push(
+        ['Facility', c.provider.facilityName, c.provider.facilityNPI]
+          .map(escape)
+          .join(',')
+      );
+
+    pushSectionHeader('Insurance');
+    lines.push(['Payer', c.insurance.payerName].map(escape).join(','));
+    lines.push(['Policy', c.insurance.policyNumber].map(escape).join(','));
+    if (c.insurance.groupNumber)
+      lines.push(['Group', c.insurance.groupNumber].map(escape).join(','));
+    if (c.insurance.subscriberName)
+      lines.push(
+        ['Subscriber', c.insurance.subscriberName].map(escape).join(',')
+      );
+
+    if (c.secondaryInsurance) {
+      pushSectionHeader('Secondary Insurance');
+      lines.push(
+        ['Payer', c.secondaryInsurance.payerName].map(escape).join(',')
+      );
+      lines.push(
+        ['Policy', c.secondaryInsurance.policyNumber].map(escape).join(',')
+      );
+    }
+
+    pushSectionHeader('Diagnoses');
+    lines.push(['Code', 'Description', 'Primary'].map(escape).join(','));
+    (c.diagnoses || []).forEach((dx) => {
+      lines.push(
+        [dx.code, dx.description, dx.primary ? 'Yes' : 'No']
+          .map(escape)
+          .join(',')
+      );
+    });
+
+    pushSectionHeader('Service Lines');
+    lines.push(
+      ['CPT', 'Units', 'Charge', 'POS', 'Modifiers', 'Dx Pointers', 'NDC']
+        .map(escape)
+        .join(',')
+    );
+    (c.serviceLines || []).forEach((sl) => {
+      const mods = [sl.modifier1, sl.modifier2, sl.modifier3, sl.modifier4]
+        .filter(Boolean)
+        .join('|');
+      lines.push(
+        [
+          sl.cptCode,
+          sl.units,
+          sl.chargeAmount,
+          sl.placeOfService || '',
+          mods,
+          (sl.diagnosisPointers || []).join('|'),
+          sl.ndcCode || '',
+        ]
+          .map(escape)
+          .join(',')
+      );
+    });
+
+    pushSectionHeader('Financials');
+    lines.push(
+      ['Total Charge', c.financials.totalCharge].map(escape).join(',')
+    );
+    if (c.financials.allowedAmount != null)
+      lines.push(['Allowed', c.financials.allowedAmount].map(escape).join(','));
+    if (c.financials.paidAmount != null)
+      lines.push(['Paid', c.financials.paidAmount].map(escape).join(','));
+    if (c.financials.patientResponsibility != null)
+      lines.push(
+        ['Patient Responsibility', c.financials.patientResponsibility]
+          .map(escape)
+          .join(',')
+      );
+    if (c.financials.balance != null)
+      lines.push(['Balance', c.financials.balance].map(escape).join(','));
+
+    if (c.auditTrail?.length) {
+      pushSectionHeader('Audit Trail');
+      lines.push(['At', 'By', 'Action', 'Details'].map(escape).join(','));
+      c.auditTrail.forEach((ev) => {
+        lines.push(
+          [ev.at.toISOString(), ev.by, ev.action, ev.details || '']
+            .map(escape)
+            .join(',')
+        );
+      });
+    }
+
+    const csvContent = lines.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `claim-${c.metadata.claimId}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Removed legacy HTML print approach; unified PDF generation instead.
+
+  // Automatic PDF download (summary) without opening print dialog
+  async downloadSummaryPdf(): Promise<void> {
+    if (!this.claim) return;
+    const pdf = this.buildPdf();
+    pdf.save(`claim-${this.claim.metadata.claimId}-summary.pdf`);
+  }
+
+  private printSummaryPdf(): void {
+    if (!this.claim) return;
+    const pdf = this.buildPdf();
+    // Auto print: open in new window then trigger browser print dialog
+    pdf.autoPrint();
+    const blobUrl = pdf.output('bloburl');
+    window.open(blobUrl, '_blank');
+  }
+
+  private buildPdf(): jsPDF {
+    const c = this.claim!;
+    const pdf = new jsPDF({ unit: 'pt', format: 'letter' });
+    const marginX = 32;
+    let cursorY = 40;
+    const headStyles: any = {
+      fillColor: [245, 245, 245] as [number, number, number],
+      textColor: 0,
+      fontStyle: 'bold',
+    };
+    const bodyStyles = { fontSize: 9, cellPadding: 4 };
+    const smallBodyStyles = { fontSize: 8, cellPadding: 3 };
+
+    const addHeader = () => {
+      pdf.setFontSize(18);
+      pdf.text(`Claim ${c.metadata.claimId}`, marginX, cursorY);
+      cursorY += 18;
+      pdf.setFontSize(9);
+      pdf.setTextColor(80);
+      pdf.text(`Generated: ${new Date().toLocaleString()}`, marginX, cursorY);
+      pdf.setTextColor(0);
+      cursorY += 14;
+    };
+    const ensureSpace = (needed: number = 60) => {
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      if (cursorY + needed > pageHeight - 40) {
+        pdf.addPage();
+        cursorY = 40;
+        addHeader();
+      }
+    };
+    addHeader();
+
+    const sectionTable = (title: string, rows: [string, any][]) => {
+      ensureSpace();
+      pdf.setFontSize(12);
+      pdf.text(title, marginX, cursorY);
+      cursorY += 10;
+      autoTable(pdf, {
+        startY: cursorY,
+        head: [['Field', 'Value']],
+        body: rows.map((r) => [r[0], r[1] == null ? '' : String(r[1])]),
+        margin: { left: marginX, right: marginX },
+        styles: bodyStyles,
+        headStyles,
+        theme: 'grid',
+        didDrawPage: (data) => {
+          const cy = (data as any).cursor?.y;
+          if (typeof cy === 'number') cursorY = cy + 8;
+        },
+      });
+    };
+
+    sectionTable('Claim', [
+      ['Status', c.status],
+      ['Type', c.metadata.claimType],
+      ['Date of Service', c.dateOfService.toISOString().substring(0, 10)],
+      ['Submitted At', c.metadata.submittedAt?.toISOString() || ''],
+      ['Last Updated', c.metadata.lastUpdatedAt?.toISOString() || ''],
+    ]);
+    sectionTable('Patient', [
+      ['MRN', c.patient.mrn],
+      ['Name', `${c.patient.firstName} ${c.patient.lastName}`],
+      ['DOB', c.patient.dob.toISOString().substring(0, 10)],
+      ['Gender', c.patient.gender || ''],
+    ]);
+    sectionTable('Provider', [
+      [
+        'Rendering',
+        `${c.provider.renderingProviderName} (NPI ${c.provider.renderingNPI})`,
+      ],
+      [
+        'Billing',
+        c.provider.billingProviderName
+          ? `${c.provider.billingProviderName} (NPI ${c.provider.billingNPI})`
+          : '',
+      ],
+      [
+        'Facility',
+        c.provider.facilityName
+          ? `${c.provider.facilityName} (NPI ${c.provider.facilityNPI})`
+          : '',
+      ],
+      [
+        'Referring',
+        c.provider.referringProviderName
+          ? `${c.provider.referringProviderName} (NPI ${c.provider.referringNPI})`
+          : '',
+      ],
+    ]);
+    sectionTable('Primary Insurance', [
+      ['Payer', c.insurance.payerName],
+      ['Policy', c.insurance.policyNumber],
+      ['Group', c.insurance.groupNumber || ''],
+      ['Subscriber', c.insurance.subscriberName || ''],
+      ['Relationship', c.insurance.relationshipToSubscriber || ''],
+    ]);
+    if (c.secondaryInsurance) {
+      sectionTable('Secondary Insurance', [
+        ['Payer', c.secondaryInsurance.payerName],
+        ['Policy', c.secondaryInsurance.policyNumber],
+        ['Subscriber', c.secondaryInsurance.subscriberName || ''],
+        ['Relationship', c.secondaryInsurance.relationshipToSubscriber || ''],
+      ]);
+    }
+
+    ensureSpace();
+    pdf.setFontSize(12);
+    pdf.text('Diagnoses', marginX, cursorY);
+    cursorY += 10;
+    autoTable(pdf, {
+      startY: cursorY,
+      head: [['#', 'Code', 'Description', 'Primary']],
+      body: (c.diagnoses || []).map((d, i) => [
+        String(i + 1),
+        d.code || '',
+        d.description || '',
+        d.primary ? 'Yes' : 'No',
+      ]),
+      margin: { left: marginX, right: marginX },
+      styles: bodyStyles,
+      headStyles,
+      theme: 'grid',
+      didDrawPage: (data) => {
+        const cy = (data as any).cursor?.y;
+        if (typeof cy === 'number') cursorY = cy + 8;
+      },
+    });
+
+    ensureSpace();
+    pdf.setFontSize(12);
+    pdf.text('Service Lines', marginX, cursorY);
+    cursorY += 10;
+    autoTable(pdf, {
+      startY: cursorY,
+      head: [
+        ['#', 'CPT', 'Units', 'Charge', 'POS', 'Modifiers', 'Dx Ptrs', 'NDC'],
+      ],
+      body: (c.serviceLines || []).map((sl, i) => [
+        String(i + 1),
+        sl.cptCode,
+        String(sl.units),
+        `$${sl.chargeAmount}`,
+        sl.placeOfService || '',
+        [sl.modifier1, sl.modifier2, sl.modifier3, sl.modifier4]
+          .filter(Boolean)
+          .join(' | '),
+        (sl.diagnosisPointers || []).join(' | '),
+        sl.ndcCode || '',
+      ]),
+      margin: { left: marginX, right: marginX },
+      styles: bodyStyles,
+      headStyles,
+      theme: 'grid',
+      didDrawPage: (data) => {
+        const cy = (data as any).cursor?.y;
+        if (typeof cy === 'number') cursorY = cy + 8;
+      },
+    });
+
+    sectionTable('Financials', [
+      ['Total Charge', `$${c.financials.totalCharge}`],
+      [
+        'Allowed',
+        c.financials.allowedAmount != null
+          ? `$${c.financials.allowedAmount}`
+          : '',
+      ],
+      [
+        'Paid',
+        c.financials.paidAmount != null ? `$${c.financials.paidAmount}` : '',
+      ],
+      [
+        'Patient Responsibility',
+        c.financials.patientResponsibility != null
+          ? `$${c.financials.patientResponsibility}`
+          : '',
+      ],
+      [
+        'Balance',
+        c.financials.balance != null ? `$${c.financials.balance}` : '',
+      ],
+    ]);
+
+    if (c.auditTrail?.length) {
+      ensureSpace();
+      pdf.setFontSize(12);
+      pdf.text('Audit Trail', marginX, cursorY);
+      cursorY += 10;
+      autoTable(pdf, {
+        startY: cursorY,
+        head: [['At', 'By', 'Action', 'Details']],
+        body: c.auditTrail.map((ev) => [
+          ev.at.toISOString(),
+          ev.by,
+          ev.action,
+          (ev.details || '').slice(0, 140),
+        ]),
+        margin: { left: marginX, right: marginX },
+        styles: smallBodyStyles,
+        headStyles,
+        theme: 'grid',
+        didDrawPage: (data) => {
+          const cy = (data as any).cursor?.y;
+          if (typeof cy === 'number') cursorY = cy + 8;
+        },
+      });
+    }
+
+    const pageCount = pdf.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(8);
+      pdf.setTextColor(120);
+      pdf.text(
+        `Page ${i} of ${pageCount}`,
+        pdf.internal.pageSize.getWidth() - 80,
+        pdf.internal.pageSize.getHeight() - 20
+      );
+      pdf.setTextColor(0);
+    }
+    return pdf;
+  }
+
+  // Build HTML summary identical to print view (without auto print script)
+  private buildSummaryHtml(): string {
+    const c = this.claim!;
+    const esc = (v: any) => (v == null ? '' : String(v));
+    const style = `
+      body { font-family: Segoe UI, Arial, sans-serif; margin:0; padding:16px; }
+      h1 { font-size:20px; margin:0 0 8px; }
+      h2 { font-size:16px; margin:24px 0 8px; border-bottom:1px solid #ccc; padding-bottom:4px; }
+      table { width:100%; border-collapse:collapse; margin-bottom:12px; }
+      th, td { border:1px solid #ddd; padding:4px 6px; font-size:12px; text-align:left; }
+      th { background:#f5f5f5; }
+      .meta { font-size:12px; color:#555; margin-bottom:16px; }
+    `;
+    const sectionTable = (title: string, rows: [string, any][]) =>
+      `<h2>${esc(title)}</h2><table><tbody>${rows
+        .map((r) => `<tr><th>${esc(r[0])}</th><td>${esc(r[1])}</td></tr>`)
+        .join('')}</tbody></table>`;
+    const diagTable = `<h2>Diagnoses</h2><table><thead><tr><th>Code</th><th>Description</th><th>Primary</th></tr></thead><tbody>${(
+      c.diagnoses || []
+    )
+      .map(
+        (d) =>
+          `<tr><td>${esc(d.code)}</td><td>${esc(d.description)}</td><td>${
+            d.primary ? 'Yes' : 'No'
+          }</td></tr>`
+      )
+      .join('')}</tbody></table>`;
+    const slTable = `<h2>Service Lines</h2><table><thead><tr><th>CPT</th><th>Units</th><th>Charge</th><th>POS</th><th>Modifiers</th><th>Dx Ptrs</th><th>NDC</th></tr></thead><tbody>${(
+      c.serviceLines || []
+    )
+      .map((sl) => {
+        const mods = [sl.modifier1, sl.modifier2, sl.modifier3, sl.modifier4]
+          .filter(Boolean)
+          .join(' | ');
+        return `<tr><td>${esc(sl.cptCode)}</td><td>${esc(
+          sl.units
+        )}</td><td>${esc(sl.chargeAmount)}</td><td>${esc(
+          sl.placeOfService || ''
+        )}</td><td>${esc(mods)}</td><td>${(sl.diagnosisPointers || []).join(
+          ' | '
+        )}</td><td>${esc(sl.ndcCode || '')}</td></tr>`;
+      })
+      .join('')}</tbody></table>`;
+    const auditTable = c.auditTrail?.length
+      ? `<h2>Audit Trail</h2><table><thead><tr><th>At</th><th>By</th><th>Action</th><th>Details</th></tr></thead><tbody>${c.auditTrail
+          .map(
+            (ev) =>
+              `<tr><td>${ev.at.toISOString()}</td><td>${esc(
+                ev.by
+              )}</td><td>${esc(ev.action)}</td><td>${esc(
+                ev.details || ''
+              )}</td></tr>`
+          )
+          .join('')}</tbody></table>`
+      : '';
+    return `<!DOCTYPE html><html><head><meta charset='utf-8'/><style>${style}</style></head><body>
+      <h1>Claim ${esc(c.metadata.claimId)}</h1>
+      <div class="meta">Generated: ${new Date().toLocaleString()}</div>
+      ${sectionTable('Claim', [
+        ['Status', c.status],
+        ['Type', c.metadata.claimType],
+        ['Date of Service', c.dateOfService.toISOString()],
+        ['Submitted At', c.metadata.submittedAt?.toISOString() || ''],
+        ['Last Updated', c.metadata.lastUpdatedAt?.toISOString() || ''],
+      ])}
+      ${sectionTable('Patient', [
+        ['MRN', c.patient.mrn],
+        ['Name', c.patient.firstName + ' ' + c.patient.lastName],
+        ['DOB', c.patient.dob.toISOString()],
+        ['Gender', c.patient.gender || ''],
+      ])}
+      ${sectionTable('Provider', [
+        [
+          'Rendering',
+          c.provider.renderingProviderName +
+            ' (NPI ' +
+            c.provider.renderingNPI +
+            ')',
+        ],
+        [
+          'Billing',
+          c.provider.billingProviderName
+            ? c.provider.billingProviderName +
+              ' (NPI ' +
+              c.provider.billingNPI +
+              ')'
+            : '',
+        ],
+        [
+          'Facility',
+          c.provider.facilityName
+            ? c.provider.facilityName + ' (NPI ' + c.provider.facilityNPI + ')'
+            : '',
+        ],
+      ])}
+      ${sectionTable('Primary Insurance', [
+        ['Payer', c.insurance.payerName],
+        ['Policy', c.insurance.policyNumber],
+        ['Group', c.insurance.groupNumber || ''],
+      ])}
+      ${
+        c.secondaryInsurance
+          ? sectionTable('Secondary Insurance', [
+              ['Payer', c.secondaryInsurance.payerName],
+              ['Policy', c.secondaryInsurance.policyNumber],
+            ])
+          : ''
+      }
+      ${diagTable}
+      ${slTable}
+      ${sectionTable('Financials', [
+        ['Total Charge', c.financials.totalCharge],
+        ['Allowed', c.financials.allowedAmount ?? ''],
+        ['Paid', c.financials.paidAmount ?? ''],
+        ['Patient Responsibility', c.financials.patientResponsibility ?? ''],
+        ['Balance', c.financials.balance ?? ''],
+      ])}
+      ${auditTable}
+    </body></html>`;
   }
 }

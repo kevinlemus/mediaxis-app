@@ -383,9 +383,6 @@
         <span class="by">by {{ ev.by }}</span>
       </li>
     </ul>
-    <button class="secondary small" (click)="viewHistory()">
-      <mat-icon>history</mat-icon> View Full History
-    </button>
   </section>
 
   <!-- Actions -->
@@ -422,12 +419,8 @@
       <mat-icon>arrow_back</mat-icon> Back to Claims
     </button>
 
-    <button class="secondary" (click)="downloadClaim('pdf')">
-      <mat-icon>download</mat-icon> Download PDF
-    </button>
-
-    <button class="secondary" (click)="downloadClaim('csv')">
-      <mat-icon>download</mat-icon> Download CSV
+    <button class="secondary" (click)="downloadSummaryPdf()">
+      <mat-icon>picture_as_pdf</mat-icon> Download Summary PDF
     </button>
 
     <button class="secondary" (click)="printClaim()">

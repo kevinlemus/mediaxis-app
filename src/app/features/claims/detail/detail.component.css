@@ -7,7 +7,6 @@
   box-sizing: border-box;
 }
 
-/* Page header */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -46,7 +45,6 @@
   opacity: 0.85;
 }
 
-/* Status chip */
 .status-chip {
   font-size: 0.85rem;
   padding: 0.3rem 0.8rem;
@@ -88,7 +86,6 @@
   color: #666;
 }
 
-/* Two-column grid */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -96,7 +93,7 @@
   margin-bottom: 2rem;
 }
 
-/* Form sections */
+/* Restored section card styling */
 .form-section {
   background-color: var(--color-background);
   padding: 1.25rem 1.5rem;
@@ -125,12 +122,6 @@
   color: var(--color-primary-dark);
 }
 
-/* Chips */
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
 .chip {
   background: var(--color-light-blue);
   color: var(--color-primary-dark);
@@ -146,7 +137,6 @@
   cursor: pointer;
 }
 
-/* Lists */
 .service-lines,
 .financials,
 .attachments,
@@ -173,7 +163,6 @@
   border-bottom: none;
 }
 
-/* Attachments */
 .attachments .file {
   font-weight: 500;
 }
@@ -182,7 +171,6 @@
   color: var(--color-text-secondary);
 }
 
-/* History */
 .history li {
   display: grid;
   grid-template-columns: 140px 120px 1fr 120px;
@@ -200,7 +188,6 @@
   color: var(--color-primary-dark);
 }
 
-/* Rejection reason */
 .rejection-reason {
   background-color: #fdecea;
   border: 1px solid #f5c2c2;
@@ -211,7 +198,6 @@
   font-size: 0.9rem;
 }
 
-/* Form rows and inputs */
 .form-row {
   display: grid;
   grid-template-columns: 140px 1fr;
@@ -233,7 +219,6 @@
   box-sizing: border-box;
 }
 
-/* Diagnoses styling */
 .diagnoses-list {
   display: flex;
   flex-direction: column;
@@ -298,7 +283,6 @@
   background-color: var(--color-light-blue);
 }
 
-/* Service lines edit grid */
 .grid-4.header,
 .grid-4.row {
   display: grid;
@@ -318,7 +302,6 @@
   max-width: 200px;
 }
 
-/* Edit mode service line card layout */
 .service-lines-edit {
   display: flex;
   flex-direction: column;
@@ -335,7 +318,6 @@
   align-self: flex-start;
 }
 
-/* Nested full-width edit subrows inside a service line */
 .grid-4.row .form-row {
   grid-column: 1 / -1;
   display: flex;
@@ -367,7 +349,6 @@
   width: 180px;
 }
 
-/* Chips inside diagnosis pointer selector within service lines */
 .grid-4.row .chips {
   display: flex;
   flex-wrap: wrap;
@@ -390,12 +371,10 @@
   border-color: var(--color-primary);
 }
 
-/* Action button at bottom of service lines edit list */
 .service-lines-edit > .icon-btn {
   align-self: flex-start;
 }
 
-/* Modifiers and pointers inside service lines */
 .grid-4 .form-row {
   margin-top: 0.5rem;
 }
@@ -408,7 +387,6 @@
   box-sizing: border-box;
 }
 
-/* Diagnosis pointer chips inside service lines */
 .grid-4 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -430,12 +408,10 @@
   border-color: var(--color-primary);
 }
 
-/* NDC input styling */
 .grid-4 .form-row input[placeholder*="NDC"] {
   max-width: 200px;
 }
 
-/* Icon buttons */
 .icon-btn {
   display: inline-flex;
   align-items: center;
@@ -458,7 +434,6 @@
   background-color: var(--color-light-blue);
 }
 
-/* Danger icon button (delete) */
 .icon-btn.danger {
   border-color: #f5c2c2;
   background-color: #fdecea;
@@ -469,7 +444,6 @@
   color: #fff;
 }
 
-/* Actions */
 .actions {
   display: flex;
   gap: 0.75rem;
@@ -521,7 +495,6 @@
   color: #fff;
 }
 
-/* Responsive adjustments */
 @media (max-width: 900px) {
   .form-grid {
     grid-template-columns: 1fr;
@@ -545,12 +518,4 @@
   }
 }
 
-@media (max-width: 1100px) {
-  .claim-detail {
-    overflow-x: auto;
-  }
-  .claim-detail .form-grid,
-  .claim-detail .form-section {
-    min-width: 1300px; /* ensures horizontal scroll appears on narrower screens */
-  }
-}
+/* Removed wide-layout forced min-width media query to reduce CSS size */
