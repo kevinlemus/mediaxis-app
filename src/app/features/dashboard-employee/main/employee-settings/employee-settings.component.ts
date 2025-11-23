@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-employee-settings',
@@ -12,9 +13,11 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./employee-settings.component.css'],
 })
 export class EmployeeSettingsComponent {
-  resetPassword() {
-    // Placeholder: link to external reset flow
-    window.open('https://reset.medi-axis.com', '_blank');
+  constructor(private router: Router) {}
+
+  goToResetPassword() {
+    // Navigate to internal reset-password page
+    this.router.navigate(['/reset-password']);
   }
 
   reportIssue() {

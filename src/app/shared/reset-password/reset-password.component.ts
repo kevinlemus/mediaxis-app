@@ -9,9 +9,15 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+  styleUrls: ['./reset-password.component.css'],
 })
 export class ResetPasswordComponent {
   email = '';
@@ -31,10 +37,16 @@ export class ResetPasswordComponent {
       if (!this.email.includes('@')) {
         this.errorMessage = 'Invalid email address. Please try again.';
       } else {
-        // ✅ Professional wording: don't reveal if email exists
-        this.successMessage = 'If this email exists in our database, a reset link has been sent.';
+        // Professional wording: don’t reveal if email exists
+        this.successMessage =
+          'If this email exists in our database, a reset link has been sent.';
       }
       this.isSubmitting = false;
     }, 1500);
+  }
+
+  cancel() {
+    // Navigate back to login page
+    this.router.navigate(['/login']);
   }
 }
