@@ -1,6 +1,5 @@
 :host {
   display: block;
-  /* background-color: var(--color-surface); */
   color: var(--color-text-secondary);
   font-family: "Segoe UI", Roboto, sans-serif;
   padding: 2rem;
@@ -24,6 +23,23 @@
   margin: 0;
 }
 
+/* Banner */
+.banner {
+  background-color: #e6f6ea;
+  border: 1px solid #1d7a3d;
+  color: #1d7a3d;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .support-container {
   display: flex;
   flex-direction: column;
@@ -36,7 +52,6 @@
   background-color: var(--color-surface);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
-
 .support-card:hover {
   box-shadow: var(--elevation-mid);
   transform: translateY(-2px);
@@ -57,6 +72,14 @@ mat-card-content p {
   margin-bottom: 1rem;
 }
 
+/* Validation cues */
+.mat-form-field.ng-invalid.ng-touched .mat-input-element {
+  border-bottom: 2px solid var(--color-error);
+}
+.mat-form-field.ng-valid.ng-touched .mat-input-element {
+  border-bottom: 2px solid var(--color-success);
+}
+
 .support-actions {
   display: flex;
   justify-content: flex-end;
@@ -72,13 +95,25 @@ button {
 .primary-btn {
   background-color: var(--color-accent);
   color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
-
-.primary-btn:hover {
+.primary-btn:hover:enabled {
   background-color: var(--color-primary-dark);
+}
+.primary-btn:disabled {
+  background-color: var(--color-blue-gray);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 button:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
+}
+
+mat-error {
+  font-size: 0.85rem;
+  color: var(--color-error);
 }

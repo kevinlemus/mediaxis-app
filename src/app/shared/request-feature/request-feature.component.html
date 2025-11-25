@@ -6,11 +6,25 @@
     </p>
   </header>
 
+  <!-- Success banner -->
+  <div *ngIf="successMessage" class="banner">
+    {{ successMessage }}
+  </div>
+
   <mat-card class="feature-card">
     <form (ngSubmit)="submitRequest()" #featureForm="ngForm">
       <mat-form-field appearance="fill" class="feature-field">
         <mat-label>Title</mat-label>
-        <input matInput [(ngModel)]="title" name="title" required />
+        <input
+          matInput
+          [(ngModel)]="title"
+          name="title"
+          required
+          #titleCtrl="ngModel"
+        />
+        <mat-error *ngIf="titleCtrl.invalid && titleCtrl.touched">
+          Must have subject.
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="feature-field">
@@ -21,7 +35,11 @@
           name="description"
           rows="6"
           required
+          #descCtrl="ngModel"
         ></textarea>
+        <mat-error *ngIf="descCtrl.invalid && descCtrl.touched">
+          Must have message.
+        </mat-error>
       </mat-form-field>
 
       <div class="feature-actions">
@@ -29,11 +47,17 @@
           mat-raised-button
           color="primary"
           type="submit"
+          class="primary-btn"
           [disabled]="!featureForm.valid"
         >
           Submit Request
         </button>
-        <button mat-button type="button" class="cancel-btn" (click)="cancel()">
+        <button
+          mat-button
+          type="button"
+          class="secondary-btn"
+          (click)="cancel()"
+        >
           Cancel
         </button>
       </div>

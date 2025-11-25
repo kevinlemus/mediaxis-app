@@ -3,6 +3,11 @@
     <h2>Support</h2>
   </div>
 
+  <!-- Success banner -->
+  <div *ngIf="successMessage" class="banner">
+    {{ successMessage }}
+  </div>
+
   <mat-card class="support-card">
     <mat-card-header>
       <mat-card-title>Contact Support</mat-card-title>
@@ -22,7 +27,11 @@
             name="subject"
             required
             placeholder="e.g. Report Issue or Request Feature"
+            #subjectCtrl="ngModel"
           />
+          <mat-error *ngIf="subjectCtrl.invalid && subjectCtrl.touched">
+            Must have subject.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="support-field">
@@ -34,7 +43,11 @@
             rows="6"
             required
             placeholder="Describe your issue or request..."
+            #messageCtrl="ngModel"
           ></textarea>
+          <mat-error *ngIf="messageCtrl.invalid && messageCtrl.touched">
+            Must have message.
+          </mat-error>
         </mat-form-field>
 
         <div class="support-actions">

@@ -25,15 +25,24 @@ import { MatIconModule } from '@angular/material/icon';
 export class EmployeeSupportComponent {
   subject = '';
   message = '';
+  successMessage = '';
 
   submitSupport() {
-    // Placeholder: later wire to backend or email service
+    this.successMessage = '';
+
+    if (!this.subject.trim() || !this.message.trim()) {
+      return;
+    }
+
     console.log('Support request submitted:', {
       subject: this.subject,
       message: this.message,
     });
-    alert('Your message has been submitted to support.');
+
+    this.successMessage = 'Your support request has been sent. Thank you!';
     this.subject = '';
     this.message = '';
+
+    setTimeout(() => (this.successMessage = ''), 4000);
   }
 }

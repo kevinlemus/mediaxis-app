@@ -24,22 +24,30 @@ import { Router } from '@angular/router';
 export class RequestFeatureComponent {
   title = '';
   description = '';
+  successMessage = '';
 
   constructor(private router: Router) {}
 
   submitRequest() {
-    // TODO: Replace with backend integration
+    this.successMessage = '';
+
+    if (!this.title.trim() || !this.description.trim()) {
+      return;
+    }
+
     console.log('Feature request submitted:', {
       title: this.title,
       description: this.description,
     });
-    alert('Feature request submitted successfully!');
+
+    this.successMessage = 'Your feature request has been sent. Thank you!';
     this.title = '';
     this.description = '';
+
+    setTimeout(() => (this.successMessage = ''), 4000);
   }
 
   cancel() {
-    // Navigate back to settings page
     this.router.navigate(['/dashboard-employee/settings']);
   }
 }

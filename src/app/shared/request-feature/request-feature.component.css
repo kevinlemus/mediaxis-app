@@ -1,9 +1,9 @@
 :host {
   display: block;
-  background-color: #fff; /* match dashboard & claims background */
+  background-color: #fff;
   color: var(--color-text-secondary);
   font-family: "Segoe UI", Roboto, sans-serif;
-  padding: 2rem; /* consistent outer spacing */
+  padding: 2rem;
   box-sizing: border-box;
 }
 
@@ -21,6 +21,29 @@
   margin-top: 0.5rem;
 }
 
+/* Banner */
+.banner {
+  background-color: #e6f6ea;
+  border: 1px solid #1d7a3d;
+  color: #1d7a3d;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .feature-card {
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-low);
@@ -33,16 +56,62 @@
   margin-bottom: 1rem;
 }
 
+/* Validation cues */
+.mat-form-field.ng-invalid.ng-touched .mat-input-element {
+  border-bottom: 2px solid var(--color-error);
+}
+.mat-form-field.ng-valid.ng-touched .mat-input-element {
+  border-bottom: 2px solid var(--color-success);
+}
+
 .feature-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
 }
 
-.cancel-btn {
-  color: var(--color-secondary-dark);
+/* Buttons consistent with other pages */
+.feature-actions button {
+  border-radius: var(--radius-sm);
   font-weight: 500;
+  min-width: 120px;
 }
-.cancel-btn:hover {
-  text-decoration: underline;
+.primary-btn {
+  background-color: var(--color-accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.primary-btn:hover:enabled {
+  background-color: var(--color-primary-dark);
+}
+.primary-btn:disabled {
+  background-color: var(--color-blue-gray);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.secondary-btn {
+  background-color: transparent;
+  border: 1px solid var(--color-secondary-dark);
+  color: var(--color-secondary-dark);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.secondary-btn:hover {
+  background-color: var(--color-blue-gray);
+  color: #fff;
+}
+
+button:focus-visible,
+.primary-btn:focus-visible,
+.secondary-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+mat-error {
+  font-size: 0.85rem;
+  color: var(--color-error);
 }
