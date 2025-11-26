@@ -200,7 +200,7 @@ export class DetailComponent implements OnInit {
   enableEdit(): void {
     if (!this.claim || this.claim.status === 'Void') return;
     this.editMode = true;
-    this.workingCopy = JSON.parse(JSON.stringify(this.claim));
+    this.workingCopy = this.cloneClaim(this.claim);
     this.logAudit(
       'Edited',
       `Edit initiated for claim ${this.claim?.metadata.claimId}`
@@ -232,9 +232,10 @@ export class DetailComponent implements OnInit {
       return;
     }
 
-    const before = JSON.parse(JSON.stringify(this.claim));
+    const before = JSON.parse(JSON.stringify(this.claim)); // retain primitive snapshot for diff
     const after = JSON.parse(JSON.stringify(this.workingCopy));
-    this.claim = this.workingCopy;
+    // Assign a cloned version preserving Date instances
+    this.claim = this.cloneClaim(this.workingCopy);
     this.claim.metadata.lastUpdatedAt = new Date();
     const diff = this.computeDiff(before, after);
     this.logAudit(
@@ -268,7 +269,7 @@ export class DetailComponent implements OnInit {
 
       const before = JSON.parse(JSON.stringify(this.claim));
       const after = JSON.parse(JSON.stringify(this.workingCopy));
-      this.claim = this.workingCopy;
+      this.claim = this.cloneClaim(this.workingCopy);
       this.claim.metadata.lastUpdatedAt = new Date();
       const diff = this.computeDiff(before, after);
       this.logAudit(
@@ -591,7 +592,12 @@ export class DetailComponent implements OnInit {
 
   printClaim() {
     if (!this.claim) return;
-    this.printSummaryPdf();
+    try {
+      this.printSummaryPdf();
+    } catch (err) {
+      console.error('Print generation failed', err);
+      this.showBanner('Failed to generate printable claim summary', 'danger');
+    }
   }
 
   viewHistory() {
@@ -756,8 +762,13 @@ export class DetailComponent implements OnInit {
   // Automatic PDF download (summary) without opening print dialog
   async downloadSummaryPdf(): Promise<void> {
     if (!this.claim) return;
-    const pdf = this.buildPdf();
-    pdf.save(`claim-${this.claim.metadata.claimId}-summary.pdf`);
+    try {
+      const pdf = this.buildPdf();
+      pdf.save(`claim-${this.claim.metadata.claimId}-summary.pdf`);
+    } catch (err) {
+      console.error('PDF generation failed', err);
+      this.showBanner('Failed to generate PDF (invalid data)', 'danger');
+    }
   }
 
   private printSummaryPdf(): void {
@@ -771,6 +782,8 @@ export class DetailComponent implements OnInit {
 
   private buildPdf(): jsPDF {
     const c = this.claim!;
+    // Defensive: rehydrate dates if they were accidentally serialized
+    this.rehydrateDates(c);
     const pdf = new jsPDF({ unit: 'pt', format: 'letter' });
     const marginX = 32;
     let cursorY = 40;
@@ -991,6 +1004,61 @@ export class DetailComponent implements OnInit {
       pdf.setTextColor(0);
     }
     return pdf;
+  }
+
+  // ----- Clone & Date Rehydration Utilities -----
+  private cloneClaim(src: Claim): Claim {
+    // Use structuredClone when available to preserve Date instances
+    try {
+      // @ts-ignore - structuredClone may not be typed in some TS configs
+      if (typeof structuredClone === 'function') {
+        return structuredClone(src);
+      }
+    } catch (_) {}
+    // Fallback to JSON clone + manual date rehydration
+    const cloned: any = JSON.parse(JSON.stringify(src));
+    this.rehydrateDates(cloned);
+    return cloned as Claim;
+  }
+
+  private rehydrateDates(obj: any): void {
+    if (!obj || typeof obj !== 'object') return;
+    const dateKeys = [
+      'createdAt',
+      'submittedAt',
+      'lastUpdatedAt',
+      'dob',
+      'dateOfService',
+      'uploadedAt',
+      'at',
+    ];
+    const revive = (val: any, key: string) => {
+      if (
+        typeof val === 'string' &&
+        dateKeys.includes(key) &&
+        /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(val)
+      ) {
+        return new Date(val);
+      }
+      return val;
+    };
+    const walk = (node: any) => {
+      if (!node || typeof node !== 'object') return;
+      for (const k of Object.keys(node)) {
+        const v = node[k];
+        if (Array.isArray(v)) {
+          v.forEach((item, idx) => {
+            if (typeof item === 'object') walk(item);
+            else v[idx] = revive(item, k);
+          });
+        } else if (typeof v === 'object') {
+          walk(v);
+        } else {
+          node[k] = revive(v, k);
+        }
+      }
+    };
+    walk(obj);
   }
 
   private showBanner(
