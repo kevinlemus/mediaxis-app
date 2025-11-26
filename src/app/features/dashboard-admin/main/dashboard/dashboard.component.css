@@ -1,0 +1,21 @@
+:host { display:block; padding:2rem; background:#fff; }
+.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
+.kpi-grid { display:grid; gap:1.25rem; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); margin-bottom:2rem; }
+.kpi-card { display:flex; gap:0.75rem; padding:1rem 1.1rem; box-shadow:0 2px 6px rgba(0,0,0,0.08); }
+.kpi-card.accent { border-left:4px solid var(--color-accent); }
+.kpi-icon mat-icon { font-size:32px; width:32px; height:32px; color:var(--color-primary-dark); }
+.kpi-content h3 { margin:0 0 0.25rem; font-size:0.9rem; font-weight:600; color:var(--color-text-secondary); }
+.kpi-content .value { margin:0; font-size:1.9rem; font-weight:600; color:var(--color-primary); line-height:1.1; }
+.kpi-content .subtext { font-size:0.7rem; color:#666; }
+.two-column { display:grid; gap:1.75rem; grid-template-columns:repeat(auto-fit,minmax(420px,1fr)); }
+.panel { background:var(--color-surface); padding:1.25rem 1.5rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.08); display:flex; flex-direction:column; }
+.panel h2 { margin:0 0 0.75rem; font-size:1.1rem; }
+.roi-grid { display:grid; gap:0.75rem; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); margin-bottom:1rem; }
+.roi-item { background:#fff; padding:0.75rem; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.07); display:flex; flex-direction:column; gap:0.25rem; }
+.roi-item .label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px; color:#555; }
+.roi-item .number { font-size:1.1rem; font-weight:600; color:var(--color-primary-dark); }
+.chart-placeholder { flex:1; display:flex; align-items:center; justify-content:center; background:repeating-linear-gradient(45deg,#f0f2f6,#f0f2f6 10px,#e2e6ec 10px,#e2e6ec 20px); border-radius:6px; min-height:140px; font-size:0.8rem; color:#444; }
+.activity-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.6rem; }
+.activity-list li { display:grid; grid-template-columns:80px 1fr 120px 120px; gap:0.5rem; align-items:center; font-size:0.75rem; background:#fff; padding:0.6rem 0.75rem; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.07); }
+.activity-list .when { font-weight:600; color:var(--color-primary); }
+.activity-list .action { font-weight:500; }

@@ -1,0 +1,13 @@
+:host { display:block; padding:2rem; }
+.settings-grid { display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); }
+mat-card { background:var(--color-surface); box-shadow:0 2px 6px rgba(0,0,0,0.08); }
+.npi-form { display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap; }
+mat-form-field { flex:1 1 220px; }
+.payer-table { width:100%; font-size:0.75rem; }
+th { font-weight:600; }
+.status { padding:2px 8px; border-radius:12px; font-size:0.65rem; background:#e3f2fd; color:#0f2a55; }
+.status.pending { background:#fff3cd; color:#8a6d00; }
+.status.disabled { background:#ececec; color:#777; }
+.integration-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.5rem; font-size:0.8rem; }
+.integration-list li { display:flex; align-items:center; gap:0.5rem; background:#fff; padding:0.6rem 0.75rem; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.07); }
+.badge.upcoming { background:#dbe8ff; color:#1e4ca1; padding:2px 6px; border-radius:4px; font-size:0.6rem; text-transform:uppercase; }

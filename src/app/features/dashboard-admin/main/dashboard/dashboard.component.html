@@ -1,0 +1,52 @@
+<div class="page-container">
+  <header class="page-header">
+    <h1>Clinic Overview</h1>
+    <button mat-raised-button color="primary" (click)="openReport()">
+      <mat-icon>download</mat-icon>
+      Export Summary
+    </button>
+  </header>
+
+  <!-- KPI Cards -->
+  <section class="kpi-grid" aria-label="Key performance indicators">
+    <mat-card *ngFor="let k of kpiCards" class="kpi-card" [class.accent]="k.accent">
+      <div class="kpi-icon">
+        <mat-icon>{{ k.icon }}</mat-icon>
+      </div>
+      <div class="kpi-content">
+        <h3>{{ k.title }}</h3>
+        <p class="value">{{ k.value }}</p>
+        <span class="subtext">{{ k.subtext }}</span>
+      </div>
+    </mat-card>
+  </section>
+
+  <div class="two-column">
+    <!-- ROI Panel -->
+    <section class="panel" aria-labelledby="roi-title">
+      <h2 id="roi-title">ROI Panel</h2>
+      <div class="roi-grid">
+        <div class="roi-item" *ngFor="let r of roiHighlights">
+          <span class="label">{{ r.label }}</span>
+          <span class="number">{{ r.value }}</span>
+        </div>
+      </div>
+      <div class="chart-placeholder" role="img" aria-label="ROI trend chart placeholder">
+        <span>Chart placeholder</span>
+      </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="panel" aria-labelledby="activity-title">
+      <h2 id="activity-title">Recent Activity</h2>
+      <ul class="activity-list">
+        <li *ngFor="let a of recentActivity">
+          <span class="when">{{ a.when }}</span>
+          <span class="action">{{ a.action }}</span>
+          <span class="by">{{ a.by }}</span>
+          <span class="result">{{ a.result }}</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>

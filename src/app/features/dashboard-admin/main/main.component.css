@@ -1,0 +1,32 @@
+.dashboard-layout {
+	display: flex;
+	min-height: 100vh;
+	margin-left: 1.5vw;
+	overflow-x: hidden;
+}
+
+.dashboard-content {
+	flex-grow: 1;
+	overflow-y: auto;
+	background-color: #fff;
+	color: var(--color-navy);
+	font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+mat-sidenav.sidebar {
+	width: 240px;
+	background-color: var(--color-navy);
+	color: var(--color-light-blue);
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+mat-sidenav.profile-drawer {
+	width: 320px;
+	background-color: var(--color-surface);
+	box-shadow: -2px 0 6px rgba(0, 0, 0, 0.15);
+	padding: 1rem;
+}

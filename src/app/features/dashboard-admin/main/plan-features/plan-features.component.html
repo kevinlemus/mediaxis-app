@@ -1,0 +1,36 @@
+<div class="page-container">
+  <h1>Plan & Features</h1>
+  <div class="pf-grid">
+    <mat-card class="tier-card">
+      <h2>Current Tier</h2>
+      <p class="tier">{{ currentTier }}</p>
+      <button mat-raised-button color="primary" (click)="upgrade()">
+        <mat-icon>arrow_upward</mat-icon>
+        Upgrade Options
+      </button>
+    </mat-card>
+    <mat-card class="features-card">
+      <h2>Feature Set</h2>
+      <ul class="features-list">
+        <li *ngFor="let f of features" [class.disabled]="!f.active">
+          <mat-icon class="state" *ngIf="f.active">check_circle</mat-icon>
+          <mat-icon class="state" *ngIf="!f.active">lock</mat-icon>
+          <div class="meta">
+            <span class="name">{{ f.name }}</span>
+            <span class="desc">{{ f.description }}</span>
+            <span class="badge" *ngIf="!f.active">Upgrade Required</span>
+          </div>
+        </li>
+      </ul>
+    </mat-card>
+    <mat-card class="roadmap-card">
+      <h2>Roadmap Snapshot</h2>
+      <ol class="roadmap">
+        <li><strong>Q1:</strong> Pre-Authorization beta</li>
+        <li><strong>Q2:</strong> Denial Tracking rollout</li>
+        <li><strong>Q3:</strong> Intake automation pilots</li>
+        <li><strong>Q4:</strong> Analytics & reporting suite</li>
+      </ol>
+    </mat-card>
+  </div>
+</div>

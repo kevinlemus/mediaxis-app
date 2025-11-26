@@ -1,0 +1,17 @@
+:host { display:block; padding:2rem; }
+.comp-grid { display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); }
+mat-card { background:var(--color-surface); box-shadow:0 2px 6px rgba(0,0,0,0.08); }
+.hipaa-badge { display:flex; align-items:center; gap:0.5rem; background:#e3f2fd; padding:0.6rem 0.8rem; border-radius:6px; font-size:0.8rem; margin:0.75rem 0 1rem; }
+.hipaa-badge.ready { background:#e6ffe6; color:#27632a; }
+.checks-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.6rem; }
+.checks-list li { display:flex; align-items:flex-start; gap:0.65rem; background:#fff; padding:0.7rem 0.9rem; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.07); position:relative; }
+.checks-list .meta { flex:1; display:flex; flex-direction:column; gap:2px; }
+.checks-list .name { font-weight:600; font-size:0.8rem; }
+.checks-list .details { font-size:0.65rem; color:#555; }
+.checks-list .status { font-size:0.55rem; padding:2px 6px; border-radius:8px; text-transform:uppercase; letter-spacing:0.5px; align-self:flex-start; }
+.status.pass { background:#e6ffe6; color:#27632a; }
+.status.warning { background:#fff3cd; color:#8a6d00; }
+.status.fail { background:#ffe6e6; color:#8a0000; }
+.alerts-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.6rem; }
+.alerts-list li { display:flex; align-items:center; gap:0.6rem; background:#fff; padding:0.6rem 0.8rem; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.07); font-size:0.7rem; }
+.alerts-list .sev { font-size:0.55rem; padding:2px 6px; background:#fff3cd; color:#8a6d00; border-radius:6px; text-transform:uppercase; }

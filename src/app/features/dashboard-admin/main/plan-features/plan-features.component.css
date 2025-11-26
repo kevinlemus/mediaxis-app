@@ -1,0 +1,14 @@
+:host { display:block; padding:2rem; }
+.pf-grid { display:grid; gap:1.5rem; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); }
+mat-card { background:var(--color-surface); box-shadow:0 2px 6px rgba(0,0,0,0.08); }
+.tier { font-size:1.1rem; font-weight:600; margin:0.5rem 0 1rem; }
+.features-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.6rem; }
+.features-list li { display:flex; gap:0.75rem; background:#fff; padding:0.7rem 0.9rem; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.07); align-items:flex-start; }
+.features-list li.disabled { opacity:0.65; }
+.features-list .state { color:var(--color-primary); }
+.features-list li.disabled .state { color:#888; }
+.features-list .meta { display:flex; flex-direction:column; gap:2px; }
+.features-list .name { font-weight:600; font-size:0.85rem; }
+.features-list .desc { font-size:0.7rem; color:#555; }
+.badge { background:#dbe8ff; color:#1e4ca1; padding:2px 6px; border-radius:4px; font-size:0.55rem; text-transform:uppercase; margin-top:4px; align-self:start; }
+.roadmap { margin:0; padding-left:1rem; font-size:0.75rem; display:flex; flex-direction:column; gap:0.4rem; }

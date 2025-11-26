@@ -1,11 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { RouterModule, Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatRippleModule } from '@angular/material/core';
+import { CommonModule } from '@angular/common';
+import { UserService, User } from '../../../core/user/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatIconModule, MatRippleModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
+  @Output() openProfile = new EventEmitter<void>();
+  user$: Observable<User>;
 
+  constructor(private userService: UserService, private router: Router) {
+    this.user$ = this.userService.user$;
+  }
+
+  logout() {
+    this.router.navigate(['/login']);
+  }
 }

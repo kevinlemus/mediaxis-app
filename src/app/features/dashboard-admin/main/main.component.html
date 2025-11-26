@@ -1,1 +1,26 @@
-<p>main works!</p>
+<mat-sidenav-container class="dashboard-layout">
+	<!-- Left sidebar -->
+	<mat-sidenav mode="side" opened class="sidebar">
+		<app-sidebar (openProfile)="profileSidenav.open()"></app-sidebar>
+	</mat-sidenav>
+
+	<!-- Right profile drawer -->
+	<mat-sidenav #profileSidenav mode="over" position="end" class="profile-drawer">
+		<app-profile-drawer (close)="profileSidenav.close()"></app-profile-drawer>
+	</mat-sidenav>
+
+	<!-- Main content -->
+	<mat-sidenav-content>
+		<main class="dashboard-content">
+			<div class="desktop-only-warning">
+				MediAxis is optimized for laptop/desktop (≥900px width). Resize for full
+				experience.
+			</div>
+			<div class="proportional-shell">
+				<div class="proportional-shell-inner">
+					<router-outlet></router-outlet>
+				</div>
+			</div>
+		</main>
+	</mat-sidenav-content>
+</mat-sidenav-container>

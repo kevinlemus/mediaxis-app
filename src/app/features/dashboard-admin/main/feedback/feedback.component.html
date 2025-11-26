@@ -1,0 +1,46 @@
+<div class="page-container">
+  <h1>Feedback</h1>
+  <div class="fb-grid">
+    <mat-card class="stats-card">
+      <h2>Summary</h2>
+      <div class="stats">
+          <div class="stat"><span class="label">Open</span><span class="val">{{ openCount }}</span></div>
+          <div class="stat"><span class="label">Triaged</span><span class="val">{{ triagedCount }}</span></div>
+          <div class="stat"><span class="label">Closed</span><span class="val">{{ closedCount }}</span></div>
+      </div>
+    </mat-card>
+
+    <mat-card class="list-card">
+      <h2>Reports</h2>
+      <div class="filters">
+        <mat-form-field appearance="outline">
+          <mat-label>Category Filter</mat-label>
+          <input matInput [(ngModel)]="filterCategory" placeholder="e.g. Claims" />
+        </mat-form-field>
+      </div>
+      <table mat-table [dataSource]="filtered()" class="fb-table">
+        <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef>Date</th><td mat-cell *matCellDef="let i">{{ i.date }}</td></ng-container>
+        <ng-container matColumnDef="reporter"><th mat-header-cell *matHeaderCellDef>Reporter</th><td mat-cell *matCellDef="let i">{{ i.reporter }}</td></ng-container>
+        <ng-container matColumnDef="category"><th mat-header-cell *matHeaderCellDef>Category</th><td mat-cell *matCellDef="let i">{{ i.category }}</td></ng-container>
+        <ng-container matColumnDef="severity"><th mat-header-cell *matHeaderCellDef>Severity</th><td mat-cell *matCellDef="let i"><span class="sev" [class.high]="i.severity==='High'" [class.medium]="i.severity==='Medium'">{{ i.severity }}</span></td></ng-container>
+        <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>Status</th><td mat-cell *matCellDef="let i"><span class="status" [class.open]="i.status==='Open'" [class.closed]="i.status==='Closed'">{{ i.status }}</span></td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="['date','reporter','category','severity','status']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['date','reporter','category','severity','status'];"></tr>
+      </table>
+    </mat-card>
+
+    <mat-card class="note-card">
+      <h2>Internal Note</h2>
+      <form (ngSubmit)="addNote()" #nf="ngForm" class="note-form">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Note</mat-label>
+          <textarea matInput name="note" [(ngModel)]="note" rows="4" required></textarea>
+        </mat-form-field>
+        <button mat-raised-button color="primary" [disabled]="nf.invalid">
+          <mat-icon>send</mat-icon>
+          Add Note
+        </button>
+      </form>
+    </mat-card>
+  </div>
+</div>

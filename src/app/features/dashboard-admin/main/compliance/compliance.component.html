@@ -1,0 +1,41 @@
+<div class="page-container">
+  <h1>Compliance</h1>
+  <div class="comp-grid">
+    <mat-card class="badge-card">
+      <h2>Status</h2>
+      <div class="hipaa-badge" [class.ready]="auditReady">
+        <mat-icon>verified_user</mat-icon>
+        <span>HIPAA Audit-Ready</span>
+      </div>
+      <button mat-stroked-button color="primary" (click)="downloadPacket()">
+        <mat-icon>download</mat-icon>
+        Audit Packet
+      </button>
+    </mat-card>
+    <mat-card class="checks-card">
+      <h2>Security & Policy Checks</h2>
+      <ul class="checks-list">
+        <li *ngFor="let c of checks" [class.warning]="c.status==='Warning'" [class.fail]="c.status==='Fail'">
+          <mat-icon class="ok" *ngIf="c.status==='Pass'">check_circle</mat-icon>
+          <mat-icon class="warn" *ngIf="c.status==='Warning'">warning</mat-icon>
+          <mat-icon class="fail" *ngIf="c.status==='Fail'">error</mat-icon>
+          <div class="meta">
+            <span class="name">{{ c.name }}</span>
+            <span class="details">{{ c.details }}</span>
+          </div>
+          <span class="status" [class.pass]="c.status==='Pass'" [class.warning]="c.status==='Warning'" [class.fail]="c.status==='Fail'">{{ c.status }}</span>
+        </li>
+      </ul>
+    </mat-card>
+    <mat-card class="alerts-card">
+      <h2>Alerts</h2>
+      <ul class="alerts-list">
+        <li *ngFor="let a of alerts">
+          <mat-icon>notification_important</mat-icon>
+          <span class="msg">{{ a.message }}</span>
+          <span class="sev">{{ a.severity }}</span>
+        </li>
+      </ul>
+    </mat-card>
+  </div>
+</div>

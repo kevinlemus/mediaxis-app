@@ -1,1 +1,114 @@
-<p>sidebar works!</p>
+<nav class="sidebar" role="navigation" aria-label="Admin Dashboard Sidebar">
+	<div class="sidebar-logo">
+		<img
+			src="assets/mediaxis-logo-sidebar.png"
+			alt="MediAxis Logo"
+			class="logo"
+		/>
+	</div>
+
+	<div class="sidebar-header">
+		<button
+			class="profile-button"
+			matRipple
+			type="button"
+			aria-label="Open profile drawer"
+			(click)="openProfile.emit()"
+		>
+			<ng-container *ngIf="user$ | async as user">
+				<ng-container *ngIf="user.photoUrl; else defaultIcon">
+					<img
+						[src]="user.photoUrl"
+						alt="Profile photo"
+						class="profile-photo"
+					/>
+				</ng-container>
+				<ng-template #defaultIcon>
+					<mat-icon class="profile-icon">account_circle</mat-icon>
+				</ng-template>
+				<span class="profile-name">{{ user.name }}</span>
+			</ng-container>
+			<mat-icon class="profile-arrow">chevron_right</mat-icon>
+		</button>
+	</div>
+
+	<ul class="nav-list">
+		<li>
+			<a
+				routerLink="/dashboard-admin/home"
+				routerLinkActive="active"
+				[routerLinkActiveOptions]="{ exact: true }"
+			>
+				<mat-icon>dashboard</mat-icon>
+				<span>Dashboard</span>
+			</a>
+		</li>
+		<li>
+			<a
+				routerLink="/dashboard-admin/clinic-settings"
+				routerLinkActive="active"
+				[routerLinkActiveOptions]="{ exact: true }"
+			>
+				<mat-icon>medical_information</mat-icon>
+				<span>Clinic Settings</span>
+			</a>
+		</li>
+		<li>
+			<a
+				routerLink="/dashboard-admin/user-management"
+				routerLinkActive="active"
+				[routerLinkActiveOptions]="{ exact: true }"
+			>
+				<mat-icon>group</mat-icon>
+				<span>User Management</span>
+			</a>
+		</li>
+		<li>
+			<a
+				routerLink="/dashboard-admin/audit-logs"
+				routerLinkActive="active"
+				[routerLinkActiveOptions]="{ exact: true }"
+			>
+				<mat-icon>fact_check</mat-icon>
+				<span>Audit Logs</span>
+			</a>
+		</li>
+		<li>
+			<a
+				routerLink="/dashboard-admin/plan-features"
+				routerLinkActive="active"
+				[routerLinkActiveOptions]="{ exact: true }"
+			>
+				<mat-icon>view_list</mat-icon>
+				<span>Plan & Features</span>
+			</a>
+		</li>
+		<li>
+			<a
+				routerLink="/dashboard-admin/compliance"
+				routerLinkActive="active"
+				[routerLinkActiveOptions]="{ exact: true }"
+			>
+				<mat-icon>verified_user</mat-icon>
+				<span>Compliance</span>
+			</a>
+		</li>
+		<li>
+			<a
+				routerLink="/dashboard-admin/feedback"
+				routerLinkActive="active"
+				[routerLinkActiveOptions]="{ exact: true }"
+			>
+				<mat-icon>rate_review</mat-icon>
+				<span>Feedback</span>
+			</a>
+		</li>
+	</ul>
+
+	<div class="sidebar-footer">
+		<button class="logout-button" type="button" (click)="logout()">
+			<mat-icon>logout</mat-icon>
+			<span>Log Out</span>
+		</button>
+	</div>
+</nav>
