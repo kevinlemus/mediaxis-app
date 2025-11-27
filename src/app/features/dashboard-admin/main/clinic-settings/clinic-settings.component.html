@@ -1,24 +1,80 @@
 <div class="page-container">
-  <h1>Clinic Settings</h1>
+  <header class="page-header">
+    <div class="header-left">
+      <h1>Clinic Settings</h1>
+      <p class="subtitle">Manage clinic identifiers, payer configuration, and integrations.</p>
+    </div>
+    <div class="header-right">
+      <span class="env-badge">Production</span>
+    </div>
+  </header>
+
   <div class="settings-grid">
-    <mat-card class="npi-card">
-      <h2>NPI Setup</h2>
-      <form class="npi-form" (ngSubmit)="saveNpi()" #f="ngForm">
-        <mat-form-field appearance="outline">
-          <mat-label>NPI Number</mat-label>
-            <input matInput name="npi" [(ngModel)]="npi" required maxlength="10" />
-        </mat-form-field>
-        <button mat-flat-button color="primary" [disabled]="saving || f.invalid">
+    <!-- NPI Setup -->
+    <mat-card class="card npi-card full-width">
+      <div class="card-header">
+        <h2>National Provider Identifier</h2>
+        <span class="descriptor">Your clinic’s unique identifier used across claims.</span>
+      </div>
+
+      <div class="npi-bar">
+        <div class="input-bar">
+          <span class="input-icon"><mat-icon>badge</mat-icon></span>
+          <input type="text" [(ngModel)]="npi" maxlength="10" placeholder="Enter 10-digit NPI..."
+            aria-label="NPI number" />
+        </div>
+        <button class="primary-btn" (click)="saveNpi()" [disabled]="saving || !npi" aria-label="Save NPI">
           <mat-icon *ngIf="!saving">save</mat-icon>
           <mat-icon *ngIf="saving">hourglass_empty</mat-icon>
-          <span>{{ saving ? 'Saving...' : 'Save NPI' }}</span>
+          <span>{{ saving ? 'Saving…' : 'Save NPI' }}</span>
         </button>
-      </form>
+      </div>
+
+      <div class="validation" *ngIf="npiInvalid">
+        <mat-icon>error_outline</mat-icon>
+        <span>NPI must be exactly 10 digits.</span>
+      </div>
+
+      <div *ngIf="saveSuccess" class="success-banner">
+        <mat-icon>check_circle</mat-icon>
+        NPI saved successfully.
+      </div>
+
+      <div class="npi-meta">
+        <span class="meta-item"><strong>Status:</strong> <span class="status-chip active">Verified</span></span>
+        <span class="meta-item"><strong>Last updated:</strong> {{ lastUpdated | date:'short' }}</span>
+      </div>
     </mat-card>
 
-    <mat-card class="payers-card">
-      <h2>Payer Configuration</h2>
-      <table mat-table [dataSource]="payerConfigs" class="payer-table">
+    <!-- Payer configuration -->
+    <mat-card class="card payers-card">
+      <div class="card-header">
+        <h2>Payer configuration</h2>
+        <span class="descriptor">Manage active payers, IDs, and volume.</span>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-bar">
+          <span class="search-icon"><mat-icon>search</mat-icon></span>
+          <input type="text" [ngModel]="payerSearch()" (ngModelChange)="payerSearch.set($event)"
+            placeholder="Search payers by name or ID…" aria-label="Search payers"
+            (keydown.enter)="$event.preventDefault()" />
+        </div>
+        <div class="toolbar-actions">
+          <button class="action-btn" (click)="toggleAddForm()" aria-label="Add payer">
+            <mat-icon>add</mat-icon>
+            <span>Add payer</span>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="showAddForm" class="add-form">
+        <input [(ngModel)]="newPayerName" placeholder="Payer name" />
+        <input [(ngModel)]="newPayerId" placeholder="Payer ID" />
+        <button class="primary-btn" (click)="addPayer()">Save</button>
+      </div>
+
+      <table mat-table [dataSource]="filteredPayers()" class="payer-table">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>Payer</th>
           <td mat-cell *matCellDef="let p">{{ p.name }}</td>
@@ -28,27 +84,65 @@
           <td mat-cell *matCellDef="let p">{{ p.id }}</td>
         </ng-container>
         <ng-container matColumnDef="claims">
-          <th mat-header-cell *matHeaderCellDef>30d Claims</th>
+          <th mat-header-cell *matHeaderCellDef>30d claims</th>
           <td mat-cell *matCellDef="let p">{{ p.claims30d }}</td>
         </ng-container>
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>Status</th>
           <td mat-cell *matCellDef="let p">
-            <span class="status" [class.pending]="p.status==='Pending'" [class.disabled]="p.status==='Disabled'">{{ p.status }}</span>
+            <span class="status-chip" [class.active]="p.status==='Active'" [class.pending]="p.status==='Pending'"
+              [class.disabled]="p.status==='Disabled'">
+              {{ p.status }}
+            </span>
           </td>
         </ng-container>
-        <tr mat-header-row *matHeaderRowDef="['name','id','claims','status']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['name','id','claims','status'];"></tr>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
     </mat-card>
 
-    <mat-card class="integrations-card">
-      <h2>Integrations</h2>
+    <!-- Integrations -->
+    <mat-card class="card integrations-card">
+      <div class="card-header">
+        <h2>Integrations</h2>
+        <span class="descriptor">EHR connectors aligned to roadmap.</span>
+      </div>
+
       <ul class="integration-list">
-        <li><mat-icon>sync</mat-icon> Epic <span class="badge upcoming">Coming Soon</span></li>
-        <li><mat-icon>sync</mat-icon> Cerner <span class="badge upcoming">Coming Soon</span></li>
-        <li><mat-icon>sync</mat-icon> Athenahealth <span class="badge upcoming">Coming Soon</span></li>
+        <li>
+          <div class="integration-item">
+            <div class="icon-label">
+              <mat-icon>sync</mat-icon>
+              <span>Epic</span>
+            </div>
+            <span class="badge upcoming">Coming soon</span>
+          </div>
+        </li>
+        <li>
+          <div class="integration-item">
+            <div class="icon-label">
+              <mat-icon>sync</mat-icon>
+              <span>Cerner</span>
+            </div>
+            <span class="badge upcoming">Coming soon</span>
+          </div>
+        </li>
+        <li>
+          <div class="integration-item">
+            <div class="icon-label">
+              <mat-icon>sync</mat-icon>
+              <span>Athenahealth</span>
+            </div>
+            <span class="badge upcoming">Coming soon</span>
+          </div>
+        </li>
       </ul>
+
+      <div class="note">
+        <mat-icon>info</mat-icon>
+        <span>Connectors will require a BAA and per‑clinic activation.</span>
+      </div>
     </mat-card>
   </div>
 </div>
