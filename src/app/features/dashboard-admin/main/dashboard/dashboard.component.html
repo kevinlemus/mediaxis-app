@@ -22,11 +22,10 @@
     </mat-card>
   </section>
 
-  <!-- Two-column layout -->
-  <div class="two-column">
-    <!-- ROI Panel -->
-    <section class="panel" aria-labelledby="roi-title">
-      <h2 id="roi-title">ROI Panel</h2>
+  <!-- Layout: ROI with chart right, recent activity below full width -->
+  <section class="panel" aria-labelledby="roi-title">
+    <h2 id="roi-title">ROI Panel</h2>
+    <div class="roi-layout">
       <div class="roi-grid">
         <div class="roi-item" *ngFor="let r of roiHighlights">
           <span class="label">{{ r.label }}</span>
@@ -36,22 +35,20 @@
       <div class="chart-placeholder" role="img" aria-label="ROI trend chart placeholder">
         <span>Chart placeholder</span>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Recent Activity -->
-    <section class="panel" aria-labelledby="activity-title">
-      <h2 id="activity-title">Recent Activity</h2>
-      <ul class="activity-list">
-        <li *ngFor="let a of recentActivity">
-          <span class="when">{{ a.when }}</span>
-          <span class="action">{{ a.action }}</span>
-          <span class="by">{{ a.by }}</span>
-          <!-- ✅ Always render status as a chip -->
-          <span class="result" [ngClass]="statusClass(a.result)">
-            {{ a.result }}
-          </span>
-        </li>
-      </ul>
-    </section>
-  </div>
+  <section class="panel" aria-labelledby="activity-title">
+    <h2 id="activity-title">Recent Activity</h2>
+    <ul class="activity-list">
+      <li *ngFor="let a of recentActivity">
+        <span class="when">{{ a.when }}</span>
+        <span class="action">{{ a.action }}</span>
+        <span class="by">{{ a.by }}</span>
+        <span class="result" [ngClass]="statusClass(a.result)">
+          {{ a.result }}
+        </span>
+      </li>
+    </ul>
+  </section>
 </div>
