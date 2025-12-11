@@ -50,8 +50,8 @@
 
 .kpi-card:hover {
     transform: translateY(-3px);
-    box-shadow: var(--elevation-mid);
-    background-color: var(--color-light-blue);
+    /*box-shadow: var(--elevation-mid);
+    background-color: var(--color-light-blue);*/
 }
 
 .kpi-card.accent.error {
