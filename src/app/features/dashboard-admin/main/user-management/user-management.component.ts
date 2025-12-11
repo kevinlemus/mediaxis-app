@@ -42,10 +42,34 @@ export class UserManagementComponent {
   ];
 
   users: UserRow[] = [
-    { name: 'Jessica Patel', email: 'j.patel@example.com', role: 'billing-manager', status: 'Active', lastLogin: '2h ago' },
-    { name: 'Marco Chen', email: 'm.chen@example.com', role: 'staff', status: 'Active', lastLogin: '15m ago' },
-    { name: 'Ariana Rivera', email: 'a.rivera@example.com', role: 'auditor', status: 'Invited', lastLogin: '—' },
-    { name: 'Devon Lee', email: 'd.lee@example.com', role: 'staff', status: 'Suspended', lastLogin: '3d ago' },
+    {
+      name: 'Jessica Patel',
+      email: 'j.patel@example.com',
+      role: 'billing-manager',
+      status: 'Active',
+      lastLogin: '2h ago',
+    },
+    {
+      name: 'Marco Chen',
+      email: 'm.chen@example.com',
+      role: 'staff',
+      status: 'Active',
+      lastLogin: '15m ago',
+    },
+    {
+      name: 'Ariana Rivera',
+      email: 'a.rivera@example.com',
+      role: 'auditor',
+      status: 'Invited',
+      lastLogin: '—',
+    },
+    {
+      name: 'Devon Lee',
+      email: 'd.lee@example.com',
+      role: 'staff',
+      status: 'Suspended',
+      lastLogin: '3d ago',
+    },
   ];
 
   searchTerm = '';
@@ -53,12 +77,13 @@ export class UserManagementComponent {
 
   get filteredUsers(): UserRow[] {
     const term = this.searchTerm.trim().toLowerCase();
-    const filtered = this.users.filter(u =>
-      !term ||
-      u.name.toLowerCase().includes(term) ||
-      u.email.toLowerCase().includes(term) ||
-      u.role.toLowerCase().includes(term) ||
-      u.status.toLowerCase().includes(term)
+    const filtered = this.users.filter(
+      (u) =>
+        !term ||
+        u.name.toLowerCase().includes(term) ||
+        u.email.toLowerCase().includes(term) ||
+        u.role.toLowerCase().includes(term) ||
+        u.status.toLowerCase().includes(term)
     );
 
     return filtered.sort((a, b) => {
@@ -73,7 +98,11 @@ export class UserManagementComponent {
   }
 
   submitInvite(): void {
-    if (!this.inviteForm.name.trim() || !this.inviteForm.email.trim() || !this.inviteForm.role) {
+    if (
+      !this.inviteForm.name.trim() ||
+      !this.inviteForm.email.trim() ||
+      !this.inviteForm.role
+    ) {
       return;
     }
 
