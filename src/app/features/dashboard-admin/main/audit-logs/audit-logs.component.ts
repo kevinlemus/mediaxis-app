@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 
@@ -23,9 +20,6 @@ interface AuditLog {
     CommonModule,
     FormsModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
     MatIconModule,
     MatTableModule,
   ],
@@ -33,7 +27,9 @@ interface AuditLog {
   styleUrls: ['./audit-logs.component.css'],
 })
 export class AuditLogsComponent {
-  filter = { user: '', action: '', dateFrom: '', dateTo: '' };
+  searchTerm = '';
+  activeFilter: 'user' | 'action' | 'entity' | 'status' | null = null;
+
   exporting = false;
   exportSuccess = false;
 
@@ -45,14 +41,27 @@ export class AuditLogsComponent {
     { time: '2025-11-25 16:09', user: 'System', action: 'DAILY_ROLLUP', entity: 'Statistics', status: 'Success' },
   ];
 
-  filteredLogs(): AuditLog[] {
-    const termUser = this.filter.user.trim().toLowerCase();
-    const termAction = this.filter.action.trim().toLowerCase();
+  setFilter(type: 'user' | 'action' | 'entity' | 'status') {
+    this.activeFilter = type;
+  }
 
-    return this.logs.filter(l =>
-      (!termUser || l.user.toLowerCase().includes(termUser)) &&
-      (!termAction || l.action.toLowerCase().includes(termAction))
-    );
+  filteredLogs(): AuditLog[] {
+    const term = this.searchTerm.trim().toLowerCase();
+
+    return this.logs.filter(l => {
+      if (!term) return true;
+
+      if (!this.activeFilter) {
+        return (
+          l.user.toLowerCase().includes(term) ||
+          l.action.toLowerCase().includes(term) ||
+          l.entity.toLowerCase().includes(term) ||
+          l.status.toLowerCase().includes(term)
+        );
+      }
+
+      return l[this.activeFilter].toLowerCase().includes(term);
+    });
   }
 
   export(type: 'csv' | 'pdf'): void {
@@ -64,7 +73,6 @@ export class AuditLogsComponent {
       this.exportSuccess = true;
       console.log('Export', type);
 
-      // Auto-hide success banner after 4 seconds
       setTimeout(() => (this.exportSuccess = false), 4000);
     }, 1000);
   }
