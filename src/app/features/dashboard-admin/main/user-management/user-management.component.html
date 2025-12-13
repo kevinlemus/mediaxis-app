@@ -17,31 +17,19 @@
       <form class="invite-form" (ngSubmit)="submitInvite()" #f="ngForm">
         <div class="input-bar">
           <span class="input-icon"><mat-icon>person</mat-icon></span>
-          <input
-            type="text"
-            name="name"
-            [(ngModel)]="inviteForm.name"
-            placeholder="Full name"
-            required
-          />
+          <input type="text" name="name" [(ngModel)]="inviteForm.name" placeholder="Full name" required />
         </div>
 
         <div class="input-bar">
           <span class="input-icon"><mat-icon>email</mat-icon></span>
-          <input
-            type="email"
-            name="email"
-            [(ngModel)]="inviteForm.email"
-            placeholder="Email address"
-            required
-          />
+          <input type="email" name="email" [(ngModel)]="inviteForm.email" placeholder="Email address" required />
         </div>
 
-        <div class="input-bar">
+        <div class="input-bar role-field">
           <span class="input-icon"><mat-icon>supervisor_account</mat-icon></span>
-          <select name="role" [(ngModel)]="inviteForm.role" required>
-            <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
-          </select>
+          <mat-select name="role" [(ngModel)]="inviteForm.role" required panelClass="dept-panel">
+            <mat-option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</mat-option>
+          </mat-select>
         </div>
 
         <button class="primary-btn" type="submit" [disabled]="inviting || f.invalid">
@@ -91,15 +79,12 @@
         <div class="search-bar">
           <span class="search-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z"/>
+              <path
+                d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z" />
             </svg>
           </span>
-          <input
-            type="text"
-            [(ngModel)]="searchTerm"
-            placeholder="Search by name, email, role, or status..."
-            aria-label="Search users"
-          />
+          <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name, email, role, or status..."
+            aria-label="Search users" />
         </div>
 
         <div class="sort-controls">
@@ -133,7 +118,8 @@
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>Status</th>
           <td mat-cell *matCellDef="let u">
-            <span class="status" [class.invited]="u.status==='Invited'" [class.suspended]="u.status==='Suspended'">
+            <span class="status" [class.active]="u.status==='Active'" [class.invited]="u.status==='Invited'"
+              [class.suspended]="u.status==='Suspended'">
               {{ u.status }}
             </span>
           </td>
@@ -147,7 +133,8 @@
           <td mat-cell *matCellDef="let u">
             <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="activate(u)"><mat-icon>check_circle</mat-icon><span>Activate</span></button>
+              <button mat-menu-item
+                (click)="activate(u)"><mat-icon>check_circle</mat-icon><span>Activate</span></button>
               <button mat-menu-item (click)="suspend(u)"><mat-icon>pause_circle</mat-icon><span>Suspend</span></button>
               <button mat-menu-item (click)="revoke(u)"><mat-icon>block</mat-icon><span>Revoke</span></button>
             </mat-menu>

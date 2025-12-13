@@ -5,6 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 
 interface UserRow {
@@ -26,6 +28,8 @@ interface UserRow {
     MatIconModule,
     MatMenuModule,
     MatTableModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css'],
@@ -74,7 +78,7 @@ export class UserManagementComponent {
 
   searchTerm = '';
   sortKey: keyof UserRow = 'name';
-  sortDirection: 'asc' | 'desc' | 'statusCycle' = 'asc';
+  sortDirection: 'asc' | 'desc' | 'activeFirst' | 'invitedFirst' | 'suspendedFirst' = 'asc';
   private statusOrder: Record<string, number> = {
     active: 1,
     invited: 2,
@@ -101,7 +105,27 @@ export class UserManagementComponent {
 
       if (key === 'status') {
         const rank = (s: string) => this.statusOrder[s?.toLowerCase()] ?? 99;
-        return dir === 'asc' ? rank(valA) - rank(valB) : rank(valB) - rank(valA);
+        const prefer = (target: string) => (value: string) => (value?.toLowerCase() === target ? 0 : 1);
+        const priorityComparator = (target: string) => {
+          const pA = prefer(target)(valA as string);
+          const pB = prefer(target)(valB as string);
+          if (pA !== pB) return pA - pB;
+          return rank(valA as string) - rank(valB as string);
+        };
+
+        switch (dir) {
+          case 'activeFirst':
+            return priorityComparator('active');
+          case 'invitedFirst':
+            return priorityComparator('invited');
+          case 'suspendedFirst':
+            return priorityComparator('suspended');
+          case 'asc':
+            return rank(valA as string) - rank(valB as string);
+          case 'desc':
+          default:
+            return rank(valB as string) - rank(valA as string);
+        }
       }
 
       if (typeof valA === 'string') valA = valA.toLowerCase();
@@ -117,10 +141,16 @@ export class UserManagementComponent {
 
   setSort(key: keyof UserRow): void {
     if (this.sortKey === key) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+      if (key === 'status') {
+        const cycle: Array<typeof this.sortDirection> = ['activeFirst', 'invitedFirst', 'suspendedFirst'];
+        const idx = cycle.indexOf(this.sortDirection);
+        this.sortDirection = cycle[(idx + 1) % cycle.length];
+      } else {
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+      }
     } else {
       this.sortKey = key;
-      this.sortDirection = key === 'status' ? 'asc' : 'asc';
+      this.sortDirection = key === 'status' ? 'activeFirst' : 'asc';
     }
   }
 
