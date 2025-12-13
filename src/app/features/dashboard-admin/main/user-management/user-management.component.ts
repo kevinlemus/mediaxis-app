@@ -74,6 +74,12 @@ export class UserManagementComponent {
 
   searchTerm = '';
   sortKey: keyof UserRow = 'name';
+  sortDirection: 'asc' | 'desc' | 'statusCycle' = 'asc';
+  private statusOrder: Record<string, number> = {
+    active: 1,
+    invited: 2,
+    suspended: 3,
+  };
 
   get filteredUsers(): UserRow[] {
     const term = this.searchTerm.trim().toLowerCase();
@@ -86,15 +92,36 @@ export class UserManagementComponent {
         u.status.toLowerCase().includes(term)
     );
 
-    return filtered.sort((a, b) => {
-      const valA = (a[this.sortKey] ?? '').toString().toLowerCase();
-      const valB = (b[this.sortKey] ?? '').toString().toLowerCase();
-      return valA.localeCompare(valB);
-    });
+    const key = this.sortKey;
+    const dir = this.sortDirection;
+
+    const comparator = (a: UserRow, b: UserRow) => {
+      let valA: any = a[key];
+      let valB: any = b[key];
+
+      if (key === 'status') {
+        const rank = (s: string) => this.statusOrder[s?.toLowerCase()] ?? 99;
+        return dir === 'asc' ? rank(valA) - rank(valB) : rank(valB) - rank(valA);
+      }
+
+      if (typeof valA === 'string') valA = valA.toLowerCase();
+      if (typeof valB === 'string') valB = valB.toLowerCase();
+
+      if (valA < valB) return dir === 'asc' ? -1 : 1;
+      if (valA > valB) return dir === 'asc' ? 1 : -1;
+      return a.name.localeCompare(b.name) || a.email.localeCompare(b.email);
+    };
+
+    return [...filtered].sort(comparator);
   }
 
   setSort(key: keyof UserRow): void {
-    this.sortKey = key;
+    if (this.sortKey === key) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortKey = key;
+      this.sortDirection = key === 'status' ? 'asc' : 'asc';
+    }
   }
 
   submitInvite(): void {

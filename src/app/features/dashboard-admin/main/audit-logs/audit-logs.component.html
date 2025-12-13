@@ -15,16 +15,21 @@
             d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z" />
         </svg>
       </span>
-      <input type="text" [(ngModel)]="searchTerm" placeholder="Search by user, action, entity, or status..."
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Search by time, user, action, entity, or status..."
         aria-label="Search audit logs" />
     </div>
 
-    <div class="filter-controls">
-      <button class="filter-btn" (click)="setFilter('user')">User</button>
-      <button class="filter-btn" (click)="setFilter('action')">Action</button>
-      <button class="filter-btn" (click)="setFilter('entity')">Entity</button>
-      <button class="filter-btn" (click)="setFilter('status')">Status</button>
+
+
+    <div class="sort-controls">
+      <label>Sort by:</label>
+      <button (click)="setSort('time')">Time</button>
+      <button (click)="setSort('user')">User</button>
+      <button (click)="setSort('action')">Action</button>
+      <button (click)="setSort('entity')">Entity</button>
+      <button (click)="setSort('status')">Status</button>
     </div>
+
   </div>
 
   <!-- Timeline -->
