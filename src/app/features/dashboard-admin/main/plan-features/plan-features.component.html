@@ -1,36 +1,129 @@
 <div class="page-container">
-  <h1>Plan & Features</h1>
-  <div class="pf-grid">
-    <mat-card class="tier-card">
-      <h2>Current Tier</h2>
-      <p class="tier">{{ currentTier }}</p>
-      <button mat-raised-button color="primary" (click)="upgrade()">
-        <mat-icon>arrow_upward</mat-icon>
-        Upgrade Options
-      </button>
+  <header class="page-header">
+    <div class="header-left">
+      <h1>Plan & Features</h1>
+      <p class="subtitle">See what’s live today and what’s coming next for your clinic.</p>
+    </div>
+    <div class="header-right">
+      <span class="env-badge">Production</span>
+    </div>
+  </header>
+
+  <div class="stacked">
+
+    <!-- ✅ HERO CURRENT PLAN -->
+    <mat-card class="card current-plan">
+      <div class="plan-hero">
+
+        <!-- LEFT SIDE (original description restored) -->
+        <div class="plan-hero-left">
+          <div class="plan-tier-label">
+            <span class="tier-name">{{ currentTierName }} Plan</span>
+            <span class="tier-tag">Active</span>
+          </div>
+
+          <div class="plan-price">{{ currentTierPrice }}</div>
+
+          <p class="plan-summary">
+            Your clinic is currently using the MVP tier, which includes automated billing codes and claims submission.
+            Additional automation features are in development and will roll out throughout the year.
+          </p>
+
+          <div class="coming-soon-strip">
+            <mat-icon>schedule</mat-icon>
+            <span>Additional tiers launching soon — Pre‑Auth, Denials, Intake, Analytics</span>
+          </div>
+        </div>
+
+        <!-- ✅ RIGHT SIDE (lighter, cleaner) -->
+        <div class="plan-hero-right">
+          <div class="stat-group">
+            <div class="stat-item">
+              <span class="stat-value">2</span>
+              <span class="stat-label">Live</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">4</span>
+              <span class="stat-label">Planned</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </mat-card>
-    <mat-card class="features-card">
-      <h2>Feature Set</h2>
-      <ul class="features-list">
-        <li *ngFor="let f of features" [class.disabled]="!f.active">
-          <mat-icon class="state" *ngIf="f.active">check_circle</mat-icon>
-          <mat-icon class="state" *ngIf="!f.active">lock</mat-icon>
-          <div class="meta">
-            <span class="name">{{ f.name }}</span>
-            <span class="desc">{{ f.description }}</span>
-            <span class="badge" *ngIf="!f.active">Upgrade Required</span>
+
+    <!-- ✅ FEATURE AVAILABILITY -->
+    <mat-card class="card features-card">
+      <div class="card-header">
+        <h2>Feature availability</h2>
+        <span class="descriptor">What’s included now vs planned for future tiers.</span>
+      </div>
+
+      <div class="feature-header-row">
+        <span class="col-feature">Feature</span>
+        <span class="col-status">Status</span>
+      </div>
+
+      <ul class="feature-list">
+        <li *ngFor="let f of features">
+          <div class="feature-main">
+            <div class="feature-icon">
+              <mat-icon class="icon-live" *ngIf="f.status === 'included'">check_circle</mat-icon>
+              <mat-icon class="icon-planned" *ngIf="f.status === 'planned'">lock</mat-icon>
+            </div>
+            <div class="meta">
+              <span class="name">{{ f.name }}</span>
+              <span class="desc">{{ f.description }}</span>
+            </div>
+          </div>
+
+          <div class="feature-status">
+            <span class="status-chip" [ngClass]="{
+                'status-chip--included': f.status === 'included',
+                'status-chip--planned': f.status === 'planned'
+              }">
+              {{ f.status === 'included' ? 'Included' : 'Planned' }}
+            </span>
           </div>
         </li>
       </ul>
     </mat-card>
-    <mat-card class="roadmap-card">
-      <h2>Roadmap Snapshot</h2>
-      <ol class="roadmap">
-        <li><strong>Q1:</strong> Pre-Authorization beta</li>
-        <li><strong>Q2:</strong> Denial Tracking rollout</li>
-        <li><strong>Q3:</strong> Intake automation pilots</li>
-        <li><strong>Q4:</strong> Analytics & reporting suite</li>
-      </ol>
+
+    <!-- ✅ ROADMAP -->
+    <mat-card class="card roadmap-card">
+      <div class="card-header">
+        <h2>Product roadmap</h2>
+        <span class="descriptor">A high-level view of what’s coming.</span>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item" *ngFor="let r of roadmap; let last = last">
+          <div class="timeline-line" [class.timeline-line--last]="last"></div>
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-quarter">{{ r.quarter }}</span>
+              <span class="stage-pill" [ngClass]="{
+                  'stage-pill--beta': r.stage === 'Beta',
+                  'stage-pill--rollout': r.stage === 'Rollout',
+                  'stage-pill--pilot': r.stage === 'Pilot',
+                  'stage-pill--suite': r.stage === 'Suite'
+                }">
+                {{ r.stage }}
+              </span>
+            </div>
+
+            <div class="timeline-title">{{ r.label }}</div>
+            <div class="timeline-desc">{{ r.description }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-footnote">
+        Timeline may adjust based on pilot feedback and regulatory requirements.
+      </div>
     </mat-card>
+
   </div>
 </div>

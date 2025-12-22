@@ -1,41 +1,133 @@
 <div class="page-container">
-  <h1>Compliance</h1>
-  <div class="comp-grid">
-    <mat-card class="badge-card">
-      <h2>Status</h2>
-      <div class="hipaa-badge" [class.ready]="auditReady">
-        <mat-icon>verified_user</mat-icon>
-        <span>HIPAA Audit-Ready</span>
+  <header class="page-header">
+    <div class="header-left">
+      <h1>Compliance</h1>
+      <p class="subtitle">
+        Audit-ready status, key security checks, and active alerts for your clinic.
+      </p>
+    </div>
+    <div class="header-right">
+      <span class="env-badge">Production</span>
+    </div>
+  </header>
+
+  <div class="comp-layout">
+    <!-- ✅ HERO: HIPAA STATUS -->
+    <mat-card class="card hero-card">
+      <div class="hero-content">
+        <div class="hero-main">
+          <div class="hero-title-row">
+            <mat-icon class="hero-icon" *ngIf="auditReady">verified_user</mat-icon>
+            <div>
+              <div class="hero-title">
+                HIPAA Audit Status
+              </div>
+              <div class="hero-subtitle">
+                Snapshot of your current audit readiness.
+              </div>
+            </div>
+          </div>
+
+          <div class="hipaa-badge" [class.ready]="auditReady">
+            <mat-icon>{{ auditReady ? 'check_circle' : 'error_outline' }}</mat-icon>
+            <span>{{ auditReady ? 'Audit-ready for HIPAA review' : 'Not audit-ready' }}</span>
+          </div>
+
+          <div class="hero-meta">
+            <div class="meta-item">
+              <span class="meta-label">Last review</span>
+              <span class="meta-value">{{ lastAuditDate }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Reviewed by</span>
+              <span class="meta-value">{{ lastAuditBy }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button mat-stroked-button color="primary" (click)="downloadPacket()">
+            <mat-icon>download</mat-icon>
+            <span>Audit Packet</span>
+          </button>
+          <p class="hero-note">
+            Includes policy summaries, logging configuration, and technical controls for auditors.
+          </p>
+        </div>
       </div>
-      <button mat-stroked-button color="primary" (click)="downloadPacket()">
-        <mat-icon>download</mat-icon>
-        Audit Packet
-      </button>
     </mat-card>
-    <mat-card class="checks-card">
-      <h2>Security & Policy Checks</h2>
+
+    <!-- ✅ SECURITY & POLICY CHECKS -->
+    <mat-card class="card checks-card">
+      <div class="card-header">
+        <h2>Security & policy checks</h2>
+        <span class="descriptor">
+          Key controls tracked for compliance readiness.
+        </span>
+      </div>
+
       <ul class="checks-list">
-        <li *ngFor="let c of checks" [class.warning]="c.status==='Warning'" [class.fail]="c.status==='Fail'">
-          <mat-icon class="ok" *ngIf="c.status==='Pass'">check_circle</mat-icon>
-          <mat-icon class="warn" *ngIf="c.status==='Warning'">warning</mat-icon>
-          <mat-icon class="fail" *ngIf="c.status==='Fail'">error</mat-icon>
+        <li *ngFor="let c of checks" [class.row-warning]="c.status === 'Warning'"
+          [class.row-fail]="c.status === 'Fail'">
+          <mat-icon class="status-icon status-icon--pass" *ngIf="c.status === 'Pass'">
+            check_circle
+          </mat-icon>
+          <mat-icon class="status-icon status-icon--warning" *ngIf="c.status === 'Warning'">
+            warning
+          </mat-icon>
+          <mat-icon class="status-icon status-icon--fail" *ngIf="c.status === 'Fail'">
+            error
+          </mat-icon>
+
           <div class="meta">
             <span class="name">{{ c.name }}</span>
             <span class="details">{{ c.details }}</span>
           </div>
-          <span class="status" [class.pass]="c.status==='Pass'" [class.warning]="c.status==='Warning'" [class.fail]="c.status==='Fail'">{{ c.status }}</span>
+
+          <span class="status-pill" [ngClass]="{
+              'status-pill--pass': c.status === 'Pass',
+              'status-pill--warning': c.status === 'Warning',
+              'status-pill--fail': c.status === 'Fail'
+            }">
+            {{ c.status }}
+          </span>
         </li>
       </ul>
     </mat-card>
-    <mat-card class="alerts-card">
-      <h2>Alerts</h2>
-      <ul class="alerts-list">
-        <li *ngFor="let a of alerts">
-          <mat-icon>notification_important</mat-icon>
-          <span class="msg">{{ a.message }}</span>
-          <span class="sev">{{ a.severity }}</span>
-        </li>
-      </ul>
+
+    <!-- ✅ ALERTS -->
+    <mat-card class="card alerts-card">
+      <div class="card-header">
+        <h2>Alerts</h2>
+        <span class="descriptor">
+          Items that may require follow-up or review.
+        </span>
+      </div>
+
+      <ng-container *ngIf="alerts && alerts.length; else noAlerts">
+        <ul class="alerts-list">
+          <li *ngFor="let a of alerts">
+            <mat-icon class="alert-icon">notification_important</mat-icon>
+            <div class="alert-text">
+              <span class="msg">{{ a.message }}</span>
+            </div>
+            <span class="sev" [ngClass]="{
+                'sev--low': a.severity === 'Low',
+                'sev--medium': a.severity === 'Medium',
+                'sev--high': a.severity === 'High'
+              }">
+              {{ a.severity }}
+            </span>
+          </li>
+        </ul>
+      </ng-container>
+
+      <ng-template #noAlerts>
+        <div class="empty-state">
+          <mat-icon>check_circle</mat-icon>
+          <span>No active compliance alerts.</span>
+        </div>
+      </ng-template>
     </mat-card>
   </div>
 </div>
