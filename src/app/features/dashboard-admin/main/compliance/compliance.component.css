@@ -367,3 +367,15 @@
         max-width: none;
     }
 }
+
+/* Offscreen audit packet container for PDF export */
+.packet-print {
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    width: 800px;
+    /* reasonable content width for A4 scaling */
+    background: #fff;
+    padding: 16px;
+    box-sizing: border-box;
+}

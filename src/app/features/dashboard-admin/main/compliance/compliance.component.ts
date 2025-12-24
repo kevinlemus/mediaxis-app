@@ -54,7 +54,13 @@ export class ComplianceComponent {
   ];
 
   downloadPacket(): void {
-    const element = this.packetContainer.nativeElement;
-    this.auditPacketService.generatePdf(element);
+    const container: HTMLElement = this.packetContainer?.nativeElement;
+    const packetEl = container?.querySelector('app-audit-packet') as HTMLElement | null;
+    if (packetEl) {
+      this.auditPacketService.generatePdf(packetEl);
+    } else {
+      // Fallback: export container if packet element not found
+      this.auditPacketService.generatePdf(container);
+    }
   }
 }

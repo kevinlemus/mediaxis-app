@@ -9,7 +9,7 @@ export class AuditPacketService {
     generatePdf(element: HTMLElement) {
         const options = {
             margin: 10,
-            filename: 'mediAxis-audit-packet.pdf',
+            filename: 'MediAxis - Audit Packet.pdf',
             image: { type: 'jpeg' as 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
             jsPDF: {
