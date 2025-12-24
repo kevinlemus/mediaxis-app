@@ -26,6 +26,7 @@ export class FeedbackComponent {
   ];
   filterCategory = '';
   note = '';
+  noteSuccessMessage = '';
   
   // Derived counts used in template to avoid arrow functions in binding
   get openCount(): number { return this.items.filter(i => i.status === 'Open').length; }
@@ -37,7 +38,18 @@ export class FeedbackComponent {
   }
 
   addNote(): void {
-    console.log('Add internal note (dummy):', this.note);
+    this.noteSuccessMessage = '';
+
+    const trimmed = this.note.trim();
+    if (!trimmed) {
+      return;
+    }
+
+    console.log('Add internal note (dummy):', trimmed);
+    // In a real implementation, this would persist the note.
+    this.noteSuccessMessage = 'Your note has been sent. Thank you!';
     this.note = '';
+
+    setTimeout(() => (this.noteSuccessMessage = ''), 4000);
   }
 }
