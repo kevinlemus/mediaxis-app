@@ -10,25 +10,25 @@
     </div>
   </header>
 
-  <!-- HERO SUMMARY -->
-  <mat-card class="card hero-card">
-    <div class="hero-content">
-      <div class="hero-title">Feedback Overview</div>
-      <div class="hero-subtitle">Snapshot of current feedback lifecycle.</div>
+  <!-- SUMMARY CARD -->
+  <mat-card class="card summary-card">
+    <div class="card-header">
+      <h2>Overview</h2>
+      <span class="descriptor">Snapshot of feedback lifecycle</span>
+    </div>
 
-      <div class="stats-row">
-        <div class="stat">
-          <span class="label">Open</span>
-          <span class="value">{{ openCount }}</span>
-        </div>
-        <div class="stat">
-          <span class="label">Triaged</span>
-          <span class="value">{{ triagedCount }}</span>
-        </div>
-        <div class="stat">
-          <span class="label">Closed</span>
-          <span class="value">{{ closedCount }}</span>
-        </div>
+    <div class="stats-row">
+      <div class="stat">
+        <span class="label">Open</span>
+        <span class="value">{{ openCount }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">Triaged</span>
+        <span class="value">{{ triagedCount }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">Closed</span>
+        <span class="value">{{ closedCount }}</span>
       </div>
     </div>
   </mat-card>
@@ -88,9 +88,10 @@
     </div>
 
     <form (ngSubmit)="addNote()" #nf="ngForm" class="note-form">
-      <mat-form-field appearance="outline" class="full">
+      <mat-form-field appearance="fill" class="full">
         <mat-label>Note</mat-label>
-        <textarea matInput name="note" [(ngModel)]="note" rows="4" required></textarea>
+        <textarea matInput name="note" [(ngModel)]="note" rows="4" required
+          placeholder="Add internal context or follow‑up..."></textarea>
       </mat-form-field>
 
       <button mat-raised-button color="primary" [disabled]="nf.invalid">

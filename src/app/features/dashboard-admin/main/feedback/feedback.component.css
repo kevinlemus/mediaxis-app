@@ -46,22 +46,11 @@
     color: var(--color-text-secondary);
 }
 
-/* HERO */
-.hero-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--color-primary-dark);
-}
-
-.hero-subtitle {
-    font-size: 0.9rem;
-    color: #555;
-    margin-bottom: 1rem;
-}
-
+/* SUMMARY STATS */
 .stats-row {
     display: flex;
     gap: 1rem;
+    margin-top: 1rem;
 }
 
 .stat {
@@ -155,4 +144,18 @@ tr:hover td {
 
 .full {
     width: 100%;
+}
+
+/* MATCH SUPPORT PAGE INPUT STYLE */
+mat-form-field {
+    border-radius: var(--radius-md) !important;
+}
+
+.mat-mdc-text-field-wrapper {
+    border-radius: var(--radius-md) !important;
+}
+
+textarea.mat-input-element,
+input.mat-input-element {
+    border-radius: var(--radius-md) !important;
 }
