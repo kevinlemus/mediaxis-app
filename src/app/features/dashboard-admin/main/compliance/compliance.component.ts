@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { AuditPacketService } from './audit-packet/audit-packet.service';
+import { AuditPacketComponent } from './audit-packet/audit-packet.component'; // ✅ REQUIRED
 
 type ComplianceStatus = 'Pass' | 'Warning' | 'Fail';
 
@@ -20,11 +22,22 @@ interface ComplianceAlert {
 @Component({
   selector: 'app-compliance',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    AuditPacketComponent, // ✅ REQUIRED FOR <app-audit-packet>
+  ],
   templateUrl: './compliance.component.html',
   styleUrls: ['./compliance.component.css'],
 })
 export class ComplianceComponent {
+
+  @ViewChild('packetContainer') packetContainer!: ElementRef;
+
+  constructor(private auditPacketService: AuditPacketService) { }
+
   auditReady = true;
   lastAuditDate = 'Jan 5, 2025';
   lastAuditBy = 'Internal security review';
@@ -41,6 +54,7 @@ export class ComplianceComponent {
   ];
 
   downloadPacket(): void {
-    console.log('Download audit packet (dummy)');
+    const element = this.packetContainer.nativeElement;
+    this.auditPacketService.generatePdf(element);
   }
 }
