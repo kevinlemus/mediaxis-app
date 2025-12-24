@@ -56,9 +56,19 @@ export const routes: Routes = [
       { path: 'audit-logs', loadComponent: () => import('./features/dashboard-admin/main/audit-logs/audit-logs.component').then(m => m.AuditLogsComponent) },
       { path: 'plan-features', loadComponent: () => import('./features/dashboard-admin/main/plan-features/plan-features.component').then(m => m.PlanFeaturesComponent) },
       { path: 'compliance', loadComponent: () => import('./features/dashboard-admin/main/compliance/compliance.component').then(m => m.ComplianceComponent) },
+
+      // ✅ ADDED: Audit Packet Preview Route (consistent with your structure)
+      {
+        path: 'compliance/audit-packet-preview',
+        loadComponent: () =>
+          import('./features/dashboard-admin/main/compliance/audit-packet-preview/audit-packet-preview.component')
+            .then(m => m.AuditPacketPreviewComponent)
+      },
+
       { path: 'feedback', loadComponent: () => import('./features/dashboard-admin/main/feedback/feedback.component').then(m => m.FeedbackComponent) },
     ],
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login', pathMatch: 'full' },
+
 ];

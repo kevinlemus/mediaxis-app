@@ -1,0 +1,40 @@
+/* ========================= */
+/*   DOCUMENT TYPOGRAPHY     */
+/* ========================= */
+
+h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.meta {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 1.5rem 0 0.5rem;
+}
+
+p {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin-bottom: 1rem;
+}
+
+/* Layout helpers for future sections */
+.section {
+    margin-top: 2rem;
+}
+
+.subsection {
+    margin-top: 1rem;
+}
