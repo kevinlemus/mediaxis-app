@@ -163,6 +163,46 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    border-radius: var(--radius-md);
+    padding: 0.6rem 1rem;
+    line-height: 1;
+    transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Normalize icon size/alignment inside the audit button */
+.hero-actions button mat-icon {
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+/* Ripple and interactive highlight to match app */
+.hero-actions button .mat-mdc-button-ripple {
+    opacity: 0.15;
+}
+
+.hero-actions .primary-btn {
+    background-color: var(--color-primary);
+    color: #fff;
+    border: 1px solid transparent;
+    font-weight: 500;
+}
+
+.hero-actions .primary-btn:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.hero-actions button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.hero-actions button:active {
+    transform: translateY(1px);
 }
 
 .hero-note {
