@@ -45,45 +45,21 @@
 }
 
 .users-card {
-    mat-form-field {
-        width: 100%;
-    }
-
-    mat-label {
-        font-weight: 500;
-        color: var(--color-text-secondary);
-    }
-
-    mat-form-field.mat-form-field-appearance-fill .mat-input-element:hover,
-    mat-form-field.mat-form-field-appearance-fill .mat-input-element:focus {
-        background-color: #f9fbff;
-    }
-
-    /* Make the Role dropdown visually match the input-bar */
-    .invite-card mat-form-field.mat-form-field-appearance-fill .mat-form-field-flex {
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 0.4rem 0.6rem;
-    }
-
-    .invite-card mat-form-field.mat-form-field-appearance-fill .mat-form-field-underline {
-        display: none;
-    }
-
-    .invite-card .mat-select-trigger {
-        padding: 0.6rem 0;
-    }
-
-    .invite-card .mat-select-arrow {
-        color: #6c757d;
-    }
-
-    .invite-card .mat-form-field-label {
-        color: #6c757d;
-    }
-
     grid-area: users;
+}
+
+.users-card mat-form-field {
+    width: 100%;
+}
+
+.users-card mat-label {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.users-card mat-form-field.mat-form-field-appearance-fill .mat-input-element:hover,
+.users-card mat-form-field.mat-form-field-appearance-fill .mat-input-element:focus {
+    background-color: #f9fbff;
 }
 
 /* Cards */
@@ -108,7 +84,7 @@
     color: var(--color-text-secondary);
 }
 
-/* Success banner (like Clinic Settings) */
+/* Success banner */
 .success-banner {
     background-color: #e6f6ea;
     color: #1d7a3d;
@@ -134,7 +110,7 @@
     }
 }
 
-/* Role definitions card */
+/* Role definitions */
 .role-definitions {
     display: flex;
     flex-direction: column;
@@ -190,7 +166,6 @@
     flex: 1;
 }
 
-/* Make Role field taller than others */
 .input-bar.role-field {
     height: 52px;
     padding: 0 0.6rem;
@@ -225,7 +200,6 @@
     align-items: center;
 }
 
-/* Ensure taller role field centers its content */
 .input-bar.role-field .mat-select,
 .input-bar.role-field .mat-select-trigger {
     height: 100%;
@@ -241,7 +215,7 @@
     font-style: italic;
 }
 
-/* Invite form layout */
+/* Invite form */
 .invite-form {
     display: grid;
     gap: 1rem;
@@ -278,7 +252,7 @@
     opacity: 0.6;
 }
 
-/* Toolbar layout */
+/* Toolbar */
 .toolbar {
     display: flex;
     justify-content: space-between;
@@ -377,7 +351,7 @@ td {
     padding: 0.75rem;
 }
 
-/* Status chips (match Audit Logs style) */
+/* Status chips */
 .status {
     font-size: 0.75rem;
     padding: 2px 8px;
@@ -400,6 +374,47 @@ td {
 .status.suspended {
     background: #fff3cd;
     color: #8a6d00;
+}
+
+/* ============================================
+   FULLY OPAQUE ENTERPRISE MAT-MENU
+   ============================================ */
+
+.mat-mdc-menu-panel {
+    background: #ffffff !important;
+    /* fully opaque */
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14) !important;
+    padding: 0.35rem 0 !important;
+    backdrop-filter: none !important;
+}
+
+.mat-mdc-menu-item {
+    background: #ffffff !important;
+    color: var(--color-text-primary) !important;
+    padding: 0.75rem 1.25rem !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.mat-mdc-menu-item:hover:not([disabled]) {
+    background: #f3f6ff !important;
+    color: var(--color-primary-dark) !important;
+}
+
+.mat-mdc-menu-item mat-icon {
+    color: var(--color-primary-dark) !important;
+    margin-right: 0.75rem;
+}
+
+.mat-mdc-menu-item.cdk-focused {
+    background: #e8efff !important;
+    color: var(--color-primary-dark) !important;
+}
+
+.mat-mdc-menu-divider {
+    margin: 0.25rem 0 !important;
+    border-color: #e0e0e0 !important;
 }
 
 /* Responsive */
