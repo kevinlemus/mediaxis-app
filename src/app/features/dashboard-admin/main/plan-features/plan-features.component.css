@@ -114,7 +114,7 @@
     font-weight: 500;
 }
 
-/* ✅ NEW RIGHT SIDE (lighter, cleaner) */
+/* RIGHT SIDE */
 .plan-hero-right {
     flex: 1;
     display: flex;
@@ -157,6 +157,11 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     color: #666;
+}
+
+/* ⭐ FIX: Align “Status” header to the right */
+.feature-header-row .col-status {
+    text-align: right;
 }
 
 .feature-list {
