@@ -1,0 +1,63 @@
+<div class="auth-container">
+    <div class="auth-card">
+
+        <h1 class="auth-title">Create Clinic Account</h1>
+
+        <p class="instructions">
+            Register your clinic and create your administrator account.
+        </p>
+
+        <!-- Success banner -->
+        <div *ngIf="successMessage" class="success-banner">
+            <mat-icon>check_circle</mat-icon>
+            {{ successMessage }}
+        </div>
+
+        <!-- Error banner -->
+        <div *ngIf="errorMessage" class="error-banner">
+            <mat-icon>error</mat-icon>
+            {{ errorMessage }}
+        </div>
+
+        <form (ngSubmit)="register()" #regForm="ngForm">
+
+            <!-- Clinic Name -->
+            <mat-form-field appearance="fill" class="auth-field">
+                <mat-label>Clinic Name</mat-label>
+                <input matInput name="clinic" [(ngModel)]="clinicName" required />
+            </mat-form-field>
+
+            <!-- Full Name -->
+            <mat-form-field appearance="fill" class="auth-field">
+                <mat-label>Your Full Name</mat-label>
+                <input matInput name="fullName" [(ngModel)]="fullName" required />
+            </mat-form-field>
+
+            <!-- Email -->
+            <mat-form-field appearance="fill" class="auth-field">
+                <mat-label>Email</mat-label>
+                <input matInput name="email" type="email" [(ngModel)]="email" required />
+            </mat-form-field>
+
+            <!-- Password -->
+            <mat-form-field appearance="fill" class="auth-field">
+                <mat-label>Password</mat-label>
+                <input matInput name="password" type="password" [(ngModel)]="password" required />
+            </mat-form-field>
+
+            <!-- Confirm Password -->
+            <mat-form-field appearance="fill" class="auth-field">
+                <mat-label>Confirm Password</mat-label>
+                <input matInput name="confirmPassword" type="password" [(ngModel)]="confirmPassword" required />
+            </mat-form-field>
+
+            <div class="auth-actions">
+                <button mat-raised-button color="primary" type="submit" [disabled]="!regForm.valid || isSubmitting">
+                    {{ isSubmitting ? "Creating..." : "Create Account" }}
+                </button>
+
+                <a routerLink="/login" class="link">Back to login</a>
+            </div>
+        </form>
+    </div>
+</div>
