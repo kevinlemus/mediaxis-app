@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -25,28 +26,29 @@ export class ResetPasswordComponent {
   successMessage = '';
   errorMessage = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) { }
 
   resetPassword() {
     this.isSubmitting = true;
     this.successMessage = '';
     this.errorMessage = '';
 
-    // Simulate backend call
-    setTimeout(() => {
-      if (!this.email.includes('@')) {
-        this.errorMessage = 'Invalid email address. Please try again.';
-      } else {
-        // Professional wording: don’t reveal if email exists
+    this.authService.requestPasswordReset(this.email).subscribe({
+      next: () => {
         this.successMessage =
-          'If this email exists in our database, a reset link has been sent.';
+          'If this email exists in our system, a reset link has been sent.';
+        this.isSubmitting = false;
+      },
+      error: () => {
+        // Same message for security
+        this.successMessage =
+          'If this email exists in our system, a reset link has been sent.';
+        this.isSubmitting = false;
       }
-      this.isSubmitting = false;
-    }, 1500);
+    });
   }
 
   cancel() {
-    // Navigate back to login page
     this.router.navigate(['/login']);
   }
 }

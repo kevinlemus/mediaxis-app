@@ -5,6 +5,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../core/auth/auth.service';
+
 
 @Component({
   selector: 'app-new-password',
@@ -24,32 +27,37 @@ export class NewPasswordComponent {
   confirmPassword = '';
   isSubmitting = false;
   errorMessage = '';
+  token = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private auth: AuthService
+  ) {
+    this.route.queryParams.subscribe(params => {
+      this.token = params['token'];
+    });
+  }
 
   updatePassword() {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    setTimeout(() => {
-      if (this.newPassword !== this.confirmPassword) {
-        this.errorMessage = 'Passwords do not match. Please try again.';
-      } else if (this.newPassword.length < 8) {
-        this.errorMessage = 'Password must be at least 8 characters long.';
-      } else if (
-        !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*]).+$/.test(
-          this.newPassword
-        )
-      ) {
-        this.errorMessage =
-          'Include uppercase, lowercase, a number, and a special character.';
-      } else {
-        this.router.navigate(['/login'], {
-          queryParams: { reset: 'success' },
-        });
-      }
-
+    if (this.newPassword !== this.confirmPassword) {
+      this.errorMessage = 'Passwords do not match.';
       this.isSubmitting = false;
-    }, 1200);
+      return;
+    }
+
+    this.auth.updatePassword(this.token, this.newPassword).subscribe({
+      next: () => {
+        this.router.navigate(['/login'], { queryParams: { reset: 'success' } });
+      },
+      error: () => {
+        this.errorMessage = 'Reset link is invalid or expired.';
+        this.isSubmitting = false;
+      }
+    });
   }
+
 }

@@ -87,11 +87,6 @@
       <span class="descriptor">Add internal context or follow‑up notes</span>
     </div>
 
-    <!-- Success banner -->
-    <div *ngIf="noteSuccessMessage" class="success-banner">
-      {{ noteSuccessMessage }}
-    </div>
-
     <form (ngSubmit)="addNote()" #nf="ngForm" class="note-form">
       <mat-form-field appearance="fill" class="full">
         <mat-label>Note</mat-label>
