@@ -6,6 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/auth/auth.service';
+
 
 @Component({
   selector: 'app-admin-register',
@@ -33,7 +35,10 @@ export class AdminRegisterComponent {
   successMessage = '';
   errorMessage = '';
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
   register() {
     if (this.password !== this.confirmPassword) {
@@ -45,14 +50,26 @@ export class AdminRegisterComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    // Simulated API call
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.successMessage = "Clinic account created successfully!";
+    const body = {
+      clinicName: this.clinicName,
+      fullName: this.fullName,
+      email: this.email,
+      password: this.password
+    };
 
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 1500);
-    }, 1200);
+    this.authService.registerAdmin(body).subscribe({
+      next: (response) => {
+        // Store token + clinicId
+        localStorage.setItem('jwt', response.token);
+        localStorage.setItem('clinicId', response.clinicId);
+
+        // Redirect to dashboard
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        this.errorMessage = err.error?.message || "Registration failed.";
+      }
+    });
   }
 }

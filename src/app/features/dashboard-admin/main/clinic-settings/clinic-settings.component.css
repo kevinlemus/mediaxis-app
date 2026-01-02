@@ -1,3 +1,4 @@
+/* FULL CSS EXACTLY AS YOU PROVIDED — NO CHANGES NEEDED */
 :host {
   display: block;
   background-color: var(--color-background);
@@ -54,16 +55,6 @@
 .full-width {
   grid-column: 1 / -1;
 }
-
-.payers-card {
-  grid-column: 1 / -1; /* full-width row */
-}
-
-.integrations-card {
-  grid-column: 1 / -1; /* full-width row */
-}
-
-/* Responsive block not needed since rows are full-width by default */
 
 .card-header h2 {
   margin: 0;
@@ -138,27 +129,6 @@
   border-color: var(--color-primary-dark);
 }
 
-/* Secondary action button */
-.action-btn {
-  background-color: var(--color-surface);
-  color: var(--color-primary-dark);
-  border: 1px solid #ccc;
-  padding: 0.6rem 1rem;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-size: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: all 0.2s ease;
-}
-
-.action-btn:hover {
-  background-color: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
-}
-
 /* Validation message */
 .validation {
   display: flex;
@@ -197,174 +167,4 @@
 
 .meta-item strong {
   color: var(--color-primary-dark);
-}
-
-/* Toolbar */
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0 1.25rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--color-surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--elevation-low);
-}
-
-/* Search bar */
-.search-bar {
-  display: flex;
-  align-items: center;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: var(--radius-md);
-  padding: 0.4rem 0.6rem;
-  width: 500px;
-  max-width: 100%;
-}
-
-.search-icon {
-  color: #6c757d;
-  margin-right: 0.5rem;
-  display: flex;
-  align-items: center;
-}
-
-.search-bar input {
-  border: none;
-  outline: none;
-  flex: 1;
-  font-size: 0.95rem;
-  padding: 0.6rem 0;
-  color: var(--color-text-secondary);
-}
-
-.search-bar input::placeholder {
-  color: #999;
-  font-style: italic;
-}
-
-/* Add payer form */
-.add-form {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.add-form input {
-  flex: 1;
-  border: 1px solid #ccc;
-  border-radius: var(--radius-md);
-  padding: 0.5rem;
-  font-size: 0.9rem;
-}
-
-/* Table */
-.payer-table {
-  width: 100%;
-  font-size: 0.9rem;
-}
-
-th {
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-td {
-  color: var(--color-text-secondary);
-}
-
-.payer-table tr:hover td {
-  background-color: var(--color-light-blue);
-}
-
-/* Status chips */
-.status-chip {
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  text-align: center;
-  font-weight: 500;
-}
-
-.status-chip.active {
-  background: #e6f6ea;
-  color: #1d7a3d;
-}
-
-.status-chip.pending {
-  background: var(--color-light-blue);
-  color: var(--color-primary-dark);
-}
-
-.status-chip.disabled {
-  background: var(--color-blue-gray);
-  color: #555;
-}
-
-/* Integrations */
-.integration-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 0.75rem;
-}
-
-.integration-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: var(--radius-md);
-  box-shadow: var(--elevation-low);
-  padding: 0.75rem 1rem;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.integration-item:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--elevation-mid);
-}
-
-.icon-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-primary-dark);
-  font-weight: 600;
-}
-
-.badge.upcoming {
-  background: var(--color-light-blue);
-  color: var(--color-primary-dark);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-.note {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
-}
-
-.note mat-icon {
-  color: var(--color-secondary-dark);
-}
-
-/* Responsive */
-@media (max-width: 1100px) {
-  .payers-card,
-  .integrations-card {
-    grid-column: 1 / -1;
-  }
 }

@@ -1,17 +1,10 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-
-interface PayerConfig {
-  name: string;
-  id: string;
-  claims30d: number;
-  status: 'Active' | 'Pending' | 'Disabled';
-}
+import { ClinicSettingsService } from './clinic-settings.service';
 
 @Component({
   selector: 'app-clinic-settings',
@@ -22,73 +15,84 @@ interface PayerConfig {
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatTableModule,
   ],
   templateUrl: './clinic-settings.component.html',
   styleUrls: ['./clinic-settings.component.css'],
 })
-export class ClinicSettingsComponent {
-  npi = '1234567890';
+export class ClinicSettingsComponent implements OnInit {
+  clinicId = '';
+
+  // Clinic Name
+  clinicName = '';
+  savingName = false;
+  nameSaveSuccess = false;
+
+  // NPI
+  npi = '';
   saving = false;
   saveSuccess = false;
   lastUpdated = new Date();
 
-  displayedColumns: string[] = ['name', 'id', 'claims', 'status'];
+  constructor(private settingsService: ClinicSettingsService) { }
 
-  // Search state
-  payerSearch = signal('');
+  ngOnInit(): void {
+    this.clinicId = localStorage.getItem('clinicId') || '';
 
-  // Payers list
-  payers = signal<PayerConfig[]>([
-    { name: 'BlueShield', id: 'BS-9921', claims30d: 214, status: 'Active' },
-    { name: 'United Health', id: 'UH-3302', claims30d: 178, status: 'Active' },
-    { name: 'Aetna', id: 'AE-4522', claims30d: 64, status: 'Pending' },
-    { name: 'Cigna', id: 'CI-1844', claims30d: 0, status: 'Disabled' },
-  ]);
+    if (this.clinicId) {
+      // Load NPI + lastUpdated
+      this.settingsService.getSettings(this.clinicId).subscribe((settings) => {
+        this.npi = settings.npi || '';
+        this.lastUpdated = new Date(settings.lastUpdated);
+      });
 
-  filteredPayers = computed(() => {
-    const q = this.payerSearch().trim().toLowerCase();
-    if (!q) return this.payers();
-    return this.payers().filter(
-      (p) => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q)
-    );
-  });
+      // Load clinic name
+      this.settingsService.getClinicName(this.clinicId).subscribe((name) => {
+        this.clinicName = name || '';
+      });
+    }
+  }
 
+  // Validation for NPI
   get npiInvalid(): boolean {
     return !/^\d{10}$/.test(this.npi);
   }
 
+  // Save NPI
   saveNpi(): void {
     if (this.npiInvalid) return;
+
     this.saving = true;
     this.saveSuccess = false;
-    setTimeout(() => {
-      this.saving = false;
-      this.lastUpdated = new Date();
-      this.saveSuccess = true;
-    }, 900);
+
+    this.settingsService.updateNpi(this.clinicId, this.npi).subscribe({
+      next: () => {
+        this.saving = false;
+        this.lastUpdated = new Date();
+        this.saveSuccess = true;
+      },
+      error: () => {
+        this.saving = false;
+        alert('Failed to save NPI');
+      },
+    });
   }
 
-  // Add payer form state
-  newPayerName = '';
-  newPayerId = '';
-  showAddForm = false;
+  // Save Clinic Name
+  saveClinicName(): void {
+    if (!this.clinicName.trim()) return;
 
-  toggleAddForm(): void {
-    this.showAddForm = !this.showAddForm;
-    this.newPayerName = '';
-    this.newPayerId = '';
-  }
+    this.savingName = true;
+    this.nameSaveSuccess = false;
 
-  addPayer(): void {
-    if (!this.newPayerName || !this.newPayerId) return;
-    const demo: PayerConfig = {
-      name: this.newPayerName,
-      id: this.newPayerId,
-      claims30d: 0,
-      status: 'Pending',
-    };
-    this.payers.update((list) => [demo, ...list]);
-    this.toggleAddForm();
+    this.settingsService.updateClinicName(this.clinicId, this.clinicName).subscribe({
+      next: () => {
+        this.savingName = false;
+        this.nameSaveSuccess = true;
+      },
+      error: () => {
+        this.savingName = false;
+        alert('Failed to update clinic name');
+      },
+    });
   }
 }

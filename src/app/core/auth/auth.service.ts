@@ -28,13 +28,14 @@ export class AuthService {
   /**
    * Logs in the user and stores the JWT in localStorage.
    */
-  login(email: string, password: string): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(
+  login(email: string, password: string): Observable<{ token: string, clinicId: string }> {
+    return this.http.post<{ token: string, clinicId: string }>(
       `${this.baseUrl}/login`,
       { email, password }
     ).pipe(
       tap(response => {
         localStorage.setItem('jwt', response.token);
+        localStorage.setItem('clinicId', response.clinicId);
       })
     );
   }
@@ -94,6 +95,23 @@ export class AuthService {
       token,
       newPassword
     });
+  }
+
+  registerAdmin(body: {
+    clinicName: string;
+    fullName: string;
+    email: string;
+    password: string;
+  }): Observable<{ token: string, clinicId: string }> {
+    return this.http.post<{ token: string, clinicId: string }>(
+      `${this.baseUrl}/register`,
+      body
+    ).pipe(
+      tap(response => {
+        localStorage.setItem('jwt', response.token);
+        localStorage.setItem('clinicId', response.clinicId);
+      })
+    );
   }
 
 }
