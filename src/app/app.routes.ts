@@ -6,6 +6,7 @@ import { NewPasswordComponent } from './shared/new-password/new-password.compone
 import { RequestFeatureComponent } from './shared/request-feature/request-feature.component';
 
 import { AdminRegisterComponent } from './shared/register/admin-register/admin-register.component';
+import { EmployeeRegisterComponent } from './shared/register/employee-register/employee-register.component';
 
 import { AdminMainComponent } from './features/dashboard-admin/main/main.component';
 import { EmployeeMainComponent } from './features/dashboard-employee/main/main.component';
@@ -21,6 +22,7 @@ import { HistoryComponent } from './features/claims/history/history.component';
 import { DetailComponent } from './features/claims/detail/detail.component';
 import { EmployeeSettingsComponent } from './features/dashboard-employee/main/employee-settings/employee-settings.component';
 import { EmployeeSupportComponent } from './features/dashboard-employee/main/employee-support/employee-support.component';
+
 
 export const routes: Routes = [
 
@@ -38,8 +40,10 @@ export const routes: Routes = [
   },
 
   // ⭐ EMPLOYEE REGISTRATION (INVITE-BASED)
+  // This is the correct public route for invite links:
+  // http://localhost:4200/complete-registration?token=...
   {
-    path: 'register/employee',
+    path: 'complete-registration',
     loadComponent: () =>
       import('./shared/register/employee-register/employee-register.component')
         .then(m => m.EmployeeRegisterComponent)
@@ -131,7 +135,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard-admin/main/feedback/feedback.component')
             .then(m => m.FeedbackComponent)
-      },
+      }
     ],
   },
 

@@ -6,6 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-employee-register',
@@ -34,21 +36,32 @@ export class EmployeeRegisterComponent {
   successMessage = '';
   errorMessage = '';
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private http: HttpClient
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.token = params['token'] || '';
 
-      // Simulated token decode (replace with real API call)
       if (!this.token) {
         this.errorMessage = 'Invalid or missing invite token.';
         return;
       }
 
-      // Simulated invite payload
-      this.email = 'invited.user@example.com';
-      this.role = 'staff';
+      // ⭐ REAL API CALL — validate invite token
+      this.http.get<any>(`${environment.apiUrl}/auth/invite/validate?token=${this.token}`)
+        .subscribe({
+          next: (data) => {
+            this.email = data.email;
+            this.role = data.role;
+          },
+          error: () => {
+            this.errorMessage = 'Invalid or expired invite link.';
+          }
+        });
     });
   }
 
@@ -62,14 +75,24 @@ export class EmployeeRegisterComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    // Simulated API call
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.successMessage = 'Account created successfully!';
+    // ⭐ REAL API CALL — complete registration
+    this.http.post(`${environment.apiUrl}/auth/complete-registration`, {
+      token: this.token,
+      fullName: this.fullName,
+      password: this.password,
+      confirmPassword: this.confirmPassword
+    }).subscribe({
+      next: () => {
+        this.successMessage = 'Account created successfully!';
 
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 1500);
-    }, 1200);
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+      },
+      error: () => {
+        this.isSubmitting = false;
+        this.errorMessage = 'Failed to complete registration. Please try again.';
+      }
+    });
   }
 }

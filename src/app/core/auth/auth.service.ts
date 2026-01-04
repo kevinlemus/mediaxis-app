@@ -20,6 +20,8 @@ export class AuthService {
    *   POST /auth/login
    *   POST /auth/reset-password
    *   POST /auth/update-password
+   *   POST /auth/register
+   *   POST /auth/invite
    */
   private baseUrl = `${environment.apiUrl}/auth`;
 
@@ -45,6 +47,7 @@ export class AuthService {
    */
   logout(): void {
     localStorage.removeItem('jwt');
+    localStorage.removeItem('clinicId');
   }
 
   /**
@@ -74,6 +77,14 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+
+  /**
+   * Returns the current clinicId from localStorage, if present.
+   * This is set at login and during admin registration.
+   */
+  getClinicId(): string | null {
+    return localStorage.getItem('clinicId');
   }
 
   /**
@@ -114,4 +125,20 @@ export class AuthService {
     );
   }
 
+  /**
+   * Sends an invite to a new user for the current clinic.
+   * Uses the stored clinicId from login/registration.
+   */
+  sendInvite(email: string, role: string): Observable<void> {
+    const clinicId = this.getClinicId();
+    if (!clinicId) {
+      throw new Error('Clinic ID is not available in localStorage.');
+    }
+
+    return this.http.post<void>(`${this.baseUrl}/invite`, {
+      email,
+      role,
+      clinicId
+    });
+  }
 }
