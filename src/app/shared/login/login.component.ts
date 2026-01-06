@@ -49,6 +49,16 @@ export class LoginComponent {
   ) { }
 
   ngOnInit() {
+    /**
+     * ⭐ FIX: Reset login form state on component load.
+     * Angular was reusing the component instance when navigating
+     * from employee registration → login, leaving stale values.
+     */
+    this.email = '';
+    this.password = '';
+    this.errorMessage = '';
+    this.resetSuccess = false;
+
     // Show success banner if redirected from reset-password
     this.route.queryParams.subscribe(params => {
       if (params['reset'] === 'success') {
@@ -62,27 +72,26 @@ export class LoginComponent {
    * Calls backend /auth/login and navigates to dashboard on success.
    */
   login() {
-  this.errorMessage = '';
+    this.errorMessage = '';
 
-  this.authService.login(this.email, this.password).subscribe({
-    next: () => {
-      const role = this.authService.getUserRole();
+    this.authService.login(this.email, this.password).subscribe({
+      next: () => {
+        const role = this.authService.getUserRole();
 
-      if (role === 'ADMIN') {
-        this.router.navigate(['/dashboard-admin']);
-      } else if (role === 'STAFF' || role === 'BILLING_MANAGER') {
-        this.router.navigate(['/dashboard-employee']);
-      } else if (role === 'AUDITOR') {
-        this.router.navigate(['/dashboard-auditor']);
-      } else {
-        console.warn('Unknown role:', role);
+        if (role === 'ADMIN') {
+          this.router.navigate(['/dashboard-admin']);
+        } else if (role === 'STAFF' || role === 'BILLING_MANAGER') {
+          this.router.navigate(['/dashboard-employee']);
+        } else if (role === 'AUDITOR') {
+          this.router.navigate(['/dashboard-auditor']);
+        } else {
+          console.warn('Unknown role:', role);
+        }
+      },
+      error: err => {
+        this.errorMessage = 'Invalid email or password.';
+        console.error(err);
       }
-    },
-    error: err => {
-      this.errorMessage = 'Invalid email or password.';
-      console.error(err);
-    }
-  });
-}
-
+    });
+  }
 }
