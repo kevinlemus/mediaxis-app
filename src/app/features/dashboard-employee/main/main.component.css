@@ -1,10 +1,11 @@
 .dashboard-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   margin-left: 1.5vw;
   overflow-x: hidden;
 }
 
+/* The main scroll container for routed pages */
 .dashboard-content {
   flex-grow: 1;
   overflow-y: auto;
@@ -24,9 +25,17 @@ mat-sidenav.sidebar {
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Profile drawer: full-height overlay on the right */
 mat-sidenav.profile-drawer {
   width: 320px;
   background-color: var(--color-surface);
   box-shadow: -2px 0 6px rgba(0, 0, 0, 0.15);
-  padding: 1rem;
+  padding: 0;
+  /* let the drawer component handle its own padding */
+  display: flex;
+  flex-direction: column;
+}
+
+mat-sidenav.profile-drawer {
+  background-color: #ffffff !important;
 }

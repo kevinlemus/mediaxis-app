@@ -1,72 +1,120 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  background-color: var(--color-surface);
+  background-color: #ffffff;
+  /* pure white drawer */
   color: var(--color-text-secondary);
   font-family: "Segoe UI", Roboto, sans-serif;
   padding: 1.5rem;
   box-sizing: border-box;
-
-  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);
-  border-left: 1px solid #e0e0e0;
-  border-radius: 8px 0 0 8px;
 }
+
+/* ----------------------------- */
+/* Header                        */
+/* ----------------------------- */
 
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  /* premium spacing */
   padding: 1rem;
   border-radius: 6px;
   background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
-  color: #fff;
+}
+
+/* Force header text + icon to white */
+.drawer-header h2,
+.drawer-header button,
+.drawer-header mat-icon {
+  color: #ffffff !important;
 }
 
 .drawer-header h2 {
   font-size: 1.35rem;
   font-weight: 600;
   margin: 0;
-  color: #fff;
 }
 
-.drawer-header button {
-  color: #fff;
-}
+/* ----------------------------- */
+/* Avatar                        */
+/* ----------------------------- */
 
 .profile-avatar {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  /* matches header spacing */
 }
 
-.avatar {
+.avatar-wrapper {
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 0.75rem;
+  overflow: hidden;
   background-color: #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border: 3px solid var(--color-accent);
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.avatar:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-input[type="file"] {
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+}
+
+.avatar-fallback mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+/* ----------------------------- */
+/* Upload Button                 */
+/* ----------------------------- */
+
+.upload-btn {
+  margin-top: 0.75rem;
+  padding: 0.4rem 0.75rem;
   font-size: 0.85rem;
-  color: var(--color-text-secondary);
-  margin-top: 0.25rem;
+  border-radius: 6px;
+  background-color: var(--color-primary);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
+
+.upload-btn:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* Hide native file input */
+.upload-btn input[type="file"] {
+  display: none;
+}
+
+/* ----------------------------- */
+/* Form Fields                   */
+/* ----------------------------- */
 
 mat-form-field {
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 mat-label {
@@ -74,23 +122,27 @@ mat-label {
   color: var(--color-text-secondary);
 }
 
-mat-form-field.mat-form-field-appearance-fill .mat-input-element:hover,
-mat-form-field.mat-form-field-appearance-fill .mat-input-element:focus {
-  background-color: #f9fbff;
-}
-
 input[disabled] {
   background-color: #fafafa;
   color: #888;
 }
 
+/* ----------------------------- */
+/* Actions (Save / Cancel)       */
+/* ----------------------------- */
+
 .actions {
+  margin-top: auto;
+  /* pushes to bottom */
+  padding-top: 2rem;
+  /* matches top spacing */
+  padding-bottom: 1.5rem;
+  /* adds breathing room at bottom */
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
+  background: transparent;
+  /* ensures no grey band */
 }
 
 .actions button {
@@ -98,45 +150,37 @@ input[disabled] {
   font-weight: 500;
   border-radius: 6px;
 }
+
+/* Save button shimmer */
 .save-btn {
   position: relative;
   overflow: hidden;
 }
+
 .save-btn::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, rgba(255,255,255,0.15), rgba(255,255,255,0));
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
   opacity: 0;
   transition: opacity 0.25s ease;
 }
-.save-btn:hover::after { opacity: 1; }
-.save-btn:active { transform: translateY(1px); }
 
-.logout-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border-color: var(--color-primary-dark);
-  color: var(--color-primary-dark);
-  font-weight: 500;
-  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
-}
-.logout-btn:hover {
-  background-color: var(--color-blue-gray);
-  box-shadow: var(--elevation-mid);
-}
-.logout-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
-
-form {
-  padding-top: 0.5rem;
+.save-btn:hover::after {
+  opacity: 1;
 }
 
+.save-btn:active {
+  transform: translateY(1px);
+}
+
+/* Cancel button */
 .actions button[color="warn"] {
   background-color: transparent;
   color: var(--color-primary-dark);
   border: 1px solid var(--color-primary-dark);
 }
+
 .actions button[color="warn"]:hover {
   background-color: var(--color-blue-gray);
   color: var(--color-primary-dark);

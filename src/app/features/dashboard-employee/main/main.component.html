@@ -4,11 +4,6 @@
     <app-sidebar (openProfile)="profileSidenav.open()"></app-sidebar>
   </mat-sidenav>
 
-  <!-- Right profile drawer -->
-  <mat-sidenav #profileSidenav mode="over" position="end">
-    <app-profile-drawer (close)="profileSidenav.close()"></app-profile-drawer>
-  </mat-sidenav>
-
   <!-- Main content -->
   <mat-sidenav-content>
     <main class="dashboard-content">
@@ -23,4 +18,10 @@
       </div>
     </main>
   </mat-sidenav-content>
+
+  <!-- Right profile drawer (overlaid, does not affect scroll position) -->
+  <mat-sidenav #profileSidenav mode="over" position="end" class="profile-drawer" [autoFocus]="false">
+    <app-profile-drawer (close)="profileSidenav.close()"></app-profile-drawer>
+  </mat-sidenav>
+
 </mat-sidenav-container>

@@ -33,15 +33,14 @@ export class ProfileDrawerComponent {
 
   profileForm: FormGroup;
   pendingAvatar: string | null = null;
+  useFallback = false;
 
   constructor(private fb: FormBuilder, private userService: UserService) {
     const user = this.userService.currentUser;
+
     this.profileForm = this.fb.group({
       name: [user.name, Validators.required],
-      email: [
-        { value: user.email, disabled: true },
-        [Validators.required, Validators.email],
-      ],
+      email: [{ value: user.email, disabled: true }, [Validators.required, Validators.email]],
       phone: [user.phone ?? ''],
       department: [user.department ?? '', Validators.required],
       role: [{ value: user.role, disabled: true }],
@@ -49,30 +48,37 @@ export class ProfileDrawerComponent {
   }
 
   get avatarSrc(): string {
-    return (
+    const src =
       this.pendingAvatar ||
       this.userService.currentUser.photoUrl ||
-      'assets/default-avatar.png'
-    );
+      '';
+
+    this.useFallback = !src;
+    return src;
   }
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => (this.pendingAvatar = reader.result as string);
+      reader.onload = () => {
+        this.pendingAvatar = reader.result as string;
+        this.useFallback = false;
+      };
       reader.readAsDataURL(file);
     }
   }
 
   submit() {
     const raw = this.profileForm.getRawValue();
+
     this.userService.updateUser({
       name: raw.name,
       phone: raw.phone,
       department: raw.department,
       photoUrl: this.pendingAvatar ?? this.userService.currentUser.photoUrl,
     });
+
     this.pendingAvatar = null;
     this.close.emit();
   }
@@ -80,5 +86,4 @@ export class ProfileDrawerComponent {
   cancel() {
     this.close.emit();
   }
-
 }

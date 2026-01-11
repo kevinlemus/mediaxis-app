@@ -13,6 +13,7 @@
 	font-family: "Segoe UI", Roboto, sans-serif;
 }
 
+/* Left sidebar */
 mat-sidenav.sidebar {
 	width: 240px;
 	background-color: var(--color-navy);
@@ -24,9 +25,19 @@ mat-sidenav.sidebar {
 	box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Right profile drawer — MATCHES EMPLOYEE VERSION */
 mat-sidenav.profile-drawer {
 	width: 320px;
-	background-color: var(--color-surface);
+	background-color: #ffffff !important;
+	/* pure white, fixes grey band */
 	box-shadow: -2px 0 6px rgba(0, 0, 0, 0.15);
-	padding: 1rem;
+	padding: 0;
+	/* drawer component handles its own padding */
+}
+
+mat-sidenav.profile-drawer {
+	position: fixed !important;
+	top: 0;
+	right: 0;
+	height: 100vh;
 }
