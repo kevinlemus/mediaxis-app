@@ -225,6 +225,8 @@ export class UserManagementComponent implements OnInit {
 
   roleBadge(role: string): string {
     switch (role) {
+      case 'admin':
+        return 'Admin';
       case 'billing-manager':
         return 'Billing Manager';
       case 'auditor':
@@ -233,6 +235,7 @@ export class UserManagementComponent implements OnInit {
         return 'Staff';
     }
   }
+
 
   // These still only update local state.
   // Later you can wire them to backend /users/{id}/status endpoints.
