@@ -29,6 +29,9 @@ export class AuthService {
 
   /**
    * Logs in the user and stores the JWT in localStorage.
+   *
+   * ⭐ FIX: Allow backend error messages to propagate
+   * so the login component can detect suspension/revocation.
    */
   login(email: string, password: string): Observable<{ token: string, clinicId: string }> {
     return this.http.post<{ token: string, clinicId: string }>(
@@ -89,13 +92,6 @@ export class AuthService {
 
   /**
    * Requests a password reset email.
-   *
-   * FIXED:
-   * Previously: `${this.baseUrl}/auth/reset-password`
-   * Which produced: /auth/auth/reset-password
-   *
-   * Now correct: `${this.baseUrl}/reset-password`
-   * Produces: /auth/reset-password
    */
   requestPasswordReset(email: string) {
     return this.http.post(`${this.baseUrl}/reset-password`, { email });

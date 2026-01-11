@@ -12,7 +12,8 @@
   border-radius: 8px;
   box-shadow: var(--elevation-mid);
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
+  /* ⭐ Wider to prevent clipping */
 }
 
 .auth-title {
@@ -43,26 +44,34 @@
   text-decoration: underline;
 }
 
-.success-banner {
-  background-color: #e6f6ea;
-  color: #1d7a3d;
+.success-banner,
+.error-banner {
   padding: 0.75rem 1rem;
   border-radius: 6px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  /* ⭐ Keeps icon aligned left */
   gap: 0.5rem;
   margin-bottom: 1rem;
   font-weight: 500;
+  line-height: 1.4;
+  /* ⭐ Cleaner text flow */
+  white-space: normal;
+  /* ⭐ Prevents weird wrapping */
+}
+
+.success-banner mat-icon,
+.error-banner mat-icon {
+  flex-shrink: 0;
+  /* ⭐ Prevents icon from collapsing or wrapping */
+}
+
+.success-banner {
+  background-color: #e6f6ea;
+  color: #1d7a3d;
 }
 
 .error-banner {
   background-color: #fdecea;
   color: #b71c1c;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  font-weight: 500;
 }

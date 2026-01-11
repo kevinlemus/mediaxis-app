@@ -13,12 +13,15 @@ import { environment } from '@env/environment';
 import { AuthService } from '../../../../core/auth/auth.service';
 
 interface UserRow {
+  id: string;
   name: string;
   email: string;
   role: string;
-  status: 'Active' | 'Invited' | 'Suspended';
+  status: 'Active' | 'Suspended' | 'Revoked' | 'Invited';
   lastLogin: string;
 }
+
+type PendingActionType = 'ACTIVE' | 'SUSPENDED' | 'REVOKED';
 
 @Component({
   selector: 'app-user-management',
@@ -38,15 +41,16 @@ interface UserRow {
   styleUrls: ['./user-management.component.css'],
 })
 export class UserManagementComponent implements OnInit {
+
   inviteForm = { name: '', email: '', role: 'staff' };
   inviting = false;
   inviteSuccess = false;
   inviteError: string | null = null;
 
   roles = [
-    { value: 'staff', 'label': 'Staff' },
-    { value: 'billing-manager', 'label': 'Billing Manager' },
-    { value: 'auditor', 'label': 'Auditor' },
+    { value: 'staff', label: 'Staff' },
+    { value: 'billing-manager', label: 'Billing Manager' },
+    { value: 'auditor', label: 'Auditor' },
   ];
 
   users: UserRow[] = [];
@@ -54,11 +58,19 @@ export class UserManagementComponent implements OnInit {
   searchTerm = '';
   sortKey: keyof UserRow = 'name';
   sortDirection: 'asc' | 'desc' | 'activeFirst' | 'invitedFirst' | 'suspendedFirst' = 'asc';
+
   private statusOrder: Record<string, number> = {
     active: 1,
     invited: 2,
     suspended: 3,
+    revoked: 4
   };
+
+  /**
+   * Tracks which user/action is pending confirmation for status changes.
+   * When non-null, a confirmation modal is shown.
+   */
+  pendingAction: { user: UserRow; action: PendingActionType } | null = null;
 
   constructor(
     private http: HttpClient,
@@ -75,40 +87,39 @@ export class UserManagementComponent implements OnInit {
    */
   private loadUsers(): void {
     const clinicId = this.authService.getClinicId();
-    if (!clinicId) {
-      // In a real app, you might redirect or show an error state here.
-      return;
-    }
+    if (!clinicId) return;
 
     this.http
       .get<any[]>(`${environment.apiUrl}/profile/clinic/${clinicId}`)
       .subscribe({
         next: (profiles) => {
           this.users = profiles.map((p) => ({
+            id: p.userId, // backend returns userId, not id
             name: p.name ?? '',
             email: p.email,
             role: p.role,
-            status: (p.status ?? 'Active') as 'Active' | 'Invited' | 'Suspended',
-            // Format ISO timestamp into a human‑readable string for the table
+            status: this.mapBackendStatus(p.status),
             lastLogin: p.lastLogin ? this.formatLastLogin(p.lastLogin) : '—',
           }));
-        },
-        error: () => {
-          // For now, fail silently in the UI. You can add error UX later.
-        },
+        }
       });
   }
 
   /**
-   * Converts an ISO-8601 timestamp from the backend into a readable string.
-   * Example:
-   *   "2026-01-03T20:16:36.527421Z" -> "Jan 3, 2026, 3:16 PM"
+   * Maps backend status (ACTIVE, SUSPENDED, REVOKED) to UI labels.
    */
+  private mapBackendStatus(status: string): UserRow['status'] {
+    switch (status) {
+      case 'ACTIVE': return 'Active';
+      case 'SUSPENDED': return 'Suspended';
+      case 'REVOKED': return 'Revoked';
+      default: return 'Invited';
+    }
+  }
+
   private formatLastLogin(isoString: string): string {
     const date = new Date(isoString);
-    if (isNaN(date.getTime())) {
-      return '—';
-    }
+    if (isNaN(date.getTime())) return '—';
 
     return date.toLocaleString(undefined, {
       year: 'numeric',
@@ -139,27 +150,9 @@ export class UserManagementComponent implements OnInit {
 
       if (key === 'status') {
         const rank = (s: string) => this.statusOrder[s?.toLowerCase()] ?? 99;
-        const prefer = (target: string) => (value: string) => (value?.toLowerCase() === target ? 0 : 1);
-        const priorityComparator = (target: string) => {
-          const pA = prefer(target)(valA as string);
-          const pB = prefer(target)(valB as string);
-          if (pA !== pB) return pA - pB;
-          return rank(valA as string) - rank(valB as string);
-        };
-
-        switch (dir) {
-          case 'activeFirst':
-            return priorityComparator('active');
-          case 'invitedFirst':
-            return priorityComparator('invited');
-          case 'suspendedFirst':
-            return priorityComparator('suspended');
-          case 'asc':
-            return rank(valA as string) - rank(valB as string);
-          case 'desc':
-          default:
-            return rank(valB as string) - rank(valA as string);
-        }
+        return dir === 'asc'
+          ? rank(valA) - rank(valB)
+          : rank(valB) - rank(valA);
       }
 
       if (typeof valA === 'string') valA = valA.toLowerCase();
@@ -175,27 +168,15 @@ export class UserManagementComponent implements OnInit {
 
   setSort(key: keyof UserRow): void {
     if (this.sortKey === key) {
-      if (key === 'status') {
-        const cycle: Array<typeof this.sortDirection> = ['activeFirst', 'invitedFirst', 'suspendedFirst'];
-        const idx = cycle.indexOf(this.sortDirection);
-        this.sortDirection = cycle[(idx + 1) % cycle.length];
-      } else {
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-      }
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
       this.sortKey = key;
-      this.sortDirection = key === 'status' ? 'activeFirst' : 'asc';
+      this.sortDirection = 'asc';
     }
   }
 
   submitInvite(): void {
-    if (
-      !this.inviteForm.name.trim() ||
-      !this.inviteForm.email.trim() ||
-      !this.inviteForm.role
-    ) {
-      return;
-    }
+    if (!this.inviteForm.name.trim() || !this.inviteForm.email.trim()) return;
 
     this.inviting = true;
     this.inviteSuccess = false;
@@ -203,21 +184,15 @@ export class UserManagementComponent implements OnInit {
 
     this.authService.sendInvite(this.inviteForm.email, this.inviteForm.role).subscribe({
       next: () => {
-        // We don't create the user locally here because the real source of truth is the backend.
-        // Reload the users from the API so the new "Invited" user appears in the Accounts table.
         this.loadUsers();
-
         this.inviteForm = { name: '', email: '', role: 'staff' };
         this.inviting = false;
         this.inviteSuccess = true;
-
-        // Auto-hide success banner after 4 seconds
         setTimeout(() => (this.inviteSuccess = false), 4000);
       },
       error: () => {
         this.inviting = false;
         this.inviteError = 'Failed to send invite. Please try again.';
-        // Auto-hide error banner after 4 seconds
         setTimeout(() => (this.inviteError = null), 4000);
       },
     });
@@ -225,29 +200,47 @@ export class UserManagementComponent implements OnInit {
 
   roleBadge(role: string): string {
     switch (role) {
-      case 'admin':
-        return 'Admin';
-      case 'billing-manager':
-        return 'Billing Manager';
-      case 'auditor':
-        return 'Auditor';
-      default:
-        return 'Staff';
+      case 'admin': return 'Admin';
+      case 'billing-manager': return 'Billing Manager';
+      case 'auditor': return 'Auditor';
+      default: return 'Staff';
     }
   }
 
-
-  // These still only update local state.
-  // Later you can wire them to backend /users/{id}/status endpoints.
-  suspend(u: UserRow): void {
-    u.status = 'Suspended';
+  /**
+   * Status change entry points — now open a confirmation modal instead
+   * of immediately calling the backend.
+   */
+  activate(u: UserRow): void {
+    this.pendingAction = { user: u, action: 'ACTIVE' };
   }
 
-  activate(u: UserRow): void {
-    u.status = 'Active';
+  suspend(u: UserRow): void {
+    this.pendingAction = { user: u, action: 'SUSPENDED' };
   }
 
   revoke(u: UserRow): void {
-    u.status = 'Suspended';
+    this.pendingAction = { user: u, action: 'REVOKED' };
+  }
+
+  /** Closes the confirmation modal without persisting changes. */
+  cancelAction(): void {
+    this.pendingAction = null;
+  }
+
+  /** Confirms the selected action and persists the status change to the backend. */
+  confirmAction(): void {
+    if (!this.pendingAction) return;
+
+    const { user, action } = this.pendingAction;
+
+    this.http.patch(`${environment.apiUrl}/users/${user.id}/status`, { status: action })
+      .subscribe({
+        next: () => {
+          this.pendingAction = null;
+          this.loadUsers();
+        },
+        error: () => alert('Failed to update status.')
+      });
   }
 }

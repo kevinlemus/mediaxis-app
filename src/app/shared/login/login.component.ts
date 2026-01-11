@@ -89,7 +89,29 @@ export class LoginComponent {
         }
       },
       error: err => {
-        this.errorMessage = 'Invalid email or password.';
+        /**
+         * ⭐ NEW: Show specific suspension/revocation messages
+         * Backend sends:
+         *  - "User account is suspended."
+         *  - "User account is revoked."
+         *  - "User account is disabled."
+         */
+        const backendMessage =
+          err?.error?.message ||
+          err?.error ||
+          '';
+
+        if (backendMessage.includes('suspended')) {
+          this.errorMessage = 'Your account is suspended. Please contact your administrator.';
+        } else if (backendMessage.includes('revoked')) {
+          this.errorMessage = 'Your account has been revoked and can no longer be used.';
+        } else if (backendMessage.includes('disabled')) {
+          this.errorMessage = 'Your account is disabled. Please contact your administrator.';
+        } else {
+          // Default fallback for wrong password or unknown errors
+          this.errorMessage = 'Invalid email or password.';
+        }
+
         console.error(err);
       }
     });
